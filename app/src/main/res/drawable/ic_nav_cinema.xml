@@ -1,0 +1,49 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Khung kính ngoài -->
+    <path
+        android:pathData="M 3,10 L 21,10 A 1,1 0 0 1 22,11 L 22,17 A 1,1 0 0 1 21,18 L 3,18 A 1,1 0 0 1 2,17 L 2,11 A 1,1 0 0 1 3,10 Z"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.5"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000" />
+
+    <!-- Mắt kính trái -->
+    <path
+        android:pathData="M 5.5,12 L 10.5,12 A 0.5,0.5 0 0 1 11,12.5 L 11,15.5 A 0.5,0.5 0 0 1 10.5,16 L 5.5,16 A 0.5,0.5 0 0 1 5,15.5 L 5,12.5 A 0.5,0.5 0 0 1 5.5,12 Z"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.5"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000" />
+
+    <!-- Mắt kính phải -->
+    <path
+        android:pathData="M 13.5,12 L 18.5,12 A 0.5,0.5 0 0 1 19,12.5 L 19,15.5 A 0.5,0.5 0 0 1 18.5,16 L 13.5,16 A 0.5,0.5 0 0 1 13,15.5 L 13,12.5 A 0.5,0.5 0 0 1 13.5,12 Z"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.5"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000" />
+
+    <!-- Gọng kính trái -->
+    <path
+        android:pathData="M 3,10 L 6.5,3.5 L 8.5,3.5 L 8.5,6"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000" />
+
+    <!-- Gọng kính phải -->
+    <path
+        android:pathData="M 21,10 L 17.5,3.5 L 15.5,3.5 L 15.5,6"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000" />
+
+</vector>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "531654457543",
+    "project_id": "apprap-84af4",
+    "storage_bucket": "apprap-84af4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:531654457543:android:fa6759fed0343e3e3826e2",
+        "android_client_info": {
+          "package_name": "com.example.rapapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArQiecPjswhpaMhko6vsaofoejmjac-vI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
