@@ -31,9 +31,13 @@ public class MovieListActivity extends AppCompatActivity {
     private MovieAdapter movieAdapter;
     private List<Movie> movies; // List for display
     private List<Movie> allMovies; // All movies from Firebase
-    private TextView tabNowShowing, tabComingSoon;
+    private TextView tabNowShowing, tabComingSoon, tvLocation;
     private ImageView btnBack;
     private boolean isNowShowingSelected = true;
+    private String selectedLocation = "Toàn quốc";
+    private final String[] locations = {
+        "Toàn quốc", "An Giang", "Bà Rịa - Vũng Tàu", "Bắc Giang", "Bắc Kạn", "Bạc Liêu", "Bắc Ninh", "Bến Tre", "Bình Định", "Bình Dương", "Bình Phước", "Bình Thuận", "Cà Mau", "Cần Thơ", "Cao Bằng", "Đà Nẵng", "Đắk Lắk", "Đắk Nông", "Điện Biên", "Đồng Nai", "Đồng Tháp", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Nội", "Hà Tĩnh", "Hải Dương", "Hải Phòng", "Hậu Giang", "Hòa Bình", "Hưng Yên", "Khánh Hòa", "Kiên Giang", "Kon Tum", "Lai Châu", "Lâm Đồng", "Lạng Sơn", "Lào Cai", "Long An", "Nam Định", "Nghệ An", "Ninh Bình", "Ninh Thuận", "Phú Thọ", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh", "Quảng Trị", "Sóc Trăng", "Sơn La", "Tây Ninh", "Thái Bình", "Thái Nguyên", "Thanh Hóa", "Thừa Thiên Huế", "Tiền Giang", "TP Hồ Chí Minh", "Trà Vinh", "Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +54,19 @@ public class MovieListActivity extends AppCompatActivity {
         rvMovies = findViewById(R.id.rvMovies);
         tabNowShowing = findViewById(R.id.tabNowShowing);
         tabComingSoon = findViewById(R.id.tabComingSoon);
+        tvLocation = findViewById(R.id.tvLocation);
         btnBack = findViewById(R.id.btnBack);
 
         btnBack.setOnClickListener(v -> {
             onBackPressed();
+        });
+
+        tvLocation.setOnClickListener(v -> {
+            // Hiệu ứng click: Thu nhỏ nhẹ rồi mở dialog
+            v.animate().scaleX(0.9f).scaleY(0.9f).setDuration(100).withEndAction(() -> {
+                v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(100).start();
+                showLocationPickerDialog();
+            }).start();
         });
 
         // Initialize lists
@@ -88,6 +101,35 @@ public class MovieListActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    private void showLocationPickerDialog() {
+        com.google.android.material.bottomsheet.BottomSheetDialog bottomSheetDialog = new com.google.android.material.bottomsheet.BottomSheetDialog(this);
+        android.view.View view = getLayoutInflater().inflate(R.layout.dialog_location_picker, null);
+        bottomSheetDialog.setContentView(view);
+
+        android.widget.NumberPicker picker = view.findViewById(R.id.locationPicker);
+        picker.setMinValue(0);
+        picker.setMaxValue(locations.length - 1);
+        picker.setDisplayedValues(locations);
+
+        // Set current value
+        for (int i = 0; i < locations.length; i++) {
+            if (locations[i].equals(selectedLocation)) {
+                picker.setValue(i);
+                break;
+            }
+        }
+
+        view.findViewById(R.id.btnConfirm).setOnClickListener(v -> {
+            selectedLocation = locations[picker.getValue()];
+            tvLocation.setText(selectedLocation);
+            bottomSheetDialog.dismiss();
+        });
+
+        view.findViewById(R.id.btnClose).setOnClickListener(v -> bottomSheetDialog.dismiss());
+
+        bottomSheetDialog.show();
     }
 
     private void updateTabUI() {

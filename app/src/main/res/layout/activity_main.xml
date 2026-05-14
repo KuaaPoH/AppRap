@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
+ 
             <!-- Banner Slider Area -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -101,6 +101,7 @@
                     android:layout_weight="1" />
 
                 <TextView
+                    android:id="@+id/tvLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawablePadding="4dp"
@@ -108,6 +109,10 @@
                     android:text="Toàn quốc"
                     android:textColor="#034EA2"
                     android:textSize="13sp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
                     app:drawableStartCompat="@drawable/ic_location"
                     app:drawableTint="#034EA2" />
             </LinearLayout>
@@ -139,16 +144,33 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+    <!-- Line phân cách mỏng -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="70dp"
+        android:background="#EEEEEE" />
+
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="70dp"
         android:layout_gravity="bottom"
         android:background="@color/white"
+        app:itemIconSize="20dp"
         app:itemIconTint="@color/nav_item_color"
         app:itemTextColor="@color/nav_item_color"
-        app:labelVisibilityMode="labeled"
+        app:labelVisibilityMode="selected"
+        app:itemActiveIndicatorStyle="@null"
+        app:itemBackground="@android:color/transparent"
+        app:itemRippleColor="@android:color/transparent"
+        app:itemTextAppearanceActive="@style/BottomNavLabelStyle"
+        app:itemTextAppearanceInactive="@style/BottomNavLabelStyle"
+        app:itemIconPadding="4dp"
+        app:itemPaddingTop="16dp"
+        app:itemPaddingBottom="4dp"
         app:menu="@menu/bottom_nav_menu" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

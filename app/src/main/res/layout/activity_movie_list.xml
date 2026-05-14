@@ -85,6 +85,7 @@
             android:layout_weight="1" />
 
         <TextView
+            android:id="@+id/tvLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="4dp"
@@ -92,6 +93,10 @@
             android:text="Toàn quốc"
             android:textColor="#034EA2"
             android:textSize="13sp"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
             app:drawableStartCompat="@drawable/ic_location"
             app:drawableTint="#034EA2" />
     </LinearLayout>

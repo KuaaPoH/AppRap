@@ -16,7 +16,8 @@
         android:theme="@style/Theme.RapApp">
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.RapApp.NoAnimation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,6 +25,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".MovieListActivity" />
+        <activity 
+            android:name=".CinemaListActivity" 
+            android:theme="@style/Theme.RapApp.NoAnimation" />
     </application>
 
 </manifest>

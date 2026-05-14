@@ -3,7 +3,26 @@
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
-  <path
-      android:fillColor="@android:color/white"
-      android:pathData="M15,8v8H5V8H15M16,6H4c-0.55,0 -1,0.45 -1,1v10c0,0.55 0.45,1 1,1h12c0.55,0 1,-0.45 1,-1v-3.5l4,4v-11l-4,4V7c0,-0.55 -0.45,-1 -1,-1z"/>
+    <!-- Main Camera Body -->
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M15,18H3a2,2 0 0,1 -2,-2V8a2,2 0 0,1 2,-2h12a2,2 0 0,1 2,2v8a2,2 0 0,1 -2,2z" />
+    
+    <!-- Lens / Front Part -->
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M17,10l4.2,-3.15a1,1 0 0,1 1.8,0.8v8.7a1,1 0 0,1 -1.8,0.8L17,14" />
+
+    <!-- Record Button Detail (Optional small dot to make it look like a camera) -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M4,9h2v2h-2z" />
 </vector>

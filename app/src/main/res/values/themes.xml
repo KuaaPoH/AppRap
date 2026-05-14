@@ -6,4 +6,17 @@
     </style>
 
     <style name="Theme.RapApp" parent="Base.Theme.RapApp" />
+
+    <!-- Theme riêng biệt vô hiệu hóa hiệu ứng chuyển cảnh cho các màn hình có Bottom Nav -->
+    <style name="Theme.RapApp.NoAnimation" parent="Theme.RapApp">
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
+    <!-- Style cho chữ mỏng và nhỏ ở Bottom Nav -->
+    <style name="BottomNavLabelStyle">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
 </resources>
