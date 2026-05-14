@@ -64,7 +64,8 @@
                 android:orientation="horizontal"
                 android:paddingHorizontal="16dp"
                 android:paddingTop="16dp"
-                android:paddingBottom="0dp">
+                android:paddingBottom="0dp"
+                android:clipChildren="false">
 
                 <TextView
                     android:id="@+id/tabNowShowing"
@@ -73,7 +74,8 @@
                     android:text="Đang chiếu"
                     android:textColor="#034EA2"
                     android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:paddingHorizontal="4dp" />
 
                 <View
                     android:layout_width="1dp"
@@ -90,7 +92,8 @@
                     android:text="Sắp chiếu"
                     android:textColor="#888888"
                     android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:paddingHorizontal="4dp" />
 
                 <View
                     android:layout_width="0dp"

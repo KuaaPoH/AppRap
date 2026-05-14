@@ -41,7 +41,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         holder.txtAgeRating.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#F58020")));
 
         Glide.with(context)
-                .load(movie.getPoster())
+                .load(movie.getPosterUrl())
+                .diskCacheStrategy(com.bumptech.glide.load.engine.DiskCacheStrategy.ALL)
+                .thumbnail(0.1f) // Load ảnh mờ trước để tăng cảm giác nhanh
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.stat_notify_error)
                 .into(holder.imgPoster);

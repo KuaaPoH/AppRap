@@ -34,9 +34,12 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView rvMovies;
     private MovieAdapter movieAdapter;
-    private List<Movie> movies;
-    private List<Movie> allMovies;
+    private List<Movie> movies; // Danh sách hiển thị
+    private List<Movie> allMovies; // Toàn bộ phim lấy từ Firebase
+    private List<Movie> filteredMovies; // Phim sau khi lọc theo tab
     private TextView btnViewMore;
+    private TextView tabNowShowing, tabComingSoon;
+    private boolean isNowShowingSelected = true;
 
     private ViewPager2 viewPagerBanner;
     private TabLayout tabLayoutDots;
@@ -49,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         
-        // Sửa lỗi 'main' ID bị thiếu: Dùng ID gốc của CoordinatorLayout là 'main_content'
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_content), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -60,13 +62,17 @@ public class MainActivity extends AppCompatActivity {
         viewPagerBanner = findViewById(R.id.viewPagerBanner);
         tabLayoutDots = findViewById(R.id.tabLayoutDots);
         btnViewMore = findViewById(R.id.btnViewMore);
+        tabNowShowing = findViewById(R.id.tabNowShowing);
+        tabComingSoon = findViewById(R.id.tabComingSoon);
 
         // Thiết lập Banner
         setupBanner();
 
-        // Khởi tạo danh sách rỗng và Adapter trước
+        // Khởi tạo danh sách
         movies = new ArrayList<>();
         allMovies = new ArrayList<>();
+        filteredMovies = new ArrayList<>();
+        
         movieAdapter = new MovieAdapter(this, movies);
         rvMovies.setLayoutManager(new GridLayoutManager(this, 2));
         rvMovies.setAdapter(movieAdapter);
@@ -74,14 +80,87 @@ public class MainActivity extends AppCompatActivity {
 
         // Xử lý sự kiện nút Xem Thêm
         btnViewMore.setOnClickListener(v -> {
-            movies.clear();
-            movies.addAll(allMovies);
-            movieAdapter.notifyDataSetChanged();
-            btnViewMore.setVisibility(android.view.View.GONE);
+            android.content.Intent intent = new android.content.Intent(MainActivity.this, MovieListActivity.class);
+            startActivity(intent);
+        });
+
+        // Xử lý sự kiện Tab
+        tabNowShowing.setOnClickListener(v -> {
+            if (!isNowShowingSelected) {
+                isNowShowingSelected = true;
+                updateTabUI();
+                filterMovies();
+            }
+        });
+
+        tabComingSoon.setOnClickListener(v -> {
+            if (isNowShowingSelected) {
+                isNowShowingSelected = false;
+                updateTabUI();
+                filterMovies();
+            }
         });
 
         // Lấy dữ liệu từ Firebase
         loadMoviesFromFirebase();
+    }
+
+    private void updateTabUI() {
+        float activeScale = 1.05f; // Chỉ to hơn một chút (~1px tùy màn hình)
+        float inactiveScale = 1.0f;
+        int activeColor = android.graphics.Color.parseColor("#034EA2");
+        int inactiveColor = android.graphics.Color.parseColor("#888888");
+        long duration = 200;
+
+        // Cả hai luôn để Bold theo yêu cầu mới
+        tabNowShowing.setTypeface(null, android.graphics.Typeface.BOLD);
+        tabComingSoon.setTypeface(null, android.graphics.Typeface.BOLD);
+
+        if (isNowShowingSelected) {
+            tabNowShowing.animate().scaleX(activeScale).scaleY(activeScale).setDuration(duration).start();
+            tabNowShowing.setTextColor(activeColor);
+
+            tabComingSoon.animate().scaleX(inactiveScale).scaleY(inactiveScale).setDuration(duration).start();
+            tabComingSoon.setTextColor(inactiveColor);
+        } else {
+            tabNowShowing.animate().scaleX(inactiveScale).scaleY(inactiveScale).setDuration(duration).start();
+            tabNowShowing.setTextColor(inactiveColor);
+
+            tabComingSoon.animate().scaleX(activeScale).scaleY(activeScale).setDuration(duration).start();
+            tabComingSoon.setTextColor(activeColor);
+        }
+    }
+
+    private void filterMovies() {
+        filteredMovies.clear();
+        com.google.firebase.Timestamp now = com.google.firebase.Timestamp.now();
+
+        for (Movie movie : allMovies) {
+            if (movie.getReleaseDate() == null) continue;
+            
+            if (isNowShowingSelected) {
+                // Đang chiếu: releaseDate <= now
+                if (movie.getReleaseDate().compareTo(now) <= 0) {
+                    filteredMovies.add(movie);
+                }
+            } else {
+                // Sắp chiếu: releaseDate > now
+                if (movie.getReleaseDate().compareTo(now) > 0) {
+                    filteredMovies.add(movie);
+                }
+            }
+        }
+
+        // Hiển thị tối đa 6 phim ban đầu
+        movies.clear();
+        if (filteredMovies.size() > 6) {
+            movies.addAll(filteredMovies.subList(0, 6));
+            btnViewMore.setVisibility(android.view.View.VISIBLE);
+        } else {
+            movies.addAll(filteredMovies);
+            btnViewMore.setVisibility(android.view.View.GONE);
+        }
+        movieAdapter.notifyDataSetChanged();
     }
 
     private void setupBanner() {
@@ -89,18 +168,13 @@ public class MainActivity extends AppCompatActivity {
         BannerAdapter bannerAdapter = new BannerAdapter(bannerUrls);
         viewPagerBanner.setAdapter(bannerAdapter);
 
-        // Hiệu ứng xem trước banner sau
         viewPagerBanner.setOffscreenPageLimit(3);
         CompositePageTransformer transformer = new CompositePageTransformer();
         transformer.addTransformer(new MarginPageTransformer(10));
         viewPagerBanner.setPageTransformer(transformer);
 
-        // Liên kết ViewPager2 với TabLayout để tạo dấu chấm
-        new TabLayoutMediator(tabLayoutDots, viewPagerBanner, (tab, position) -> {
-            // Không cần set text, chỉ cần hiện chấm tròn
-        }).attach();
+        new TabLayoutMediator(tabLayoutDots, viewPagerBanner, (tab, position) -> {}).attach();
 
-        // Tự động chuyển banner sau 5s
         bannerRunnable = new Runnable() {
             @Override
             public void run() {
@@ -113,33 +187,15 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        // Lấy dữ liệu banner từ Firebase
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("banners").get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 bannerUrls.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     String url = document.getString("imageUrl");
-                    if (url != null) {
-                        bannerUrls.add(url);
-                    }
+                    if (url != null) bannerUrls.add(url);
                 }
                 bannerAdapter.notifyDataSetChanged();
-                
-                // Bắt đầu chạy slide sau khi có dữ liệu
-                bannerHandler.removeCallbacks(bannerRunnable);
-                bannerHandler.postDelayed(bannerRunnable, 5000);
-            } else {
-                Log.e("MainActivity", "Lỗi lấy dữ liệu banner", task.getException());
-                // Fallback nếu lỗi hoặc chưa có database
-                bannerUrls.clear();
-                bannerUrls.addAll(Arrays.asList(
-                        "https://ocw.mobi/img/movie/doi-tham-tu-cuu.jpg",
-                        "https://image.tmdb.org/t/p/w500/gKkl37BQuKT9S60m2sycM6biOqy.jpg",
-                        "https://ocw.mobi/img/movie/lat-mat-7.jpg"
-                ));
-                bannerAdapter.notifyDataSetChanged();
-                
                 bannerHandler.removeCallbacks(bannerRunnable);
                 bannerHandler.postDelayed(bannerRunnable, 5000);
             }
@@ -163,42 +219,20 @@ public class MainActivity extends AppCompatActivity {
     private void loadMoviesFromFirebase() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         
-        db.collection("movies").get().addOnCompleteListener(task -> {
+        // Sắp xếp theo ngày phát hành mới nhất lên đầu
+        db.collection("movies")
+          .orderBy("releaseDate", com.google.firebase.firestore.Query.Direction.DESCENDING)
+          .get()
+          .addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 allMovies.clear();
-                movies.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
-                    Movie movie = new Movie();
-                    
-                    movie.setTitle(document.getString("title"));
-                    movie.setDescription(document.getString("description"));
-                    movie.setPoster(document.getString("posterUrl"));
-                    Log.d("FirebaseData", "Link anh: " + movie.getPoster());
-                    movie.setAgeRating(document.getString("ageRating"));
-                    
-                    Long duration = document.getLong("duration");
-                    if (duration != null) {
-                        movie.setDuration(duration.intValue());
-                    }
-                    
-                    Double rating = document.getDouble("rating");
-                    if (rating != null) {
-                        movie.setRating(rating);
-                    }
-                    
+                    Movie movie = document.toObject(Movie.class);
+                    movie.setId(document.getId());
                     allMovies.add(movie);
                 }
-
-                if (allMovies.size() > 6) {
-                    movies.addAll(allMovies.subList(0, 6));
-                    btnViewMore.setVisibility(android.view.View.VISIBLE);
-                } else {
-                    movies.addAll(allMovies);
-                    btnViewMore.setVisibility(android.view.View.GONE);
-                }
-                
-                movieAdapter.notifyDataSetChanged();
-                
+                // Sau khi lấy toàn bộ phim, thực hiện lọc theo tab mặc định (Đang chiếu)
+                filterMovies();
             } else {
                 Log.e("MainActivity", "Lỗi lấy dữ liệu phim", task.getException());
                 Toast.makeText(MainActivity.this, "Không thể tải danh sách phim", Toast.LENGTH_SHORT).show();
@@ -206,3 +240,4 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 }
+

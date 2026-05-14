@@ -11,11 +11,18 @@
 ## 🖼️ GIAI ĐOẠN 2: GIAO DIỆN TRANG CHỦ (UI/UX)
 - [x] Thiết kế Layout Item phim (`item_movie.xml`) theo phong cách Galaxy: Bo góc, thêm nhãn Độ tuổi (T18, K) màu cam và Điểm đánh giá (Rating) đè lên poster.
 - [x] Hiển thị danh sách phim dạng Grid (2 cột) lấy dữ liệu thật (Realtime) từ Firebase.
-- [x] **Giới hạn hiển thị 6 phim ở màn hình chính và thêm nút "Xem Thêm" (Mới cập nhật).**
+- [x] **Giới hạn hiển thị 6 phim ở màn hình chính và chuyển hướng sang màn hình "Xem Thêm" mới.**
 - [x] Thêm Bottom Navigation chuyên nghiệp với 5 tab (Trang chủ, Rạp, Mua vé, Tin tức, Tài khoản), hỗ trợ hiệu ứng đổi màu khi chọn. Đã tùy chỉnh lại icon kính 3D/tòa nhà cho tab "Rạp".
 - [x] Thêm Banner Slider trượt tự động (Sử dụng `ViewPager2` + `TabLayout` làm Dots Indicator).
 - [x] **Hiệu ứng lấp ló banner kế tiếp và load dữ liệu banner từ collection `banners` trên Firestore (Mới cập nhật).**
-- [ ] Xử lý sự kiện chuyển đổi giữa tab Đang chiếu và Sắp chiếu.
+- [x] **Xử lý sự kiện chuyển đổi giữa tab Đang chiếu và Sắp chiếu (Dựa trên `releaseDate` thời gian thực).**
+- [x] **Thêm hiệu ứng Scale và đổi màu mượt mà khi chuyển Tab.**
+
+## 📽️ GIAI ĐOẠN 2.5: DANH SÁCH PHIM CHI TIẾT (MỚI BỔ SUNG)
+- [x] Tạo màn hình `MovieListActivity` để hiển thị toàn bộ danh sách phim.
+- [x] Header chuyên nghiệp với nút Quay lại (`ic_arrow_back`) và tiêu đề trung tâm.
+- [x] Tối ưu hóa tốc độ tải ảnh với Glide (Disk Cache & Thumbnail).
+- [x] Đồng bộ logic lọc Tab Đang chiếu/Sắp chiếu giữa Trang chủ và Trang danh sách.
 
 ## 🎬 GIAI ĐOẠN 3: CHI TIẾT PHIM & TRAILER
 - [ ] Thiết kế màn hình MovieDetailActivity.
@@ -53,9 +60,11 @@
 *   `duration` (Number): Thời lượng (Phút).
 *   `rating` (Number): Điểm đánh giá (Ví dụ: 8.5).
 *   `ageRating` (String): Phân loại độ tuổi (Ví dụ: "T18", "K").
+*   `releaseDate` (Timestamp): Ngày phát hành (Dùng để sắp xếp và lọc Tab).
 
 **2. Collection `banners` (Danh sách Banner quảng cáo):**
 *   `imageUrl` (String): Link ảnh banner.
+*   `newsId` (String): ID bài báo liên quan (Dành cho giai đoạn sau).
 
 **3. Collection `cinemas` (Danh sách rạp chiếu):**
 *   `name` (String): Tên rạp (Ví dụ: "RapApp Nguyễn Trãi").
@@ -71,5 +80,5 @@
 
 ---
 **CẬP NHẬT TIẾN ĐỘ HIỆN TẠI:**
-- **Tiến độ:** Hoàn thành toàn bộ Giai đoạn 1 và gần như 100% Giai đoạn 2. Đã khắc phục lỗi hiển thị ảnh, tùy chỉnh UI (Dots, Label, Text Size) giống hệt thiết kế Galaxy Cinema. Banner và Phim đã được đồng bộ hoàn toàn với Firebase.
-- **Trạng thái:** App đang chạy mượt mà, giao diện trang chủ đã đạt chuẩn chuyên nghiệp. Sẵn sàng chuyển sang làm chức năng chuyển Tab (Đang chiếu/Sắp chiếu) hoặc nhảy sang Giai đoạn 3 (Chi tiết phim).
+- **Tiến độ:** Hoàn thành 100% Giai đoạn 2 và bổ sung thêm màn hình Danh sách phim chi tiết (`MovieListActivity`). App đã có logic phân loại phim thông minh dựa trên ngày phát hành (`releaseDate`). UI/UX được tinh chỉnh mượt mà với hiệu ứng scale tab và tối ưu hóa nạp ảnh Glide.
+- **Trạng thái:** App hoạt động ổn định, dữ liệu Firestore đã được chuẩn hóa với Model Java (`toObject`). Sẵn sàng chuyển sang Giai đoạn 3 (Chi tiết phim).
