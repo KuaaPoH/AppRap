@@ -32,6 +32,8 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerView
     public void onBindViewHolder(@NonNull BannerViewHolder holder, int position) {
         Glide.with(holder.itemView.getContext())
                 .load(bannerUrls.get(position))
+                .placeholder(R.drawable.bg_placeholder)
+                .error(R.drawable.bg_placeholder)
                 .into(holder.imgBanner);
     }
 

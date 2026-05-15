@@ -44,7 +44,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         Glide.with(context)
                 .load(product.getImageUrl())
-                .placeholder(android.R.drawable.ic_menu_gallery)
+                .placeholder(R.drawable.bg_placeholder)
+                .error(R.drawable.bg_placeholder)
                 .into(holder.imgProduct);
 
         holder.btnBuyNow.setOnClickListener(v -> {
