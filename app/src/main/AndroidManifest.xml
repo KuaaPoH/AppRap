@@ -25,9 +25,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".MovieListActivity" />
-        <activity 
-            android:name=".CinemaListActivity" 
-            android:theme="@style/Theme.RapApp.NoAnimation" />
     </application>
 
 </manifest>

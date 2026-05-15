@@ -32,13 +32,28 @@
 - [x] Bổ sung DataSeeder nạp tự động 10 rạp chiếu mẫu từ các tỉnh thành khác nhau.
 - [x] Tích hợp logic **Lọc rạp theo Tỉnh thành** dựa trên bộ chọn Khu vực ở Header.
 
-## 🎬 GIAI ĐOẠN 3: CHI TIẾT PHIM & TRAILER
+## 🛍️ GIAI ĐOẠN 3: STAR SHOP (MỚI HOÀN THÀNH)
+- [x] Tạo màn hình `StarShopActivity`.
+- [x] Thiết kế `item_product.xml` chuẩn mẫu: Ảnh sản phẩm, tên, giá cam, nút "Mua ngay" và "Thêm vào giỏ hàng".
+- [x] Tích hợp Banner Slider và Bộ lọc danh mục (Seasonal / Movie) mượt mà.
+- [x] Xử lý hiển thị giá tiền định dạng VND.
+- [x] Kết nối Firestore lấy dữ liệu từ collection `products` và viết script `DataSeeder`.
+
+## 📰 GIAI ĐOẠN 3.5: ĐIỆN ẢNH - TIN TỨC (MỚI HOÀN THÀNH)
+- [x] Tạo màn hình `NewsListActivity` với thiết kế giao diện tin tức chuyên nghiệp.
+- [x] Thiết kế `item_news.xml`: Ảnh lớn tràn viền, tiêu đề in đậm, nút xem thêm.
+- [x] Xây dựng thanh tìm kiếm động: Có hiệu ứng trượt đẩy nút "Hủy" và lọc kết quả Realtime.
+- [x] Tạo bộ lọc Tab: Bình Luận, Tin Tức, Nhân Vật.
+- [x] Thêm tính năng "Scroll to Top" (Nút cuộn lên đầu trang) với hiệu ứng làm mờ thông minh.
+- [x] Kết nối Firestore lấy dữ liệu từ collection `news` và viết script nạp 10 tin mẫu.
+
+## 🎬 GIAI ĐOẠN 4: CHI TIẾT PHIM & TRAILER
 - [ ] Thiết kế màn hình MovieDetailActivity.
 - [ ] Hiển thị thông tin chi tiết: Nội dung, Đạo diễn, Diễn viên, Thời lượng.
 - [ ] Tích hợp xem Trailer (YouTube API hoặc VideoView).
 - [ ] Nút "Mua vé" để chuyển sang luồng đặt vé.
 
-## 🎟️ GIAI ĐOẠN 4: LUỒNG ĐẶT VÉ (QUAN TRỌNG NHẤT)
+## 🎟️ GIAI ĐOẠN 5: LUỒNG ĐẶT VÉ (QUAN TRỌNG NHẤT)
 - [ ] Màn hình chọn Suất chiếu (Chọn ngày -> Chọn rạp -> Chọn giờ).
 - [ ] Màn hình chọn Ghế (Seat Map):
     - Hiển thị sơ đồ ghế theo phòng chiếu.
@@ -46,12 +61,12 @@
     - Phân loại ghế (Thường, VIP).
 - [ ] Màn hình chọn Bắp nước (Combo Concession).
 
-## 💳 GIAI ĐOẠN 5: XÁC NHẬN & THANH TOÁN
+## 💳 GIAI ĐOẠN 6: XÁC NHẬN & THANH TOÁN
 - [ ] Màn hình tổng quan đơn hàng (Review Order).
 - [ ] Giao diện thanh toán giả lập (Nhập thẻ/Ví điện tử).
 - [ ] Xuất vé điện tử (Mã QR/Barcode) và lưu vào Database.
 
-## 👤 GIAI ĐOẠN 6: CÁ NHÂN HÓA & HOÀN THIỆN
+## 👤 GIAI ĐOẠN 7: CÁ NHÂN HÓA & HOÀN THIỆN
 - [ ] Đăng ký/Đăng nhập (Sử dụng Firebase Authentication).
 - [ ] Xem lịch sử vé đã đặt.
 - [ ] Tích điểm thành viên.
@@ -81,7 +96,20 @@
 *   `phone` (String): Số điện thoại liên hệ.
 *   `city` (String): Thuộc Tỉnh/Thành phố (Phục vụ lọc khu vực).
 
-**4. Collection `showtimes` (Lịch chiếu/Suất chiếu):**
+**4. Collection `products` (Danh sách sản phẩm Star Shop):**
+*   `name` (String): Tên sản phẩm.
+*   `price` (Number): Giá tiền (Ví dụ: 350000).
+*   `imageUrl` (String): Link ảnh sản phẩm.
+*   `category` (String): Danh mục ("Seasonal" hoặc "Movie").
+
+**5. Collection `news` (Danh sách Tin tức Điện ảnh):**
+*   `title` (String): Tiêu đề bài viết.
+*   `imageUrl` (String): Link ảnh bìa bài viết.
+*   `category` (String): Danh mục ("Review", "News", "Character").
+*   `content` (String): Nội dung chi tiết.
+*   `publishedDate` (Timestamp): Ngày đăng bài.
+
+**6. Collection `showtimes` (Lịch chiếu/Suất chiếu):**
 *   `movieId` (String): Tham chiếu đến Document ID trong bảng `movies`.
 *   `cinemaId` (String): Tham chiếu đến Document ID trong bảng `cinemas`.
 *   `roomName` (String): Tên phòng chiếu (Ví dụ: "Phòng 1").
@@ -91,5 +119,5 @@
 
 ---
 **CẬP NHẬT TIẾN ĐỘ HIỆN TẠI:**
-- **Tiến độ:** Đã hoàn thiện xong toàn bộ Giai đoạn 2 (Trang chủ), Giai đoạn 2.5 (Danh sách phim) và Giai đoạn 2.6 (Danh sách rạp). Các thao tác chuyển tab Bottom Navigation đã được tối ưu hóa mượt mà (không độ trễ). Đã hoàn thiện bộ chọn khu vực với 63 tỉnh thành. Dữ liệu Rạp đã được tự động nạp (Seeding) lên Firestore.
-- **Trạng thái:** App hoạt động siêu mượt, UI/UX chuẩn phong cách tối giản phẳng (Flat Design). Chuẩn bị bước vào **Giai đoạn 3 (Chi tiết phim)** và bắt đầu xây dựng luồng Đặt vé cốt lõi.
+- **Tiến độ:** Đã hoàn thiện xong toàn bộ Giai đoạn 2 (Trang chủ), Giai đoạn 2.5 (Danh sách phim), Giai đoạn 2.6 (Danh sách rạp), **Giai đoạn 3 (Star Shop)** và **Giai đoạn 3.5 (Điện ảnh)**. Đặc biệt, đã thực hiện **tái cấu trúc toàn bộ ứng dụng sang kiến trúc Single Activity + Fragments**, giải quyết triệt để lỗi nhảy icon Bottom Navigation và tối ưu hóa hiệu năng ứng dụng.
+- **Trạng thái:** 4 tab chính (Trang chủ, Rạp phim, Star Shop, Điện ảnh) đã hoạt động hoàn hảo, mượt mà với UI/UX đồng bộ, chuẩn Flat Design. Dữ liệu các tab đã được nạp Realtime từ Firebase. Sẵn sàng bước vào **Giai đoạn 4 (Chi tiết phim)** và xây dựng luồng Đặt vé cốt lõi.
