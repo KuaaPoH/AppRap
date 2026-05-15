@@ -2,11 +2,58 @@ package com.example.rapapp.utils;
 
 import android.util.Log;
 import com.example.rapapp.models.Cinema;
+import com.example.rapapp.models.Product;
+import com.example.rapapp.models.News;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DataSeeder {
+
+    public static void seedNews() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        List<News> newsList = new ArrayList<>();
+
+        // Tab Bình Luận (Review)
+        newsList.add(new News("[Review] The Devil Wears Prada 2: Ai Cũng Sợ Mất Việc Thôi, Kể Cả Bà Hoàng Thời Trang", "https://i.ibb.co/Vp8nZ5T/news1.jpg", "Review", "Nội dung chi tiết bài review...", new Timestamp(new Date())));
+        newsList.add(new News("[Review] Deadpool & Wolverine: Màn Hội Ngộ Đỉnh Cao Của Hai Gã Lầy Lội", "https://i.ibb.co/6yL5Y4P/news2.jpg", "Review", " Deadpool và Wolverine đã thực sự cứu vãn vũ trụ Marvel...", new Timestamp(new Date())));
+        newsList.add(new News("[Review] Inside Out 2: Khi Những Cảm Xúc Mới Xuất Hiện Ở Tuổi Dậy Thì", "https://i.ibb.co/L6v3n4K/news3.jpg", "Review", "Pixar đã thành công trong việc khai thác tâm lý tuổi mới lớn...", new Timestamp(new Date())));
+
+        // Tab Tin Tức (News)
+        newsList.add(new News("Siêu Bom Tấn Avatar 3 Chính Thức Công Bố Ngày Phát Hành Toàn Cầu", "https://i.ibb.co/VWVz0H1/news4.jpg", "News", "James Cameron tiết lộ những hình ảnh đầu tiên về bộ tộc lửa...", new Timestamp(new Date())));
+        newsList.add(new News("Đạo Diễn Christopher Nolan Trở Lại Với Dự Án Phim Về Điệp Viên", "https://i.ibb.co/abc/news5.jpg", "News", "Sau thành công của Oppenheimer, Nolan đang chuẩn bị cho dự án mới...", new Timestamp(new Date())));
+        newsList.add(new News("Vũ Trụ Điện Ảnh Marvel Công Bố Danh Sách Phim Cho Giai Đoạn 6", "https://i.ibb.co/xyz/news6.jpg", "News", "Sẽ có sự xuất hiện của nhóm Fantastic Four...", new Timestamp(new Date())));
+        newsList.add(new News("LHP Cannes 2026: Những Bộ Phim Sáng Giá Cho Giải Cành Cọ Vàng", "https://i.ibb.co/123/news7.jpg", "News", "Điện ảnh thế giới hội tụ tại Cannes...", new Timestamp(new Date())));
+
+        // Tab Nhân Vật (Character)
+        newsList.add(new News("Robert Downey Jr. Chia Sẻ Về Cảm Xúc Khi Quay Lại Vũ Trụ Marvel", "https://i.ibb.co/456/news8.jpg", "Character", "Lần trở lại này với vai phản diện Doctor Doom...", new Timestamp(new Date())));
+        newsList.add(new News("Hành Trình Tỏa Sáng Của Cựu Người Mẫu Emily Blunt Tại Hollywood", "https://i.ibb.co/789/news9.jpg", "Character", "Từ những vai diễn phụ đến ngôi sao hạng A...", new Timestamp(new Date())));
+        newsList.add(new News("Tom Cruise Và Những Pha Hành Động Không Cần Đóng Thế Ở Tuổi 60", "https://i.ibb.co/000/news10.jpg", "Character", "Anh vẫn tiếp tục chinh phục những giới hạn mới...", new Timestamp(new Date())));
+
+        for (News n : newsList) {
+            db.collection("news").add(n)
+                .addOnSuccessListener(documentReference -> Log.d("DataSeeder", "Đã thêm tin tức: " + n.getTitle()))
+                .addOnFailureListener(e -> Log.e("DataSeeder", "Lỗi thêm tin tức", e));
+        }
+    }
+
+    public static void seedProducts() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        List<Product> products = new ArrayList<>();
+
+        products.add(new Product("Ly nước Capybara", 350000, "https://i.ibb.co/L6v3n4K/capybara.jpg", "Seasonal"));
+        products.add(new Product("Combo Bắp Nước Solo", 85000, "https://www.galaxycine.vn/media/2023/10/26/combo-1_1698310323381.jpg", "Movie"));
+        products.add(new Product("Combo Bắp Nước Couple", 150000, "https://www.galaxycine.vn/media/2023/10/26/combo-2_1698310323381.jpg", "Movie"));
+        products.add(new Product("Bình nước Iron Man", 250000, "https://i.ibb.co/VWVz0H1/ironman.jpg", "Seasonal"));
+
+        for (Product p : products) {
+            db.collection("products").add(p)
+                .addOnSuccessListener(documentReference -> Log.d("DataSeeder", "Đã thêm sản phẩm: " + p.getName()))
+                .addOnFailureListener(e -> Log.e("DataSeeder", "Lỗi thêm sản phẩm", e));
+        }
+    }
 
     public static void seedCinemas() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();

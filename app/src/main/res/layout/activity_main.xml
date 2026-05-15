@@ -5,146 +5,17 @@
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    tools:context=".MainActivity">
 
-    <androidx.core.widget.NestedScrollView
+    <!-- Fragment Container để hiển thị nội dung các Tab -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="60dp">
+        android:layout_marginBottom="70dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
- 
-            <!-- Banner Slider Area -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
-
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/viewPagerBanner"
-                    android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    android:clipChildren="false"
-                    android:clipToPadding="false"
-                    android:paddingStart="40dp"
-                    android:paddingEnd="40dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <!-- Dấu chấm tròn (Dots Indicator) - Nhỏ hơn và thưa hơn -->
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tabLayoutDots"
-                    android:layout_width="wrap_content"
-                    android:layout_height="10dp"
-                    android:layout_marginTop="12dp"
-                    android:background="@android:color/transparent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/viewPagerBanner"
-                    app:tabBackground="@drawable/tab_selector"
-                    app:tabGravity="center"
-                    app:tabIndicatorHeight="0dp"
-                    app:tabMaxWidth="16dp"
-                    app:tabMinWidth="16dp"
-                    app:tabPaddingEnd="0dp"
-                    app:tabPaddingStart="0dp"
-                    app:tabRippleColor="@null" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <!-- Tabs Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="16dp"
-                android:paddingTop="16dp"
-                android:paddingBottom="0dp"
-                android:clipChildren="false">
-
-                <TextView
-                    android:id="@+id/tabNowShowing"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Đang chiếu"
-                    android:textColor="#034EA2"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:paddingHorizontal="4dp" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="12dp"
-                    android:background="#DDDDDD" />
-
-                <TextView
-                    android:id="@+id/tabComingSoon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Sắp chiếu"
-                    android:textColor="#888888"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:paddingHorizontal="4dp" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:id="@+id/tvLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="4dp"
-                    android:gravity="center"
-                    android:text="Toàn quốc"
-                    android:textColor="#034EA2"
-                    android:textSize="13sp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="4dp"
-                    app:drawableStartCompat="@drawable/ic_location"
-                    app:drawableTint="#034EA2" />
-            </LinearLayout>
-
-            <!-- Movie Grid -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvMovies"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="8dp"
-                android:paddingBottom="8dp" />
-
-            <TextView
-                android:id="@+id/btnViewMore"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="24dp"
-                android:background="@drawable/bg_btn_outline_orange"
-                android:gravity="center"
-                android:paddingVertical="12dp"
-                android:text="Xem Thêm >"
-                android:textColor="#F58020"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
-
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-
-    <!-- Line phân cách mỏng -->
+    <!-- Line phân cách mỏng phía trên Bottom Nav -->
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
@@ -152,7 +23,7 @@
         android:layout_marginBottom="70dp"
         android:background="#EEEEEE" />
 
-    <!-- Bottom Navigation -->
+    <!-- Bottom Navigation duy nhất của hệ thống -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
