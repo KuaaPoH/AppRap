@@ -47,6 +47,18 @@
 - [x] Thêm tính năng "Scroll to Top" (Nút cuộn lên đầu trang) với hiệu ứng làm mờ thông minh.
 - [x] Kết nối Firestore lấy dữ liệu từ collection `news` và viết script nạp 10 tin mẫu.
 
+## 👤 GIAI ĐOẠN 3.6: TÀI KHOẢN & HỆ THỐNG (MỚI HOÀN THÀNH)
+- [x] **Hoàn thiện Tab Tài khoản (Profile):** Thiết kế giao diện chuyên nghiệp chuẩn Galaxy Cinema với Mascot, các mục ưu đãi (Stars, Quà tặng, Đặc quyền) và danh sách liên kết hỗ trợ.
+- [x] **Xây dựng luồng Đăng nhập/Đăng ký:**
+    - Thiết kế màn hình `LoginActivity` và `RegisterActivity` với đầy đủ các trường nhập liệu bo góc, icon tinh tế.
+    - Tích hợp **DatePicker** cho mục chọn Ngày sinh.
+    - Tùy chỉnh màu sắc (Cam chủ đạo) cho RadioButton, Checkbox và Switch.
+- [x] **Hệ thống Cài đặt:**
+    - Tạo màn hình `SettingsActivity` quản lý Vị trí và Thông báo.
+    - Tạo màn hình `LanguageActivity` cho phép chuyển đổi ngôn ngữ (Tiếng Việt/English) với giao diện tick chọn hiện đại.
+- [x] **Chuẩn hóa UI/UX toàn bộ dự án:** Tạo file `GEMINI.md` quy định chặt chẽ về hệ màu, kích thước chữ (Typography), khoảng cách (Spacings) và Component quy chuẩn để đảm bảo sự đồng bộ 100%.
+- [x] **Tối ưu hóa hình ảnh:** Cấu hình **Glide Placeholder** (nền xám nhạt bo góc) cho toàn bộ Adapter, xóa bỏ hiện tượng "nháy nền xanh" khi load dữ liệu.
+
 ## 🎬 GIAI ĐOẠN 4: CHI TIẾT PHIM & TRAILER
 - [ ] Thiết kế màn hình MovieDetailActivity.
 - [ ] Hiển thị thông tin chi tiết: Nội dung, Đạo diễn, Diễn viên, Thời lượng.
@@ -65,12 +77,6 @@
 - [ ] Màn hình tổng quan đơn hàng (Review Order).
 - [ ] Giao diện thanh toán giả lập (Nhập thẻ/Ví điện tử).
 - [ ] Xuất vé điện tử (Mã QR/Barcode) và lưu vào Database.
-
-## 👤 GIAI ĐOẠN 7: CÁ NHÂN HÓA & HOÀN THIỆN
-- [ ] Đăng ký/Đăng nhập (Sử dụng Firebase Authentication).
-- [ ] Xem lịch sử vé đã đặt.
-- [ ] Tích điểm thành viên.
-- [ ] Tối ưu hóa hiệu năng và kiểm lỗi (Bug fix).
 
 ---
 ## 🗄️ CẤU TRÚC CƠ SỞ DỮ LIỆU (FIREBASE FIRESTORE SCHEMA)
@@ -109,15 +115,7 @@
 *   `content` (String): Nội dung chi tiết.
 *   `publishedDate` (Timestamp): Ngày đăng bài.
 
-**6. Collection `showtimes` (Lịch chiếu/Suất chiếu):**
-*   `movieId` (String): Tham chiếu đến Document ID trong bảng `movies`.
-*   `cinemaId` (String): Tham chiếu đến Document ID trong bảng `cinemas`.
-*   `roomName` (String): Tên phòng chiếu (Ví dụ: "Phòng 1").
-*   `price` (Number): Giá vé (Ví dụ: 100000).
-*   `startTime` (String/Timestamp): Thời gian bắt đầu chiếu.
-*   `bookedSeats` (Array of Strings): Mảng chứa các ghế đã được đặt (Ví dụ: `["A1", "A2", "D5"]`).
-
 ---
 **CẬP NHẬT TIẾN ĐỘ HIỆN TẠI:**
-- **Tiến độ:** Đã hoàn thiện xong toàn bộ Giai đoạn 2 (Trang chủ), Giai đoạn 2.5 (Danh sách phim), Giai đoạn 2.6 (Danh sách rạp), **Giai đoạn 3 (Star Shop)** và **Giai đoạn 3.5 (Điện ảnh)**. Đặc biệt, đã thực hiện **tái cấu trúc toàn bộ ứng dụng sang kiến trúc Single Activity + Fragments**, giải quyết triệt để lỗi nhảy icon Bottom Navigation và tối ưu hóa hiệu năng ứng dụng.
-- **Trạng thái:** 4 tab chính (Trang chủ, Rạp phim, Star Shop, Điện ảnh) đã hoạt động hoàn hảo, mượt mà với UI/UX đồng bộ, chuẩn Flat Design. Dữ liệu các tab đã được nạp Realtime từ Firebase. Sẵn sàng bước vào **Giai đoạn 4 (Chi tiết phim)** và xây dựng luồng Đặt vé cốt lõi.
+- **Tiến độ:** Đã hoàn thành Giai đoạn 1 đến 3.5. Vừa hoàn tất **Giai đoạn 3.6 (Tài khoản & Hệ thống)** với luồng Đăng ký/Đăng nhập và Cài đặt hoàn chỉnh, chuyên nghiệp.
+- **Trạng thái:** Ứng dụng đã có đầy đủ khung giao diện của một App Cinema thực tế. Toàn bộ 5 tab ở thanh điều hướng đã hoạt động mượt mà. Hệ thống UI/UX đã được chuẩn hóa qua file `GEMINI.md`. Sẵn sàng bước vào **Giai đoạn 4 (Chi tiết phim)** và xây dựng luồng Đặt vé.
