@@ -43,9 +43,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         Glide.with(context)
                 .load(movie.getPosterUrl())
                 .diskCacheStrategy(com.bumptech.glide.load.engine.DiskCacheStrategy.ALL)
-                .thumbnail(0.1f) // Load ảnh mờ trước để tăng cảm giác nhanh
-                .placeholder(android.R.drawable.ic_menu_gallery)
-                .error(android.R.drawable.stat_notify_error)
+                .thumbnail(0.1f)
+                .placeholder(R.drawable.bg_placeholder)
+                .error(R.drawable.bg_placeholder)
                 .into(holder.imgPoster);
     }
 

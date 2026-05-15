@@ -41,7 +41,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
         Glide.with(context)
                 .load(news.getImageUrl())
-                .placeholder(android.R.drawable.ic_menu_gallery)
+                .placeholder(R.drawable.bg_placeholder)
+                .error(R.drawable.bg_placeholder)
                 .into(holder.imgNews);
 
         // Chỉ hiển thị nội dung tóm tắt ở tab Nhân Vật (Character)

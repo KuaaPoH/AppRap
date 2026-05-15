@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import com.example.rapapp.fragments.CinemaFragment;
 import com.example.rapapp.fragments.HomeFragment;
 import com.example.rapapp.fragments.NewsFragment;
+import com.example.rapapp.fragments.ProfileFragment;
 import com.example.rapapp.fragments.StarShopFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -52,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment = new StarShopFragment();
             } else if (id == R.id.nav_news) {
                 selectedFragment = new NewsFragment();
+            } else if (id == R.id.nav_profile) {
+                selectedFragment = new ProfileFragment();
             }
 
             if (selectedFragment != null) {

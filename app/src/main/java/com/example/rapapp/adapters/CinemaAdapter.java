@@ -42,7 +42,8 @@ public class CinemaAdapter extends RecyclerView.Adapter<CinemaAdapter.CinemaView
 
         Glide.with(context)
                 .load(cinema.getImageUrl())
-                .placeholder(R.drawable.ic_launcher_background)
+                .placeholder(R.drawable.bg_placeholder)
+                .error(R.drawable.bg_placeholder)
                 .into(holder.ivCinema);
     }
 
