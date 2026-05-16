@@ -35,9 +35,7 @@ public class MovieListActivity extends AppCompatActivity {
     private ImageView btnBack;
     private boolean isNowShowingSelected = true;
     private String selectedLocation = "Toàn quốc";
-    private final String[] locations = {
-        "Toàn quốc", "An Giang", "Bà Rịa - Vũng Tàu", "Bắc Giang", "Bắc Kạn", "Bạc Liêu", "Bắc Ninh", "Bến Tre", "Bình Định", "Bình Dương", "Bình Phước", "Bình Thuận", "Cà Mau", "Cần Thơ", "Cao Bằng", "Đà Nẵng", "Đắk Lắk", "Đắk Nông", "Điện Biên", "Đồng Nai", "Đồng Tháp", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Nội", "Hà Tĩnh", "Hải Dương", "Hải Phòng", "Hậu Giang", "Hòa Bình", "Hưng Yên", "Khánh Hòa", "Kiên Giang", "Kon Tum", "Lai Châu", "Lâm Đồng", "Lạng Sơn", "Lào Cai", "Long An", "Nam Định", "Nghệ An", "Ninh Bình", "Ninh Thuận", "Phú Thọ", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh", "Quảng Trị", "Sóc Trăng", "Sơn La", "Tây Ninh", "Thái Bình", "Thái Nguyên", "Thanh Hóa", "Thừa Thiên Huế", "Tiền Giang", "TP Hồ Chí Minh", "Trà Vinh", "Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái"
-    };
+    private List<String> locations = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +94,20 @@ public class MovieListActivity extends AppCompatActivity {
 
         // Load data
         loadMoviesFromFirebase();
+        loadLocationsFromFirebase();
+    }
+
+    private void loadLocationsFromFirebase() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("metadata").document("locations").get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                List<String> locList = (List<String>) documentSnapshot.get("list");
+                if (locList != null) {
+                    locations.clear();
+                    locations.addAll(locList);
+                }
+            }
+        });
     }
 
     @Override
@@ -109,20 +121,23 @@ public class MovieListActivity extends AppCompatActivity {
         bottomSheetDialog.setContentView(view);
 
         android.widget.NumberPicker picker = view.findViewById(R.id.locationPicker);
+        if (locations.isEmpty()) {
+            locations.add("Toàn quốc");
+        }
         picker.setMinValue(0);
-        picker.setMaxValue(locations.length - 1);
-        picker.setDisplayedValues(locations);
+        picker.setMaxValue(locations.size() - 1);
+        picker.setDisplayedValues(locations.toArray(new String[0]));
 
         // Set current value
-        for (int i = 0; i < locations.length; i++) {
-            if (locations[i].equals(selectedLocation)) {
+        for (int i = 0; i < locations.size(); i++) {
+            if (locations.get(i).equals(selectedLocation)) {
                 picker.setValue(i);
                 break;
             }
         }
 
         view.findViewById(R.id.btnConfirm).setOnClickListener(v -> {
-            selectedLocation = locations[picker.getValue()];
+            selectedLocation = locations.get(picker.getValue());
             tvLocation.setText(selectedLocation);
             bottomSheetDialog.dismiss();
         });
