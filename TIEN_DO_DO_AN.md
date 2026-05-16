@@ -20,36 +20,22 @@
 - [x] Thêm hiệu ứng Scale và đổi màu mượt mà khi chuyển Tab.
 - [x] **Quản lý Khu vực (Location) động:** Xóa bỏ danh sách tỉnh thành cứng (Hardcoded array). Danh sách 63 tỉnh thành hiện được lưu trên Cloud (Collection `metadata`) và tải về động ở mọi màn hình (`HomeFragment`, `CinemaFragment`, `StarShopFragment`, `MovieListActivity`).
 
-## 📽️ GIAI ĐOẠN 2.5: DANH SÁCH PHIM CHI TIẾT
+## 📽️ GIAI ĐOẠN 2.5: DANH SÁCH PHIM & RẠP PHIM
 - [x] Tạo màn hình `MovieListActivity` để hiển thị toàn bộ danh sách phim.
 - [x] Header chuyên nghiệp với nút Quay lại (`ic_arrow_back`) và tiêu đề trung tâm.
 - [x] Tối ưu hóa tốc độ tải ảnh với Glide (Disk Cache & Thumbnail).
 - [x] Đồng bộ logic lọc Tab Đang chiếu/Sắp chiếu giữa Trang chủ và Trang danh sách.
-
-## 🏢 GIAI ĐOẠN 2.6: DANH SÁCH RẠP PHIM (MỚI BỔ SUNG)
-- [x] Tạo màn hình `CinemaListActivity`.
 - [x] Thiết kế giao diện `item_cinema.xml` đẹp mắt (ảnh bo góc, chữ tối ưu maxLines và ellipsize).
 - [x] Tích hợp logic **Lọc rạp theo Tỉnh thành** dựa trên bộ chọn Khu vực tải từ Cloud.
 
-## 🛍️ GIAI ĐOẠN 3: STAR SHOP (MỚI HOÀN THÀNH)
-- [x] Tạo màn hình `StarShopActivity`.
-- [x] Thiết kế `item_product.xml` chuẩn mẫu: Ảnh sản phẩm, tên, giá cam, nút "Mua ngay" và "Thêm vào giỏ hàng".
+## 🛍️ GIAI ĐOẠN 3: STAR SHOP & TIN TỨC ĐIỆN ẢNH
+- [x] Tạo màn hình `StarShopActivity` với thiết kế `item_product.xml` chuẩn mẫu: Ảnh sản phẩm, tên, giá cam, nút "Mua ngay".
 - [x] Tích hợp Banner Slider và Bộ lọc danh mục (Seasonal / Movie) mượt mà.
 - [x] Xử lý hiển thị giá tiền định dạng VND.
-- [x] Kết nối Firestore lấy dữ liệu từ collection `products`.
-
-## 📰 GIAI ĐOẠN 3.5: ĐIỆN ẢNH - TIN TỨC & CHI TIẾT (MỚI HOÀN THÀNH)
-- [x] Tạo màn hình `NewsListActivity` với thiết kế giao diện tin tức chuyên nghiệp.
-- [x] Thiết kế `item_news.xml`: Ảnh lớn tràn viền, tiêu đề in đậm, nút xem thêm.
-- [x] Xây dựng thanh tìm kiếm động và bộ lọc Tab: Bình Luận, Tin Tức, Nhân Vật.
 - [x] **Hệ thống nội dung đa phương tiện (Content Blocks):** Cho phép bài viết chèn nhiều ảnh và đoạn văn bản đan xen bất kỳ vị trí nào, tự động dàn trang linh hoạt.
-- [x] **Màn hình Chi tiết Tin tức (`NewsDetailActivity`):**
-    - Hiển thị đầy đủ Tiêu đề, Ngày đăng, Chuyên mục.
-    - Nội dung bài viết căn lề đều 2 bên (Justify), cỡ chữ 14sp chuyên nghiệp.
-    - Tự động hiển thị các khối nội dung và hình ảnh từ Database.
-    - Header có nút Chia sẻ và nút "Mua vé ngay!" cố định dưới chân trang.
+- [x] **Màn hình Chi tiết Tin tức (`NewsDetailActivity`):** Hiển thị đầy đủ Tiêu đề, Ngày đăng, Chuyên mục. Nội dung căn lề đều (Justify), cỡ chữ 14sp chuyên nghiệp. Có nút Chia sẻ và nút "Mua vé ngay!" cố định dưới chân trang.
 
-## 👤 GIAI ĐOẠN 3.6: TÀI KHOẢN & HỆ THỐNG (MỚI HOÀN THÀNH)
+## 👤 GIAI ĐOẠN 3.6: TÀI KHOẢN & HỆ THỐNG
 - [x] **Hoàn thiện Tab Tài khoản (Profile):** Mascot, ưu đãi Stars, Quà tặng, Đặc quyền và danh sách liên kết hỗ trợ.
 - [x] **Xây dựng luồng Đăng nhập/Đăng ký:** DatePicker ngày sinh, UI cam chủ đạo.
 - [x] **Hệ thống Cài đặt:** Quản lý Vị trí và Thông báo. LanguageActivity hỗ trợ chuyển đổi Tiếng Việt/English.
@@ -61,9 +47,9 @@
 - [x] **Hoàn thiện Tab Thông Tin:** 
     - Thiết kế phần Header (Ảnh cover, Poster nổi, Điểm đánh giá, Ngày giờ chiếu).
     - Hiển thị Nội dung phim với chức năng Xem thêm/Thu gọn, xử lý chính xác ký tự xuống dòng (`\n`).
-    - Tạo danh sách ngang cho Diễn viên và Đạo diễn (sử dụng avatar mặc định `ic_nav_profile`).
+    - Tạo danh sách ngang cho Diễn viên và Đạo diễn.
     - Tạo danh sách ngang cho Thư viện ảnh (Gallery).
-- [x] Xóa bỏ WebView hiển thị YouTube (do các lỗi chặn nhúng phức tạp từ phía YouTube) và thay thế nút Play trailer bằng Toast "Tính năng đang được phát triển" để giữ UI ổn định.
+- [x] Xử lý trailer bằng Toast thông báo để giữ UI ổn định.
 - [ ] Nút "Mua vé" để chuyển sang luồng đặt vé.
 
 ## 🎟️ GIAI ĐOẠN 5: LUỒNG ĐẶT VÉ (QUAN TRỌNG NHẤT)
@@ -78,7 +64,7 @@
 
 ---
 ## 🗄️ CẤU TRÚC CƠ SỞ DỮ LIỆU (FIREBASE FIRESTORE SCHEMA)
-*(Dùng để gửi cho AI (ChatGPT, Gemini, Claude...) khi cần hỗ trợ code)*
+*(Dùng để gửi cho AI khi cần hỗ trợ code)*
 
 **1. Collection `movies` (Danh sách phim):**
 *   `title` (String): Tên phim.
@@ -88,50 +74,48 @@
 *   `duration` (Number): Thời lượng (Phút).
 *   `rating` (Number): Điểm đánh giá (Ví dụ: 8.5).
 *   `ageRating` (String): Phân loại độ tuổi (Ví dụ: "T18", "K").
-*   `releaseDate` (Timestamp): Ngày phát hành (Dùng để sắp xếp và lọc Tab).
+*   `releaseDate` (Timestamp): Ngày phát hành.
 *   `trailerUrl` (String): Link Youtube trailer.
 *   `director` (String): Tên đạo diễn.
-*   `cast` (String): Tên các diễn viên (cách nhau bằng dấu phẩy).
+*   `cast` (String): Tên các diễn viên.
 *   `price` (Number): Giá vé cơ bản.
 
 **2. Collection `banners` (Danh sách Banner quảng cáo):**
 *   `imageUrl` (String): Link ảnh banner.
-*   `newsId` (String): ID bài báo liên quan (Dành cho giai đoạn sau).
+*   `newsId` (String): ID bài báo liên quan.
 
 **3. Collection `cinemas` (Danh sách rạp chiếu):**
-*   `name` (String): Tên rạp (Ví dụ: "Galaxy Nguyễn Du").
+*   `name` (String): Tên rạp.
 *   `address` (String): Địa chỉ.
 *   `imageUrl` (String): Link ảnh đại diện rạp.
 *   `phone` (String): Số điện thoại liên hệ.
-*   `city` (String): Thuộc Tỉnh/Thành phố (Phục vụ lọc khu vực).
+*   `city` (String): Tỉnh/Thành phố (Phục vụ lọc khu vực).
 
 **4. Collection `products` (Danh sách sản phẩm Star Shop):**
 *   `name` (String): Tên sản phẩm.
-*   `price` (Number): Giá tiền (Ví dụ: 350000).
+*   `price` (Number): Giá tiền.
 *   `imageUrl` (String): Link ảnh sản phẩm.
 *   `category` (String): Danh mục ("Seasonal" hoặc "Movie").
 
 **5. Collection `news` (Danh sách Tin tức Điện ảnh):**
 *   `title` (String): Tiêu đề bài viết.
-*   `imageUrl` (String): Link ảnh bìa bài viết.
+*   `imageUrl` (String): Link ảnh bìa.
 *   `category` (String): Danh mục ("Review", "News", "Character").
-*   `contentBlocks` (Array of Maps): 
-    - `type` (String): "text" hoặc "image".
-    - `value` (String): Nội dung chữ hoặc URL ảnh.
+*   `contentBlocks` (Array of Maps): `type` ("text"/"image") và `value`.
 *   `publishedDate` (Timestamp): Ngày đăng bài.
 
 **6. Collection `showtimes` (Danh sách suất chiếu):**
 *   `movieId` (String): ID phim.
 *   `cinemaId` (String): ID rạp chiếu.
-*   `city` (String): Tỉnh/Thành phố của rạp (Dùng để lọc nhanh).
-*   `date` (String): Ngày chiếu (Định dạng "yyyy-MM-dd").
-*   `time` (String): Giờ chiếu (Định dạng "HH:mm").
-*   `format` (String): Định dạng và phòng (VD: "CINE DE KIDS 2D LỒNG TIẾNG").
+*   `city` (String): Tỉnh/Thành phố của rạp.
+*   `date` (String): Ngày chiếu ("yyyy-MM-dd").
+*   `time` (String): Giờ chiếu ("HH:mm").
+*   `format` (String): Định dạng và phòng (VD: "2D LỒNG TIẾNG").
 
 **7. Collection `metadata` (Thông tin hệ thống):**
 *   Document `locations`: Chứa mảng `list` gồm danh sách 63 tỉnh thành Việt Nam.
 
 ---
 **CẬP NHẬT TIẾN ĐỘ HIỆN TẠI:**
-- **Tiến độ:** Đã hoàn thành Giai đoạn 1 đến 3.6. Vừa hoàn thiện phần lớn **Giai đoạn 4 (Chi tiết phim)**, đặc biệt là UI/UX xuất sắc cho Tab Suất Chiếu và Tab Thông Tin.
-- **Trạng thái:** Ứng dụng đã xử lý hoàn hảo hiệu ứng trượt mượt mà cho danh sách rạp và chuẩn hóa cấu trúc Firestore mới nhất (có mảng thư viện ảnh). Chỉ còn thiếu nút Mua vé để kết nối sang luồng đặt vé. Sẵn sàng bước vào **Giai đoạn 5 (Luồng Đặt vé - Chọn ghế)**.
+- **Tiến độ:** Đã hoàn thành Giai đoạn 1 đến 3.6. Vừa thực hiện cuộc cách mạng **"Xóa sạch Hardcode"**, chuyển đổi toàn bộ dữ liệu sang JSON và Cloud Firestore. Hoàn thiện hệ thống **Tin tức đa phương tiện** và đạt bước tiến lớn trong **Giai đoạn 4 (Chi tiết phim)** với UI/UX Tab Suất Chiếu và Thông Tin cực kỳ chuyên nghiệp.
+- **Trạng thái:** Ứng dụng hiện có khả năng mở rộng dữ liệu cực mạnh mà không cần sửa code. Sẵn sàng bước vào **Giai đoạn 5 (Luồng Đặt vé - Chọn ghế)**.
