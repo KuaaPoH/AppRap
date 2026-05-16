@@ -11,10 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.rapapp.R;
 import com.example.rapapp.models.Movie;
+import android.content.Intent;
+import com.example.rapapp.MovieDetailActivity;
 import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
-
+    
     private Context context;
     private List<Movie> movieList;
 
@@ -47,6 +49,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
                 .placeholder(R.drawable.bg_placeholder)
                 .error(R.drawable.bg_placeholder)
                 .into(holder.imgPoster);
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, MovieDetailActivity.class);
+            intent.putExtra("movieId", movie.getId());
+            intent.putExtra("movieTitle", movie.getTitle());
+            context.startActivity(intent);
+        });
     }
 
     @Override

@@ -59,10 +59,15 @@
 - [x] **Chuẩn hóa UI/UX toàn bộ dự án:** Tạo file `GEMINI.md` quy định chặt chẽ về hệ màu, kích thước chữ (Typography), khoảng cách (Spacings) và Component quy chuẩn để đảm bảo sự đồng bộ 100%.
 - [x] **Tối ưu hóa hình ảnh:** Cấu hình **Glide Placeholder** (nền xám nhạt bo góc) cho toàn bộ Adapter, xóa bỏ hiện tượng "nháy nền xanh" khi load dữ liệu.
 
-## 🎬 GIAI ĐOẠN 4: CHI TIẾT PHIM & TRAILER
-- [ ] Thiết kế màn hình MovieDetailActivity.
-- [ ] Hiển thị thông tin chi tiết: Nội dung, Đạo diễn, Diễn viên, Thời lượng.
-- [ ] Tích hợp xem Trailer (YouTube API hoặc VideoView).
+## 🎬 GIAI ĐOẠN 4: CHI TIẾT PHIM & SUẤT CHIẾU (ĐANG THỰC HIỆN)
+- [x] Tạo màn hình `MovieDetailActivity` và tích hợp `ViewPager2` với `TabLayout` (3 tab: Suất Chiếu, Thông Tin, Tin Tức).
+- [x] **Hoàn thiện Tab Suất Chiếu:** Xây dựng danh sách rạp và giờ chiếu dạng accordion (thu/phóng) có hiệu ứng trượt mượt mà (sử dụng `DiffUtil` và `TransitionManager`).
+- [x] **Hoàn thiện Tab Thông Tin:** 
+    - Thiết kế phần Header (Ảnh cover, Poster nổi, Điểm đánh giá, Ngày giờ chiếu).
+    - Hiển thị Nội dung phim với chức năng Xem thêm/Thu gọn, xử lý chính xác ký tự xuống dòng (`\n`).
+    - Tạo danh sách ngang cho Diễn viên và Đạo diễn (sử dụng avatar mặc định `ic_nav_profile`).
+    - Tạo danh sách ngang cho Thư viện ảnh (Gallery).
+- [x] Xóa bỏ WebView hiển thị YouTube (do các lỗi chặn nhúng phức tạp từ phía YouTube) và thay thế nút Play trailer bằng Toast "Tính năng đang được phát triển" để giữ UI ổn định.
 - [ ] Nút "Mua vé" để chuyển sang luồng đặt vé.
 
 ## 🎟️ GIAI ĐOẠN 5: LUỒNG ĐẶT VÉ (QUAN TRỌNG NHẤT)
@@ -86,10 +91,15 @@
 *   `title` (String): Tên phim.
 *   `description` (String): Nội dung tóm tắt.
 *   `posterUrl` (String): Link ảnh bìa.
+*   `galleryUrls` (Array of Strings): Danh sách link ảnh thư viện phim.
 *   `duration` (Number): Thời lượng (Phút).
 *   `rating` (Number): Điểm đánh giá (Ví dụ: 8.5).
 *   `ageRating` (String): Phân loại độ tuổi (Ví dụ: "T18", "K").
 *   `releaseDate` (Timestamp): Ngày phát hành (Dùng để sắp xếp và lọc Tab).
+*   `trailerUrl` (String): Link Youtube trailer.
+*   `director` (String): Tên đạo diễn.
+*   `cast` (String): Tên các diễn viên (cách nhau bằng dấu phẩy).
+*   `price` (Number): Giá vé cơ bản.
 
 **2. Collection `banners` (Danh sách Banner quảng cáo):**
 *   `imageUrl` (String): Link ảnh banner.
@@ -115,7 +125,15 @@
 *   `content` (String): Nội dung chi tiết.
 *   `publishedDate` (Timestamp): Ngày đăng bài.
 
+**6. Collection `showtimes` (Danh sách suất chiếu):**
+*   `movieId` (String): ID phim.
+*   `cinemaId` (String): ID rạp chiếu.
+*   `city` (String): Tỉnh/Thành phố của rạp (Dùng để lọc nhanh).
+*   `date` (String): Ngày chiếu (Định dạng "yyyy-MM-dd").
+*   `time` (String): Giờ chiếu (Định dạng "HH:mm").
+*   `format` (String): Định dạng và phòng (VD: "CINE DE KIDS 2D LỒNG TIẾNG").
+
 ---
 **CẬP NHẬT TIẾN ĐỘ HIỆN TẠI:**
-- **Tiến độ:** Đã hoàn thành Giai đoạn 1 đến 3.5. Vừa hoàn tất **Giai đoạn 3.6 (Tài khoản & Hệ thống)** với luồng Đăng ký/Đăng nhập và Cài đặt hoàn chỉnh, chuyên nghiệp.
-- **Trạng thái:** Ứng dụng đã có đầy đủ khung giao diện của một App Cinema thực tế. Toàn bộ 5 tab ở thanh điều hướng đã hoạt động mượt mà. Hệ thống UI/UX đã được chuẩn hóa qua file `GEMINI.md`. Sẵn sàng bước vào **Giai đoạn 4 (Chi tiết phim)** và xây dựng luồng Đặt vé.
+- **Tiến độ:** Đã hoàn thành Giai đoạn 1 đến 3.6. Vừa hoàn thiện phần lớn **Giai đoạn 4 (Chi tiết phim)**, đặc biệt là UI/UX xuất sắc cho Tab Suất Chiếu và Tab Thông Tin.
+- **Trạng thái:** Ứng dụng đã xử lý hoàn hảo hiệu ứng trượt mượt mà cho danh sách rạp và chuẩn hóa cấu trúc Firestore mới nhất (có mảng thư viện ảnh). Chỉ còn thiếu nút Mua vé để kết nối sang luồng đặt vé. Sẵn sàng bước vào **Giai đoạn 5 (Luồng Đặt vé - Chọn ghế)**.

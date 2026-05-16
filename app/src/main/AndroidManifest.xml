@@ -24,7 +24,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MovieListActivity" />
+        <activity
+            android:name=".MovieDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MovieListActivity"
+ />
         <activity android:name=".LoginActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".SettingsActivity" />
