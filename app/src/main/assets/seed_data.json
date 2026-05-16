@@ -1,0 +1,57 @@
+{
+  "banners": [
+    { "imageUrl": "https://i.ibb.co/Vp8nZ5T/banner1.jpg" },
+    { "imageUrl": "https://i.ibb.co/6yL5Y4P/banner2.jpg" }
+  ],
+  "movies": [
+    {
+      "title": "Lật Mặt 7: Một Điều Ước",
+      "description": "Câu chuyện cảm động về tình mẫu tử và gia đình.",
+      "posterUrl": "https://i.ibb.co/Vp8nZ5T/latmat7.jpg",
+      "duration": 120,
+      "rating": 9.5,
+      "ageRating": "K",
+      "releaseDate": "2024-04-26"
+    },
+    {
+      "title": "Deadpool & Wolverine",
+      "description": "Màn kết hợp bùng nổ của hai siêu anh hùng lầy lội.",
+      "posterUrl": "https://i.ibb.co/6yL5Y4P/deadpool.jpg",
+      "duration": 130,
+      "rating": 9.0,
+      "ageRating": "T18",
+      "releaseDate": "2024-07-26"
+    }
+  ],
+  "cinemas": [
+    {
+      "name": "Galaxy Nguyễn Du",
+      "address": "116 Nguyễn Du, Quận 1, TP.HCM",
+      "phone": "1900 2224",
+      "city": "TP Hồ Chí Minh",
+      "imageUrl": "https://www.galaxycine.vn/media/2023/10/26/nguyen-du-1_1698310323381.jpg"
+    }
+  ],
+  "products": [
+    {
+      "name": "Ly nước Capybara",
+      "price": 350000,
+      "imageUrl": "https://i.ibb.co/L6v3n4K/capybara.jpg",
+      "category": "Seasonal"
+    }
+  ],
+  "news": [
+    {
+      "title": "[Review] Deadpool & Wolverine: Màn Hội Ngộ Đỉnh Cao",
+      "category": "Review",
+      "imageUrl": "https://i.ibb.co/6yL5Y4P/news2.jpg",
+      "contentBlocks": [
+        { "type": "text", "value": "Nội dung review chi tiết về phim..." },
+        { "type": "image", "value": "https://i.ibb.co/6yL5Y4P/news2.jpg" }
+      ]
+    }
+  ],
+  "locations": [
+    "Toàn quốc", "An Giang", "Bà Rịa - Vũng Tàu", "Bắc Giang", "Bắc Kạn", "Bạc Liêu", "Bắc Ninh", "Bến Tre", "Bình Định", "Bình Dương", "Bình Phước", "Bình Thuận", "Cà Mau", "Cần Thơ", "Cao Bằng", "Đà Nẵng", "Đắk Lắk", "Đắk Nông", "Điện Biên", "Đồng Nai", "Đồng Tháp", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Nội", "Hà Tĩnh", "Hải Dương", "Hải Phòng", "Hậu Giang", "Hòa Bình", "Hưng Yên", "Khánh Hòa", "Kiên Giang", "Kon Tum", "Lai Châu", "Lâm Đồng", "Lạng Sơn", "Lào Cai", "Long An", "Nam Định", "Nghệ An", "Ninh Bình", "Ninh Thuận", "Phú Thọ", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh", "Quảng Trị", "Sóc Trăng", "Sơn La", "Tây Ninh", "Thái Bình", "Thái Nguyên", "Thanh Hóa", "Thừa Thiên Huế", "Tiền Giang", "TP Hồ Chí Minh", "Trà Vinh", "Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái"
+  ]
+}

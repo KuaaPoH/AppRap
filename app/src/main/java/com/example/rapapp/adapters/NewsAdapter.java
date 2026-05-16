@@ -45,21 +45,22 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
                 .error(R.drawable.bg_placeholder)
                 .into(holder.imgNews);
 
-        // Chỉ hiển thị nội dung tóm tắt ở tab Nhân Vật (Character)
-        if ("Character".equals(news.getCategory()) && news.getContent() != null) {
-            holder.tvNewsContent.setVisibility(View.VISIBLE);
-            holder.tvNewsContent.setText(news.getContent());
-        } else {
-            holder.tvNewsContent.setVisibility(View.GONE);
-        }
+        // Ẩn nội dung tóm tắt ở màn hình danh sách theo yêu cầu
+        holder.tvNewsContent.setVisibility(View.GONE);
 
         holder.btnReadMore.setOnClickListener(v -> {
-            Toast.makeText(context, "Đọc thêm: " + news.getTitle(), Toast.LENGTH_SHORT).show();
+            openNewsDetail(news.getId());
         });
 
         holder.itemView.setOnClickListener(v -> {
-            Toast.makeText(context, "Mở bài viết: " + news.getTitle(), Toast.LENGTH_SHORT).show();
+            openNewsDetail(news.getId());
         });
+    }
+
+    private void openNewsDetail(String newsId) {
+        android.content.Intent intent = new android.content.Intent(context, com.example.rapapp.NewsDetailActivity.class);
+        intent.putExtra("newsId", newsId);
+        context.startActivity(intent);
     }
 
     @Override
