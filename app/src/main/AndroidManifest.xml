@@ -40,7 +40,7 @@
         <activity android:name=".SeatSelectionActivity" />
         <activity android:name=".ComboSelectionActivity" />
         <activity android:name=".CheckoutActivity" />
-        <activity android:name=".adapters.CartActivity" />
+        <activity android:name=".CartActivity" />
         <activity android:name=".PromoDetailActivity" />
     </application>
 

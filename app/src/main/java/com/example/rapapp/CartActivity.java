@@ -1,4 +1,4 @@
-package com.example.rapapp.adapters;
+package com.example.rapapp;
 
 import android.os.Bundle;
 import android.view.View;

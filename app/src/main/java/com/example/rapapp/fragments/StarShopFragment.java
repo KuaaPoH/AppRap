@@ -27,7 +27,7 @@ import com.example.rapapp.R;
 import com.example.rapapp.PromoDetailActivity;
 import com.example.rapapp.adapters.BannerAdapter;
 import com.example.rapapp.adapters.ProductAdapter;
-import com.example.rapapp.adapters.CartActivity;
+import com.example.rapapp.CartActivity;
 import com.example.rapapp.models.Product;
 import com.example.rapapp.utils.CartManager;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
