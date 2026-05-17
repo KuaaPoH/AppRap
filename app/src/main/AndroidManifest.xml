@@ -39,6 +39,7 @@
         <activity android:name=".LanguageActivity" />
         <activity android:name=".NewsDetailActivity" />
         <activity android:name=".adapters.CartActivity" />
+        <activity android:name=".PromoDetailActivity" />
     </application>
 
 </manifest>

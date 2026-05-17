@@ -24,6 +24,7 @@ import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.rapapp.R;
+import com.example.rapapp.PromoDetailActivity;
 import com.example.rapapp.adapters.BannerAdapter;
 import com.example.rapapp.adapters.ProductAdapter;
 import com.example.rapapp.adapters.CartActivity;
@@ -173,8 +174,13 @@ public class StarShopFragment extends Fragment {
     }
 
     private void setupBanner() {
-        List<String> bannerUrls = new ArrayList<>();
-        BannerAdapter bannerAdapter = new BannerAdapter(bannerUrls);
+        List<com.example.rapapp.models.Banner> bannerList = new ArrayList<>();
+        BannerAdapter bannerAdapter = new BannerAdapter(bannerList, banner -> {
+            Intent intent = new Intent(getActivity(), PromoDetailActivity.class);
+            intent.putExtra("bannerId", banner.getId());
+            intent.putExtra("imageUrl", banner.getImageUrl());
+            startActivity(intent);
+        });
         viewPagerBanner.setAdapter(bannerAdapter);
 
         viewPagerBanner.setOffscreenPageLimit(3);
@@ -187,9 +193,9 @@ public class StarShopFragment extends Fragment {
         bannerRunnable = new Runnable() {
             @Override
             public void run() {
-                if (!bannerUrls.isEmpty()) {
+                if (!bannerList.isEmpty()) {
                     int currentItem = viewPagerBanner.getCurrentItem();
-                    int nextItem = (currentItem + 1) % bannerUrls.size();
+                    int nextItem = (currentItem + 1) % bannerList.size();
                     viewPagerBanner.setCurrentItem(nextItem, true);
                     bannerHandler.postDelayed(this, 5000);
                 }
@@ -199,10 +205,11 @@ public class StarShopFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("banners").get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
-                bannerUrls.clear();
+                bannerList.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
-                    String url = document.getString("imageUrl");
-                    if (url != null) bannerUrls.add(url);
+                    com.example.rapapp.models.Banner banner = document.toObject(com.example.rapapp.models.Banner.class);
+                    banner.setId(document.getId());
+                    bannerList.add(banner);
                 }
                 bannerAdapter.notifyDataSetChanged();
                 bannerHandler.removeCallbacks(bannerRunnable);
