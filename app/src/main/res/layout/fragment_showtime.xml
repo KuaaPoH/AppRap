@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <!-- Bộ lọc City và Cinema -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvFilterCity"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/bg_edittext"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="12dp"
+            android:text="City"
+            android:textColor="@color/black"
+            android:textSize="13sp"
+            app:drawableEndCompat="@drawable/ic_chevron_right"
+            app:drawableTint="#888888" />
+
+        <TextView
+            android:id="@+id/tvFilterCinema"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/bg_edittext"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="12dp"
+            android:text="Cinema"
+            android:textColor="@color/black"
+            android:textSize="13sp"
+            app:drawableEndCompat="@drawable/ic_chevron_right"
+            app:drawableTint="#888888" />
+    </LinearLayout>
+
+    <!-- Bộ chọn ngày -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvDates"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_date" />
+
+    <TextView
+        android:id="@+id/tvFullDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="12dp"
+        android:textColor="#888888"
+        android:textSize="12sp"
+        tools:text="Thứ Bảy 16, tháng 5 2026" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_gray" />
+
+    <!-- Danh sách Suất chiếu -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvShowtimes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:padding="16dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+</LinearLayout>

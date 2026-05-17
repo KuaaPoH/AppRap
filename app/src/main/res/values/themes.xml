@@ -1,22 +1,37 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.RapApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="Theme.RapApp" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/galaxy_blue</item>
+        <item name="colorPrimaryVariant">#023d82</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/orange_primary</item>
+        <item name="colorSecondaryVariant">#d46e1b</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.RapApp" parent="Base.Theme.RapApp" />
+    <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
-    <!-- Theme riêng biệt vô hiệu hóa hiệu ứng chuyển cảnh cho các màn hình có Bottom Nav -->
     <style name="Theme.RapApp.NoAnimation" parent="Theme.RapApp">
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
-    <!-- Style cho chữ mỏng và nhỏ ở Bottom Nav -->
-    <style name="BottomNavLabelStyle">
-        <item name="android:textSize">11sp</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:fontFamily">sans-serif</item>
+    <style name="BottomNavLabelStyle" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CircleImageAppearance" parent="">
+        <item name="cornerSize">50%</item>
     </style>
 </resources>

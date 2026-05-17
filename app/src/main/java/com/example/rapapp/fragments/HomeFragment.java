@@ -51,9 +51,7 @@ public class HomeFragment extends Fragment {
     private TextView tabNowShowing, tabComingSoon;
     private boolean isNowShowingSelected = true;
     private String selectedLocation = "Toàn quốc";
-    private final String[] locations = {
-        "Toàn quốc", "An Giang", "Bà Rịa - Vũng Tàu", "Bắc Giang", "Bắc Kạn", "Bạc Liêu", "Bắc Ninh", "Bến Tre", "Bình Định", "Bình Dương", "Bình Phước", "Bình Thuận", "Cà Mau", "Cần Thơ", "Cao Bằng", "Đà Nẵng", "Đắk Lắk", "Đắk Nông", "Điện Biên", "Đồng Nai", "Đồng Tháp", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Nội", "Hà Tĩnh", "Hải Dương", "Hải Phòng", "Hậu Giang", "Hòa Bình", "Hưng Yên", "Khánh Hòa", "Kiên Giang", "Kon Tum", "Lai Châu", "Lâm Đồng", "Lạng Sơn", "Lào Cai", "Long An", "Nam Định", "Nghệ An", "Ninh Bình", "Ninh Thuận", "Phú Thọ", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh", "Quảng Trị", "Sóc Trăng", "Sơn La", "Tây Ninh", "Thái Bình", "Thái Nguyên", "Thanh Hóa", "Thừa Thiên Huế", "Tiền Giang", "TP Hồ Chí Minh", "Trà Vinh", "Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái"
-    };
+    private List<String> locations = new ArrayList<>();
 
     private ViewPager2 viewPagerBanner;
     private TabLayout tabLayoutDots;
@@ -117,8 +115,22 @@ public class HomeFragment extends Fragment {
         });
 
         loadMoviesFromFirebase();
+        loadLocationsFromFirebase();
 
         return view;
+    }
+
+    private void loadLocationsFromFirebase() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("metadata").document("locations").get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                List<String> locList = (List<String>) documentSnapshot.get("list");
+                if (locList != null) {
+                    locations.clear();
+                    locations.addAll(locList);
+                }
+            }
+        });
     }
 
     private void showLocationPickerDialog() {
@@ -128,19 +140,22 @@ public class HomeFragment extends Fragment {
         bottomSheetDialog.setContentView(view);
 
         NumberPicker picker = view.findViewById(R.id.locationPicker);
+        if (locations.isEmpty()) {
+            locations.add("Toàn quốc");
+        }
         picker.setMinValue(0);
-        picker.setMaxValue(locations.length - 1);
-        picker.setDisplayedValues(locations);
+        picker.setMaxValue(locations.size() - 1);
+        picker.setDisplayedValues(locations.toArray(new String[0]));
 
-        for (int i = 0; i < locations.length; i++) {
-            if (locations[i].equals(selectedLocation)) {
+        for (int i = 0; i < locations.size(); i++) {
+            if (locations.get(i).equals(selectedLocation)) {
                 picker.setValue(i);
                 break;
             }
         }
 
         view.findViewById(R.id.btnConfirm).setOnClickListener(v -> {
-            selectedLocation = locations[picker.getValue()];
+            selectedLocation = locations.get(picker.getValue());
             tvLocation.setText(selectedLocation);
             bottomSheetDialog.dismiss();
         });
@@ -204,8 +219,13 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupBanner() {
-        List<String> bannerUrls = new ArrayList<>();
-        BannerAdapter bannerAdapter = new BannerAdapter(bannerUrls);
+        List<com.example.rapapp.models.Banner> bannerList = new ArrayList<>();
+        BannerAdapter bannerAdapter = new BannerAdapter(bannerList, banner -> {
+            Intent intent = new Intent(getActivity(), com.example.rapapp.PromoDetailActivity.class);
+            intent.putExtra("bannerId", banner.getId());
+            intent.putExtra("imageUrl", banner.getImageUrl());
+            startActivity(intent);
+        });
         viewPagerBanner.setAdapter(bannerAdapter);
 
         viewPagerBanner.setOffscreenPageLimit(3);
@@ -218,9 +238,9 @@ public class HomeFragment extends Fragment {
         bannerRunnable = new Runnable() {
             @Override
             public void run() {
-                if (!bannerUrls.isEmpty()) {
+                if (!bannerList.isEmpty()) {
                     int currentItem = viewPagerBanner.getCurrentItem();
-                    int nextItem = (currentItem + 1) % bannerUrls.size();
+                    int nextItem = (currentItem + 1) % bannerList.size();
                     viewPagerBanner.setCurrentItem(nextItem, true);
                     bannerHandler.postDelayed(this, 5000);
                 }
@@ -230,10 +250,11 @@ public class HomeFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("banners").get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
-                bannerUrls.clear();
+                bannerList.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
-                    String url = document.getString("imageUrl");
-                    if (url != null) bannerUrls.add(url);
+                    com.example.rapapp.models.Banner banner = document.toObject(com.example.rapapp.models.Banner.class);
+                    banner.setId(document.getId());
+                    bannerList.add(banner);
                 }
                 bannerAdapter.notifyDataSetChanged();
                 bannerHandler.removeCallbacks(bannerRunnable);

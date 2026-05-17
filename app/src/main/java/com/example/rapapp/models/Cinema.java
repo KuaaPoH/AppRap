@@ -1,6 +1,9 @@
 package com.example.rapapp.models;
 
+import com.google.firebase.firestore.Exclude;
+
 public class Cinema {
+    @Exclude
     private String id;
     private String name;
     private String address;
@@ -10,7 +13,9 @@ public class Cinema {
 
     public Cinema() {} // Required for Firebase
 
+    @Exclude
     public String getId() { return id; }
+    @Exclude
     public void setId(String id) { this.id = id; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }

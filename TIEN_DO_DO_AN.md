@@ -41,7 +41,11 @@
 - [x] **Hệ thống Cài đặt:** Quản lý Vị trí và Thông báo. LanguageActivity hỗ trợ chuyển đổi Tiếng Việt/English.
 - [x] **Chuẩn hóa UI/UX:** File `GEMINI.md` quy định chặt chẽ toàn dự án. Xóa bỏ hoàn toàn "Hardcode" dữ liệu tĩnh trong code Java.
 
+<<<<<<< HEAD
 ## 🎬 GIAI ĐOẠN 4: CHI TIẾT PHIM & SUẤT CHIẾU (HOÀN THÀNH)
+=======
+## 🎬 GIAI ĐOẠN 4: CHI TIẾT PHIM & SUẤT CHIẾU (ĐANG THỰC HIỆN)
+>>>>>>> origin/main
 - [x] Tạo màn hình `MovieDetailActivity` và tích hợp `ViewPager2` với `TabLayout` (3 tab: Suất Chiếu, Thông Tin, Tin Tức).
 - [x] **Hoàn thiện Tab Suất Chiếu:** Xây dựng danh sách rạp và giờ chiếu dạng accordion (thu/phóng) có hiệu ứng trượt mượt mà (sử dụng `DiffUtil` và `TransitionManager`).
 - [x] **Hoàn thiện Tab Thông Tin:** 
@@ -50,6 +54,7 @@
     - Tạo danh sách ngang cho Diễn viên và Đạo diễn.
     - Tạo danh sách ngang cho Thư viện ảnh (Gallery).
 - [x] Xử lý trailer bằng Toast thông báo để giữ UI ổn định.
+<<<<<<< HEAD
 - [x] Xử lý chuyển hướng sang luồng đặt vé khi click vào một Suất chiếu.
 
 ## 🎟️ GIAI ĐOẠN 5: LUỒNG ĐẶT VÉ (HOÀN THÀNH)
@@ -61,6 +66,18 @@
 - [x] Giao diện thanh toán: Chức năng chọn phương thức thanh toán (OnePay, MoMo, ZaloPay, ShopeePay) theo phong cách RadioButton hiện đại.
 - [x] **Lưu trạng thái ghế lên Firebase:** Sử dụng `arrayUnion` để cập nhật `bookedSeats` ngay sau khi thanh toán.
 - [x] Thông báo Thanh toán thành công (Custom Dialog).
+=======
+- [ ] Nút "Mua vé" để chuyển sang luồng đặt vé.
+
+## 🎟️ GIAI ĐOẠN 5: LUỒNG ĐẶT VÉ (QUAN TRỌNG NHẤT)
+- [ ] Màn hình chọn Suất chiếu (Chọn ngày -> Chọn rạp -> Chọn giờ).
+- [ ] Màn hình chọn Ghế (Seat Map).
+- [ ] Màn hình chọn Bắp nước (Combo Concession).
+
+## 💳 GIAI ĐOẠN 6: XÁC NHẬN & THANH TOÁN
+- [ ] Màn hình tổng quan đơn hàng (Review Order).
+- [ ] Giao diện thanh toán giả lập.
+>>>>>>> origin/main
 - [ ] Xuất vé điện tử (Mã QR/Barcode).
 
 ---
@@ -105,6 +122,7 @@
 *   `contentBlocks` (Array of Maps): `type` ("text"/"image") và `value`.
 *   `publishedDate` (Timestamp): Ngày đăng bài.
 
+<<<<<<< HEAD
 **6. Collection `rooms` (Danh sách Phòng chiếu):**
 *   `cinemaId` (String): ID rạp chiếu chứa phòng này.
 *   `name` (String): Tên phòng (VD: "Phòng 1").
@@ -129,9 +147,25 @@
 *   `imageUrl` (String): Link ảnh combo.
 
 **9. Collection `metadata` (Thôngpn tin hệ thống):**
+=======
+**6. Collection `showtimes` (Danh sách suất chiếu):**
+*   `movieId` (String): ID phim.
+*   `cinemaId` (String): ID rạp chiếu.
+*   `city` (String): Tỉnh/Thành phố của rạp.
+*   `date` (String): Ngày chiếu ("yyyy-MM-dd").
+*   `time` (String): Giờ chiếu ("HH:mm").
+*   `format` (String): Định dạng và phòng (VD: "2D LỒNG TIẾNG").
+
+**7. Collection `metadata` (Thông tin hệ thống):**
+>>>>>>> origin/main
 *   Document `locations`: Chứa mảng `list` gồm danh sách 63 tỉnh thành Việt Nam.
 
 ---
 **CẬP NHẬT TIẾN ĐỘ HIỆN TẠI:**
+<<<<<<< HEAD
 - **Tiến độ:** Đã hoàn thiện toàn bộ **Giai đoạn 4 và Giai đoạn 5**. Giao diện và luồng dữ liệu liên quan đến việc Chọn Phim -> Chọn Rạp -> Chọn Giờ -> Chọn Ghế -> Chọn Combo bắp nước hoạt động hoàn hảo và liên kết chặt chẽ với nhau thông qua Firebase Firestore.
 - **Trạng thái:** Đang ở những bước cuối cùng của **Giai đoạn 6 (Xác nhận & Thanh toán)**. Đã xử lý xong UI/UX màn hình Checkout, đã lưu trạng thái ghế Real-time lên Firebase. Việc còn lại là thiết kế màn hình Xuất vé điện tử (E-ticket) sau khi thanh toán thành công.
+=======
+- **Tiến độ:** Đã hoàn thành Giai đoạn 1 đến 3.6. Vừa thực hiện cuộc cách mạng **"Xóa sạch Hardcode"**, chuyển đổi toàn bộ dữ liệu sang JSON và Cloud Firestore. Hoàn thiện hệ thống **Tin tức đa phương tiện** và đạt bước tiến lớn trong **Giai đoạn 4 (Chi tiết phim)** với UI/UX Tab Suất Chiếu và Thông Tin cực kỳ chuyên nghiệp.
+- **Trạng thái:** Ứng dụng hiện có khả năng mở rộng dữ liệu cực mạnh mà không cần sửa code. Sẵn sàng bước vào **Giai đoạn 5 (Luồng Đặt vé - Chọn ghế)**.
+>>>>>>> origin/main

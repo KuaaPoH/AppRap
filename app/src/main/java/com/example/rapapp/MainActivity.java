@@ -13,7 +13,9 @@ import androidx.fragment.app.Fragment;
 import com.example.rapapp.fragments.CinemaFragment;
 import com.example.rapapp.fragments.HomeFragment;
 import com.example.rapapp.fragments.NewsFragment;
+import com.example.rapapp.fragments.ProfileFragment;
 import com.example.rapapp.fragments.StarShopFragment;
+import com.example.rapapp.utils.DataSeeder;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,6 +25,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+        // Nạp dữ liệu mẫu vào Firebase (Chỉ chạy một lần đầu tiên)
+        // DataSeeder.seedMovies();
+        // DataSeeder.seedCinemas();
+        // DataSeeder.seedShowtimes();
+        // DataSeeder.seedNews();
+        // DataSeeder.seedProducts();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_content), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -52,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment = new StarShopFragment();
             } else if (id == R.id.nav_news) {
                 selectedFragment = new NewsFragment();
+            } else if (id == R.id.nav_profile) {
+                selectedFragment = new ProfileFragment();
             }
 
             if (selectedFragment != null) {

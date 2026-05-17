@@ -29,15 +29,41 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/imgCartHeader"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_nav_ticket"
+            <FrameLayout
+                android:id="@+id/layoutCart"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:clipChildren="false"
+                android:clickable="true"
+                android:focusable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="#034EA2" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/imgCartHeader"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_cart_outline"
+                    app:tint="@color/galaxy_blue" />
+
+                <TextView
+                    android:id="@+id/tvCartBadge"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="4dp"
+                    android:background="@drawable/bg_cart_badge"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="1"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+            </FrameLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- Banner Slider Area -->
