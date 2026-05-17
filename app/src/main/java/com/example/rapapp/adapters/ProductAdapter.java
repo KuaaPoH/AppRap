@@ -20,13 +20,20 @@ import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
+    public interface OnProductClickListener {
+        void onAddToCart(Product product);
+        void onBuyNow(Product product);
+    }
+
     private Context context;
     private List<Product> productList;
+    private OnProductClickListener listener;
     private DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
 
-    public ProductAdapter(Context context, List<Product> productList) {
+    public ProductAdapter(Context context, List<Product> productList, OnProductClickListener listener) {
         this.context = context;
         this.productList = productList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -49,11 +56,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 .into(holder.imgProduct);
 
         holder.btnBuyNow.setOnClickListener(v -> {
-            Toast.makeText(context, "Mua ngay: " + product.getName(), Toast.LENGTH_SHORT).show();
+            if (listener != null) listener.onBuyNow(product);
         });
 
         holder.btnAddToCart.setOnClickListener(v -> {
-            Toast.makeText(context, "Đã thêm vào giỏ hàng: " + product.getName(), Toast.LENGTH_SHORT).show();
+            if (listener != null) listener.onAddToCart(product);
         });
     }
 

@@ -72,15 +72,15 @@
                 <ImageView
                     android:layout_width="14dp"
                     android:layout_height="14dp"
-                    android:layout_marginEnd="4dp"
-                    android:src="@drawable/ic_nav_ticket"
-                    app:tint="#F26522" />
+                    android:layout_marginEnd="6dp"
+                    android:src="@drawable/ic_cart_outline"
+                    app:tint="@color/orange_primary" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Thêm vào giỏ hàng"
-                    android:textColor="#F26522"
+                    android:textColor="@color/orange_primary"
                     android:textSize="12sp"
                     android:textStyle="bold" />
             </LinearLayout>

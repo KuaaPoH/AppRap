@@ -1,5 +1,6 @@
 package com.example.rapapp.fragments;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -25,7 +26,9 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.rapapp.R;
 import com.example.rapapp.adapters.BannerAdapter;
 import com.example.rapapp.adapters.ProductAdapter;
+import com.example.rapapp.adapters.CartActivity;
 import com.example.rapapp.models.Product;
+import com.example.rapapp.utils.CartManager;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -42,7 +45,8 @@ public class StarShopFragment extends Fragment {
     private List<Product> allProducts = new ArrayList<>();
     private List<Product> filteredProducts = new ArrayList<>();
     
-    private TextView tabSeasonal, tabMovie, tvLocation;
+    private TextView tabSeasonal, tabMovie, tvLocation, tvCartBadge;
+    private View layoutCart;
     private boolean isSeasonalSelected = true;
     private String selectedLocation = "Toàn quốc";
     private List<String> locations = new ArrayList<>();
@@ -67,13 +71,32 @@ public class StarShopFragment extends Fragment {
         tvLocation = view.findViewById(R.id.tvLocation);
         viewPagerBanner = view.findViewById(R.id.viewPagerBanner);
         tabLayoutDots = view.findViewById(R.id.tabLayoutDots);
+        layoutCart = view.findViewById(R.id.layoutCart);
+        tvCartBadge = view.findViewById(R.id.tvCartBadge);
 
         setupBanner();
 
-        productAdapter = new ProductAdapter(getContext(), filteredProducts);
+        productAdapter = new ProductAdapter(getContext(), filteredProducts, new ProductAdapter.OnProductClickListener() {
+            @Override
+            public void onAddToCart(Product product) {
+                CartManager.getInstance().addProduct(product);
+                updateCartBadge();
+                Toast.makeText(getContext(), "Đã thêm vào giỏ hàng: " + product.getName(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onBuyNow(Product product) {
+                CartManager.getInstance().addProduct(product);
+                startActivity(new Intent(getActivity(), CartActivity.class));
+            }
+        });
         rvProducts.setLayoutManager(new GridLayoutManager(getContext(), 2));
         rvProducts.setAdapter(productAdapter);
         rvProducts.setNestedScrollingEnabled(false);
+
+        layoutCart.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), CartActivity.class));
+        });
 
         tabSeasonal.setOnClickListener(v -> {
             if (!isSeasonalSelected) {
@@ -236,6 +259,16 @@ public class StarShopFragment extends Fragment {
         bottomSheetDialog.show();
     }
 
+    private void updateCartBadge() {
+        int total = CartManager.getInstance().getTotalQuantity();
+        if (total > 0) {
+            tvCartBadge.setText(String.valueOf(total));
+            tvCartBadge.setVisibility(View.VISIBLE);
+        } else {
+            tvCartBadge.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -245,6 +278,7 @@ public class StarShopFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        updateCartBadge();
         if (bannerRunnable != null) {
             bannerHandler.postDelayed(bannerRunnable, 5000);
         }
