@@ -11,6 +11,8 @@ public class Showtime {
     private String date;      // Dùng cho bộ chọn ngày (yyyy-MM-dd)
     private String time;      // Giờ chiếu (HH:mm)
     private String format;    // Gộp cả định dạng và phòng: "CINE DE KIDS 2D LỒNG TIẾNG"
+    private String roomId;    // ID phòng chiếu
+    private java.util.List<String> bookedSeats; // Danh sách ghế đã đặt: ["A1", "B5"]
 
     public Showtime() {}
 
@@ -36,4 +38,10 @@ public class Showtime {
 
     public String getFormat() { return format; }
     public void setFormat(String format) { this.format = format; }
+
+    public String getRoomId() { return roomId; }
+    public void setRoomId(String roomId) { this.roomId = roomId; }
+
+    public java.util.List<String> getBookedSeats() { return bookedSeats; }
+    public void setBookedSeats(java.util.List<String> bookedSeats) { this.bookedSeats = bookedSeats; }
 }

@@ -7,6 +7,7 @@ import com.example.rapapp.models.Cinema;
 import com.example.rapapp.models.Movie;
 import com.example.rapapp.models.News;
 import com.example.rapapp.models.Product;
+import com.example.rapapp.models.Room;
 import com.example.rapapp.models.Showtime;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -18,6 +19,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -58,6 +60,134 @@ public class DataSeeder {
 
         } catch (Exception e) {
             Log.e(TAG, "Error seeding data", e);
+        }
+    }
+
+    /**
+     * Phương thức này để nạp 4 phòng chiếu mẫu cho rạp cụ thể
+     * Bạn gọi phương thức này một lần trong MainActivity hoặc nơi nào đó để khởi tạo dữ liệu
+     */
+    public static void seedRooms(String cinemaId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        List<Room> rooms = new ArrayList<>();
+
+        // Phòng 1: Standard (Layout chuẩn)
+        rooms.add(new Room("Phòng 1", cinemaId, 9, 12, Arrays.asList(
+                "____SSSSS____", // Hàng I (Cuối)
+                "SSSSSSSSSSSS", // Hàng H
+                "SSSSSSSSSSSS", // Hàng G
+                "SSVVVVVVVVSS", // Hàng F (VIP giữa)
+                "SSVVVVVVVVSS", // Hàng E
+                "SSVVVVVVVVSS", // Hàng D
+                "SSSSSSSSSSSS", // Hàng C
+                "SSSSSSSSSSSS", // Hàng B
+                "__SSSSSSSS__"  // Hàng A (Gần màn hình)
+        )));
+
+        // Phòng 2: Standard
+        rooms.add(new Room("Phòng 2", cinemaId, 9, 12, Arrays.asList(
+                "CCCC__CCCC",   // Hàng I (Ghế đôi)
+                "SSSSSSSSSS",   // Hàng H
+                "SSSSSSSSSS",   // Hàng G
+                "SVVVVVVVVS",   // Hàng F
+                "SVVVVVVVVS",   // Hàng E
+                "SSSSSSSSSS",   // Hàng D
+                "SSSSSSSSSS",   // Hàng C
+                "SSSSSSSSSS",   // Hàng B
+                "__SSSSSS__"    // Hàng A
+        )));
+
+        // Phòng 3: Premium (Ít ghế hơn nhưng rộng hơn)
+        rooms.add(new Room("Phòng 3", cinemaId, 7, 10, Arrays.asList(
+                "BBBBBBBBBB",   // Hàng G (Ghế Ba)
+                "VVVVVVVVVV",   // Hàng F
+                "VVVVVVVVVV",   // Hàng E
+                "VVVVVVVVVV",   // Hàng D
+                "SSSSSSSSSS",   // Hàng C
+                "SSSSSSSSSS",   // Hàng B
+                "__SSSSSS__"    // Hàng A
+        )));
+
+        // Phòng 4: Premium
+        rooms.add(new Room("Phòng 4", cinemaId, 8, 10, Arrays.asList(
+                "CCCC__CCCC",   // Hàng H
+                "VVVVVVVVVV",   // Hàng G
+                "VVVVVVVVVV",   // Hàng F
+                "VVVVVVVVVV",   // Hàng E
+                "VVVVVVVVVV",   // Hàng D
+                "VVVVVVVVVV",   // Hàng C
+                "SSSSSSSSSS",   // Hàng B
+                "__SSSSSS__"    // Hàng A
+        )));
+
+        for (Room r : rooms) {
+            db.collection("rooms").add(r)
+                    .addOnSuccessListener(doc -> Log.d(TAG, "Added Room: " + r.getName()))
+                    .addOnFailureListener(e -> Log.e(TAG, "Error adding room", e));
+        }
+    }
+
+    /**
+     * Nạp thêm 2 suất chiếu cụ thể theo yêu cầu.
+     * Cần gọi 1 lần trong MainActivity: DataSeeder.seedExtraShowtimes();
+     */
+    public static void seedExtraShowtimes() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        
+        String movieId = "test";
+        String cinemaId = "test";
+        String roomId = "P2FI2eO3POTAIzBCYFml";
+        String city = "Hà Nội"; // Bạn có thể đổi lại nếu cần
+        
+        // Lấy ngày hôm nay
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        SimpleDateFormat sdfFull = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String dateToday = sdfFull.format(calendar.getTime());
+
+        // Suất chiếu 1 (Hôm nay, 19:00)
+        Showtime s1 = new Showtime();
+        s1.setMovieId(movieId);
+        s1.setCinemaId(cinemaId);
+        s1.setRoomId(roomId);
+        s1.setCity(city);
+        s1.setDate(dateToday);
+        s1.setTime("19:00");
+        s1.setFormat("2D LỒNG TIẾNG");
+        s1.setBookedSeats(Arrays.asList("E5", "E6")); // Đặt sẵn 2 ghế VIP
+
+        // Suất chiếu 2 (Hôm nay, 21:30)
+        Showtime s2 = new Showtime();
+        s2.setMovieId(movieId);
+        s2.setCinemaId(cinemaId);
+        s2.setRoomId(roomId);
+        s2.setCity(city);
+        s2.setDate(dateToday);
+        s2.setTime("21:30");
+        s2.setFormat("IMAX 3D");
+        s2.setBookedSeats(new ArrayList<>()); // Trống
+
+        db.collection("showtimes").add(s1)
+                .addOnSuccessListener(doc -> Log.d(TAG, "Added Showtime 1: " + doc.getId()))
+                .addOnFailureListener(e -> Log.e(TAG, "Error adding Showtime 1", e));
+
+        db.collection("showtimes").add(s2)
+                .addOnSuccessListener(doc -> Log.d(TAG, "Added Showtime 2: " + doc.getId()))
+                .addOnFailureListener(e -> Log.e(TAG, "Error adding Showtime 2", e));
+    }
+
+    public static void seedCombos() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        List<com.example.rapapp.models.Combo> comboList = new ArrayList<>();
+        
+        comboList.add(new com.example.rapapp.models.Combo("Combo 2 Big Extra...", "\"Nhân đôi sự sảng khoái!\" Combo gồm 1 bắp rang bơ lớn, 2 Pepsi cỡ lớn + 1 snack...", 134000, "https://firebasestorage.googleapis.com/v0/b/rapapp-9759c.appspot.com/o/popcorn.png?alt=media"));
+        comboList.add(new com.example.rapapp.models.Combo("Snacking Combo 2", "1 Bắp ngọt + 2 Nước bất kỳ + 1 Món ăn nhẹ (Gà Karaage / Lạp xưởng / Khoai tây...", 169000, "https://firebasestorage.googleapis.com/v0/b/rapapp-9759c.appspot.com/o/popcorn.png?alt=media"));
+        comboList.add(new com.example.rapapp.models.Combo("Combo 1 Big Extra...", "\"Thỏa mãn cơn thèm\" với 1 phần bắp rang bơ thơm ngon, 1 Pepsi mát lạnh và...", 115000, "https://firebasestorage.googleapis.com/v0/b/rapapp-9759c.appspot.com/o/popcorn.png?alt=media"));
+        comboList.add(new com.example.rapapp.models.Combo("Teanema Combo 1...", "1 Bắp ngọt + 1 Trà (Trà mãng cầu / Trà quýt / Trà hibiscus / Trà chuối / Socola c...", 115000, "https://firebasestorage.googleapis.com/v0/b/rapapp-9759c.appspot.com/o/popcorn.png?alt=media"));
+
+        for (com.example.rapapp.models.Combo c : comboList) {
+            db.collection("combos").add(c)
+                    .addOnSuccessListener(doc -> Log.d(TAG, "Added Combo: " + c.getName()))
+                    .addOnFailureListener(e -> Log.e(TAG, "Error adding Combo", e));
         }
     }
 

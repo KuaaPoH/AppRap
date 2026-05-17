@@ -205,13 +205,15 @@ public class ShowtimeFragment extends Fragment {
                 .whereEqualTo("date", selectedDate)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<Showtime> all = queryDocumentSnapshots.toObjects(Showtime.class);
                     filteredShowtimes.clear();
-                    if (selectedCinemaId.isEmpty()) {
-                        filteredShowtimes.addAll(all);
-                    } else {
-                        for (Showtime s : all) {
-                            if (s.getCinemaId().equals(selectedCinemaId)) filteredShowtimes.add(s);
+                    List<com.google.firebase.firestore.DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
+                    for (int i = 0; i < docs.size(); i++) {
+                        Showtime s = docs.get(i).toObject(Showtime.class);
+                        if (s != null) {
+                            s.setId(docs.get(i).getId());
+                            if (selectedCinemaId.isEmpty() || s.getCinemaId().equals(selectedCinemaId)) {
+                                filteredShowtimes.add(s);
+                            }
                         }
                     }
                     displayShowtimes();
@@ -287,6 +289,7 @@ public class ShowtimeFragment extends Fragment {
                         String f = formatKeys.get(i);
                         DisplayItem formatItem = new DisplayItem(DisplayItem.TYPE_FORMAT, cid + "_" + f);
                         formatItem.formatTitle = f;
+                        formatItem.name = header.name; // Lưu tên rạp để truyền đi
                         formatItem.times = formats.get(f);
                         formatItem.isLast = (i == formatKeys.size() - 1);
                         newList.add(formatItem);
@@ -373,8 +376,28 @@ public class ShowtimeFragment extends Fragment {
                     }
                     @Override
                     public void onBindViewHolder(@NonNull TimeViewHolder holder, int position) {
-                        holder.tvTime.setText(item.times.get(position).getTime());
-                        holder.itemView.setOnClickListener(v -> v.animate().scaleX(0.9f).scaleY(0.9f).setDuration(100).withEndAction(() -> v.animate().scaleX(1f).scaleY(1f).setDuration(100).start()).start());
+                        Showtime s = item.times.get(position);
+                        holder.tvTime.setText(s.getTime());
+                        holder.itemView.setOnClickListener(v -> {
+                            v.animate().scaleX(0.9f).scaleY(0.9f).setDuration(100).withEndAction(() -> {
+                                v.animate().scaleX(1f).scaleY(1f).setDuration(100).start();
+                                android.content.Intent intent = new android.content.Intent(getContext(), com.example.rapapp.SeatSelectionActivity.class);
+                                intent.putExtra("movieId", s.getMovieId());
+                                intent.putExtra("showtimeId", s.getId());
+                                intent.putExtra("cinemaId", s.getCinemaId());
+                                intent.putExtra("cinemaName", item.name);
+                                intent.putExtra("format", s.getFormat());
+                                intent.putExtra("time", s.getTime());
+                                
+                                String movieTitle = "";
+                                if (getActivity() != null && getActivity().getIntent() != null) {
+                                    movieTitle = getActivity().getIntent().getStringExtra("movieTitle");
+                                }
+                                intent.putExtra("movieTitle", movieTitle);
+                                
+                                startActivity(intent);
+                            }).start();
+                        });
                     }
                     @Override
                     public int getItemCount() { return item.times.size(); }

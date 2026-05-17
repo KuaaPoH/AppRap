@@ -18,7 +18,7 @@
 - [x] Hiệu ứng lấp ló banner kế tiếp và load dữ liệu banner từ collection `banners` trên Firestore.
 - [x] Xử lý sự kiện chuyển đổi giữa tab Đang chiếu và Sắp chiếu (Dựa trên `releaseDate` thời gian thực).
 - [x] Thêm hiệu ứng Scale và đổi màu mượt mà khi chuyển Tab.
-- [x] **Quản lý Khu vực (Location) động:** Xóa bỏ danh sách tỉnh thành cứng (Hardcoded array). Danh sách 63 tỉnh thành hiện được lưu trên Cloud (Collection `metadata`) và tải về động ở mọi màn hình (`HomeFragment`, `CinemaFragment`, `StarShopFragment`, `MovieListActivity`).
+- [x] **Quản lý Khu vực (Location) động:** Danh sách 63 tỉnh thành được lưu trên Cloud (Collection `metadata`) và tải về động ở mọi màn hình (`HomeFragment`, `CinemaFragment`, `StarShopFragment`, `MovieListActivity`).
 
 ## 📽️ GIAI ĐOẠN 2.5: DANH SÁCH PHIM & RẠP PHIM
 - [x] Tạo màn hình `MovieListActivity` để hiển thị toàn bộ danh sách phim.
@@ -31,71 +31,73 @@
 ## 🛍️ GIAI ĐOẠN 3: STAR SHOP & TIN TỨC ĐIỆN ẢNH
 - [x] Tạo màn hình `StarShopActivity` với thiết kế `item_product.xml` chuẩn mẫu: Ảnh sản phẩm, tên, giá cam, nút "Mua ngay".
 - [x] Tích hợp Banner Slider và Bộ lọc danh mục (Seasonal / Movie) mượt mà.
-- [x] Xử lý hiển thị giá tiền định dạng VND.
-- [x] **Hệ thống nội dung đa phương tiện (Content Blocks):** Cho phép bài viết chèn nhiều ảnh và đoạn văn bản đan xen bất kỳ vị trí nào, tự động dàn trang linh hoạt.
-- [x] **Màn hình Chi tiết Tin tức (`NewsDetailActivity`):** Hiển thị đầy đủ Tiêu đề, Ngày đăng, Chuyên mục. Nội dung căn lề đều (Justify), cỡ chữ 14sp chuyên nghiệp. Có nút Chia sẻ và nút "Mua vé ngay!" cố định dưới chân trang.
+- [x] **Hệ thống Giỏ hàng (Shopping Cart):** Khởi tạo `CartManager` (Singleton). Icon giỏ hàng với Badge cập nhật realtime, thiết kế Outline mảnh chuẩn Modern UI.
+- [x] **Màn hình Chi tiết Sản phẩm (`ProductDetailActivity`):** Hiển thị mô tả động, bộ chọn số lượng (+/-), tính tổng tiền động và Điều khoản căn lề Justify chuyên nghiệp.
+- [x] **Trang Chi tiết Khuyến mãi (`PromoDetailActivity`):** Dữ liệu 100% động từ Firestore Content Blocks. Hỗ trợ bôi đậm HTML (`<b>`), tự động phân cấp cỡ chữ 14sp/12sp cực kỳ tinh tế.
+- [x] **Chuẩn hóa Typography:** Đồng bộ toàn bộ cỡ chữ nội dung về **12sp**, giảm khoảng cách (spacing) giúp giao diện gọn gàng và hiện đại hơn.
+- [x] **Hệ thống Thông báo (Toast):** Tiêu chuẩn hóa toàn bộ thông báo ứng dụng hiển thị ở **phía trên cùng màn hình** thông qua `ToastUtils`.
+- [x] **Hệ thống nội dung đa phương tiện (Content Blocks):** Cho phép bài viết chèn nhiều ảnh và đoạn văn bản đan xen, dàn trang linh hoạt.
+- [x] **Màn hình Chi tiết Tin tức (`NewsDetailActivity`):** Hiển thị đầy đủ nội dung căn lề đều (Justify), cỡ chữ 12sp.
 
 ## 👤 GIAI ĐOẠN 3.6: TÀI KHOẢN & HỆ THỐNG
 - [x] **Hoàn thiện Tab Tài khoản (Profile):** Mascot, ưu đãi Stars, Quà tặng, Đặc quyền và danh sách liên kết hỗ trợ.
 - [x] **Xây dựng luồng Đăng nhập/Đăng ký:** DatePicker ngày sinh, UI cam chủ đạo.
-- [x] **Hệ thống Cài đặt:** Quản lý Vị trí và Thông báo. LanguageActivity hỗ trợ chuyển đổi Tiếng Việt/English.
+- [x] **Hệ thống Cài đặt:** LanguageActivity hỗ trợ chuyển đổi Tiếng Việt/English.
 - [x] **Chuẩn hóa UI/UX:** File `GEMINI.md` quy định chặt chẽ toàn dự án. Xóa bỏ hoàn toàn "Hardcode" dữ liệu tĩnh trong code Java.
 
-## 🎬 GIAI ĐOẠN 4: CHI TIẾT PHIM & SUẤT CHIẾU (ĐANG THỰC HIỆN)
+## 🎬 GIAI ĐOẠN 4: CHI TIẾT PHIM & SUẤT CHIẾU (HOÀN THÀNH)
 - [x] Tạo màn hình `MovieDetailActivity` và tích hợp `ViewPager2` với `TabLayout` (3 tab: Suất Chiếu, Thông Tin, Tin Tức).
 - [x] **Hoàn thiện Tab Suất Chiếu:** Xây dựng danh sách rạp và giờ chiếu dạng accordion (thu/phóng) có hiệu ứng trượt mượt mà (sử dụng `DiffUtil` và `TransitionManager`).
-- [x] **Hoàn thiện Tab Thông Tin:** 
-    - Thiết kế phần Header (Ảnh cover, Poster nổi, Điểm đánh giá, Ngày giờ chiếu).
-    - Hiển thị Nội dung phim với chức năng Xem thêm/Thu gọn, xử lý chính xác ký tự xuống dòng (`\n`).
-    - Tạo danh sách ngang cho Diễn viên và Đạo diễn.
-    - Tạo danh sách ngang cho Thư viện ảnh (Gallery).
-- [x] Xử lý trailer bằng Toast thông báo để giữ UI ổn định.
-- [ ] Nút "Mua vé" để chuyển sang luồng đặt vé.
+- [x] **Hoàn thiện Tab Thông Tin:** Thiết kế Header poster nổi, nội dung xem thêm/thu gọn, danh sách Diễn viên/Đạo diễn và Gallery.
+- [x] Xử lý chuyển hướng sang luồng đặt vé khi click vào một Suất chiếu.
 
-## 🎟️ GIAI ĐOẠN 5: LUỒNG ĐẶT VÉ (QUAN TRỌNG NHẤT)
-- [ ] Màn hình chọn Suất chiếu (Chọn ngày -> Chọn rạp -> Chọn giờ).
-- [ ] Màn hình chọn Ghế (Seat Map).
-- [ ] Màn hình chọn Bắp nước (Combo Concession).
+## 🎟️ GIAI ĐOẠN 5: LUỒNG ĐẶT VÉ (HOÀN THÀNH)
+- [x] **Màn hình Chọn Ghế (Seat Map):** Tải sơ đồ ghế động từ Firestore, tự động vẽ lưới ghế, tính toán giá vé theo loại ghế (Đơn, Đôi, Ba, VIP). Tích hợp Dropdown chọn nhanh giờ chiếu, hiệu ứng Pop animation mượt mà và căn giữa sơ đồ thông minh.
+- [x] **Màn hình Chọn Bắp Nước (Combo):** Tải danh sách Combo từ Firestore, thiết kế CardView nhỏ gọn (Compact UI), tích hợp bộ đếm (+/-) và tự động tính tổng tiền.
 
-## 💳 GIAI ĐOẠN 6: XÁC NHẬN & THANH TOÁN
-- [ ] Màn hình tổng quan đơn hàng (Review Order).
-- [ ] Giao diện thanh toán giả lập.
-- [ ] Xuất vé điện tử (Mã QR/Barcode).
+## 💳 GIAI ĐOẠN 6: XÁC NHẬN & THANH TOÁN (HOÀN THÀNH)
+- [x] **Màn hình Giao dịch (Checkout):** Hiển thị hóa đơn chi tiết với hiệu ứng "Vé bị cắt viền" (Ticket Cutout) độc đáo, các đường kẻ đứt phân cách và phân loại giá Ghế/Combo rõ ràng.
+- [x] **Giao diện thanh toán:** Chức năng chọn phương thức thanh toán (OnePay, MoMo, ZaloPay, ShopeePay) với thiết kế hiện đại, tinh tế.
+- [x] **Đồng bộ Dữ liệu Real-time:** Tích hợp cập nhật trạng thái ghế (`bookedSeats`) lên Firebase ngay sau khi thanh toán thành công để khóa ghế cho các người dùng khác.
+- [x] **Thông báo thành công:** Thiết kế Custom Success Dialog chuyên nghiệp và điều hướng luồng về trang chủ.
+- [ ] **GIAI ĐOẠN CUỐI:** Xuất vé điện tử (Mã QR/Barcode).
 
 ---
 ## 🗄️ CẤU TRÚC CƠ SỞ DỮ LIỆU (FIREBASE FIRESTORE SCHEMA)
-*(Dùng để gửi cho AI khi cần hỗ trợ code)*
+*(Chi tiết các Model đã triển khai)*
 
 **1. Collection `movies` (Danh sách phim):**
 *   `title` (String): Tên phim.
 *   `description` (String): Nội dung tóm tắt.
 *   `posterUrl` (String): Link ảnh bìa.
-*   `galleryUrls` (Array of Strings): Danh sách link ảnh thư viện phim.
-*   `duration` (Number): Thời lượng (Phút).
-*   `rating` (Number): Điểm đánh giá (Ví dụ: 8.5).
+*   `duration` (Number/Int): Thời lượng (Phút).
+*   `rating` (Number/Double): Điểm đánh giá (Ví dụ: 8.5).
 *   `ageRating` (String): Phân loại độ tuổi (Ví dụ: "T18", "K").
 *   `releaseDate` (Timestamp): Ngày phát hành.
 *   `trailerUrl` (String): Link Youtube trailer.
 *   `director` (String): Tên đạo diễn.
 *   `cast` (String): Tên các diễn viên.
-*   `price` (Number): Giá vé cơ bản.
+*   `price` (Number/Double): Giá vé cơ bản.
+*   `galleryUrls` (Array of Strings): Danh sách link ảnh thư viện phim.
 
 **2. Collection `banners` (Danh sách Banner quảng cáo):**
 *   `imageUrl` (String): Link ảnh banner.
 *   `newsId` (String): ID bài báo liên quan.
+*   `contentBlocks` (Array of Maps): Dữ liệu nội dung chi tiết nếu không trỏ tới newsId (Gồm `type` và `value`).
 
 **3. Collection `cinemas` (Danh sách rạp chiếu):**
 *   `name` (String): Tên rạp.
 *   `address` (String): Địa chỉ.
 *   `imageUrl` (String): Link ảnh đại diện rạp.
 *   `phone` (String): Số điện thoại liên hệ.
-*   `city` (String): Tỉnh/Thành phố (Phục vụ lọc khu vực).
+*   `city` (String): Tỉnh/Thành phố.
 
 **4. Collection `products` (Danh sách sản phẩm Star Shop):**
 *   `name` (String): Tên sản phẩm.
-*   `price` (Number): Giá tiền.
+*   `price` (Number/Double): Giá tiền.
 *   `imageUrl` (String): Link ảnh sản phẩm.
 *   `category` (String): Danh mục ("Seasonal" hoặc "Movie").
+*   `description` (String): Mô tả chi tiết sản phẩm.
 
 **5. Collection `news` (Danh sách Tin tức Điện ảnh):**
 *   `title` (String): Tiêu đề bài viết.
@@ -104,18 +106,33 @@
 *   `contentBlocks` (Array of Maps): `type` ("text"/"image") và `value`.
 *   `publishedDate` (Timestamp): Ngày đăng bài.
 
-**6. Collection `showtimes` (Danh sách suất chiếu):**
+**6. Collection `rooms` (Danh sách Phòng chiếu):**
+*   `cinemaId` (String): ID rạp chiếu chứa phòng này.
+*   `name` (String): Tên phòng (VD: "Phòng 1").
+*   `totalRows` (Number/Int): Tổng số hàng ghế.
+*   `totalCols` (Number/Int): Tổng số cột ghế.
+*   `layout` (Array of Strings): Bản đồ ghế theo hàng (Ký tự `S`, `V`, `C`, `B`, `_`).
+
+**7. Collection `showtimes` (Danh sách suất chiếu):**
 *   `movieId` (String): ID phim.
 *   `cinemaId` (String): ID rạp chiếu.
+*   `roomId` (String): ID phòng chiếu (Liên kết với `rooms`).
 *   `city` (String): Tỉnh/Thành phố của rạp.
 *   `date` (String): Ngày chiếu ("yyyy-MM-dd").
 *   `time` (String): Giờ chiếu ("HH:mm").
-*   `format` (String): Định dạng và phòng (VD: "2D LỒNG TIẾNG").
+*   `format` (String): Định dạng (VD: "2D LỒNG TIẾNG").
+*   `bookedSeats` (Array of Strings): Danh sách mã ghế đã bán (VD: `["E5", "E6"]`).
 
-**7. Collection `metadata` (Thông tin hệ thống):**
+**8. Collection `combos` (Danh sách Bắp Nước cho đặt vé):**
+*   `name` (String): Tên combo.
+*   `description` (String): Mô tả chi tiết.
+*   `price` (Number/Double): Giá tiền.
+*   `imageUrl` (String): Link ảnh combo.
+
+**9. Collection `metadata` (Thông tin hệ thống):**
 *   Document `locations`: Chứa mảng `list` gồm danh sách 63 tỉnh thành Việt Nam.
 
 ---
 **CẬP NHẬT TIẾN ĐỘ HIỆN TẠI:**
-- **Tiến độ:** Đã hoàn thành Giai đoạn 1 đến 3.6. Vừa thực hiện cuộc cách mạng **"Xóa sạch Hardcode"**, chuyển đổi toàn bộ dữ liệu sang JSON và Cloud Firestore. Hoàn thiện hệ thống **Tin tức đa phương tiện** và đạt bước tiến lớn trong **Giai đoạn 4 (Chi tiết phim)** với UI/UX Tab Suất Chiếu và Thông Tin cực kỳ chuyên nghiệp.
-- **Trạng thái:** Ứng dụng hiện có khả năng mở rộng dữ liệu cực mạnh mà không cần sửa code. Sẵn sàng bước vào **Giai đoạn 5 (Luồng Đặt vé - Chọn ghế)**.
+- **Tiến độ:** Đã hoàn thiện 100% luồng đặt vé và mua sắm của ứng dụng. Toàn bộ hệ thống (Shopping Cart, Star Shop, Movie Booking) đã được chuẩn hóa UI/UX cực kỳ chuyên nghiệp và mượt mà.
+- **Trạng thái:** Dữ liệu đồng bộ Real-time với Cloud Firestore thông qua các Model đã được tối ưu hóa. Chỉ còn bước cuối cùng là xuất vé điện tử.

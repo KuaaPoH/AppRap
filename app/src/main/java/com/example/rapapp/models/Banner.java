@@ -5,7 +5,7 @@ import java.util.List;
 public class Banner {
     private String id;
     private String imageUrl;
-    private String newsId; // ID của bài báo liên quan
+    private String newsId;
     private List<ContentBlock> contentBlocks;
 
     public static class ContentBlock {

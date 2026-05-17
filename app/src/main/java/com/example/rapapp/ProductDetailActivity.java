@@ -10,7 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.example.rapapp.adapters.CartActivity;
+import com.example.rapapp.CartActivity;
 import com.example.rapapp.models.Product;
 import com.example.rapapp.utils.CartManager;
 
