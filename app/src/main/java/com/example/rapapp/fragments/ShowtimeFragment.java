@@ -205,7 +205,6 @@ public class ShowtimeFragment extends Fragment {
                 .whereEqualTo("date", selectedDate)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-<<<<<<< HEAD
                     filteredShowtimes.clear();
                     List<com.google.firebase.firestore.DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
                     for (int i = 0; i < docs.size(); i++) {
@@ -215,15 +214,6 @@ public class ShowtimeFragment extends Fragment {
                             if (selectedCinemaId.isEmpty() || s.getCinemaId().equals(selectedCinemaId)) {
                                 filteredShowtimes.add(s);
                             }
-=======
-                    List<Showtime> all = queryDocumentSnapshots.toObjects(Showtime.class);
-                    filteredShowtimes.clear();
-                    if (selectedCinemaId.isEmpty()) {
-                        filteredShowtimes.addAll(all);
-                    } else {
-                        for (Showtime s : all) {
-                            if (s.getCinemaId().equals(selectedCinemaId)) filteredShowtimes.add(s);
->>>>>>> origin/main
                         }
                     }
                     displayShowtimes();
