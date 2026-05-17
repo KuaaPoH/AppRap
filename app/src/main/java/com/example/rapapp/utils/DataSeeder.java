@@ -136,10 +136,13 @@ public class DataSeeder {
             JSONObject obj = products.getJSONObject(i);
             Product p = new Product(
                     obj.getString("name"),
-                    obj.getInt("price"),
+                    (double) obj.getInt("price"),
                     obj.getString("imageUrl"),
                     obj.getString("category")
             );
+            if (obj.has("description")) {
+                p.setDescription(obj.getString("description"));
+            }
             db.collection("products").add(p);
         }
     }

@@ -1,6 +1,7 @@
 package com.example.rapapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.rapapp.ProductDetailActivity;
 import com.example.rapapp.R;
 import com.example.rapapp.models.Product;
 
@@ -20,13 +22,20 @@ import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
+    public interface OnProductClickListener {
+        void onAddToCart(Product product);
+        void onBuyNow(Product product);
+    }
+
     private Context context;
     private List<Product> productList;
+    private OnProductClickListener listener;
     private DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
 
-    public ProductAdapter(Context context, List<Product> productList) {
+    public ProductAdapter(Context context, List<Product> productList, OnProductClickListener listener) {
         this.context = context;
         this.productList = productList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -48,12 +57,22 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 .error(R.drawable.bg_placeholder)
                 .into(holder.imgProduct);
 
+        holder.imgProduct.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ProductDetailActivity.class);
+            intent.putExtra("product_id", product.getId());
+            intent.putExtra("product_name", product.getName());
+            intent.putExtra("product_price", product.getPrice());
+            intent.putExtra("product_image", product.getImageUrl());
+            intent.putExtra("product_desc", product.getDescription());
+            context.startActivity(intent);
+        });
+
         holder.btnBuyNow.setOnClickListener(v -> {
-            Toast.makeText(context, "Mua ngay: " + product.getName(), Toast.LENGTH_SHORT).show();
+            if (listener != null) listener.onBuyNow(product);
         });
 
         holder.btnAddToCart.setOnClickListener(v -> {
-            Toast.makeText(context, "Đã thêm vào giỏ hàng: " + product.getName(), Toast.LENGTH_SHORT).show();
+            if (listener != null) listener.onAddToCart(product);
         });
     }
 
