@@ -28,6 +28,9 @@
             android:name=".MovieDetailActivity"
             android:exported="false" />
         <activity
+            android:name=".ProductDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".MovieListActivity"
  />
         <activity android:name=".LoginActivity" />

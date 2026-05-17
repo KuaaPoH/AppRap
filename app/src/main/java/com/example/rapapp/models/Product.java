@@ -1,21 +1,35 @@
 package com.example.rapapp.models;
 
-public class Product {
+import java.io.Serializable;
+
+public class Product implements Serializable {
     private String id;
     private String name;
     private double price;
     private String imageUrl;
     private String category; // "Seasonal" or "Movie"
+    private String description;
 
     public Product() {
         // Required for Firebase
     }
 
+    // Constructor with 4 arguments (compatible with existing Seeder)
     public Product(String name, double price, String imageUrl, String category) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.category = category;
+        this.description = "";
+    }
+
+    // Constructor with 5 arguments (for detailed data)
+    public Product(String name, double price, String imageUrl, String category, String description) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.category = category;
+        this.description = description;
     }
 
     public String getId() {
@@ -56,5 +70,13 @@ public class Product {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.rapapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.rapapp.ProductDetailActivity;
 import com.example.rapapp.R;
 import com.example.rapapp.models.Product;
 
@@ -54,6 +56,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 .placeholder(R.drawable.bg_placeholder)
                 .error(R.drawable.bg_placeholder)
                 .into(holder.imgProduct);
+
+        holder.imgProduct.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ProductDetailActivity.class);
+            intent.putExtra("product_id", product.getId());
+            intent.putExtra("product_name", product.getName());
+            intent.putExtra("product_price", product.getPrice());
+            intent.putExtra("product_image", product.getImageUrl());
+            intent.putExtra("product_desc", product.getDescription());
+            context.startActivity(intent);
+        });
 
         holder.btnBuyNow.setOnClickListener(v -> {
             if (listener != null) listener.onBuyNow(product);
