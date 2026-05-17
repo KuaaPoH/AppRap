@@ -1,90 +1,325 @@
 package com.example.rapapp.utils;
 
+import android.content.Context;
 import android.util.Log;
+
 import com.example.rapapp.models.Cinema;
-import com.example.rapapp.models.Product;
+import com.example.rapapp.models.Movie;
 import com.example.rapapp.models.News;
+import com.example.rapapp.models.Product;
+import com.example.rapapp.models.Room;
+import com.example.rapapp.models.Showtime;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class DataSeeder {
 
-    public static void seedNews() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        List<News> newsList = new ArrayList<>();
+    private static final String TAG = "DataSeeder";
 
-        // Tab Bình Luận (Review)
-        newsList.add(new News("[Review] The Devil Wears Prada 2: Ai Cũng Sợ Mất Việc Thôi, Kể Cả Bà Hoàng Thời Trang", "https://i.ibb.co/Vp8nZ5T/news1.jpg", "Review", "Nội dung chi tiết bài review...", new Timestamp(new Date())));
-        newsList.add(new News("[Review] Deadpool & Wolverine: Màn Hội Ngộ Đỉnh Cao Của Hai Gã Lầy Lội", "https://i.ibb.co/6yL5Y4P/news2.jpg", "Review", " Deadpool và Wolverine đã thực sự cứu vãn vũ trụ Marvel...", new Timestamp(new Date())));
-        newsList.add(new News("[Review] Inside Out 2: Khi Những Cảm Xúc Mới Xuất Hiện Ở Tuổi Dậy Thì", "https://i.ibb.co/L6v3n4K/news3.jpg", "Review", "Pixar đã thành công trong việc khai thác tâm lý tuổi mới lớn...", new Timestamp(new Date())));
+    public static void seedAllData(Context context) {
+        try {
+            String json = loadJSONFromAsset(context, "seed_data.json");
+            if (json == null) return;
 
-        // Tab Tin Tức (News)
-        newsList.add(new News("Siêu Bom Tấn Avatar 3 Chính Thức Công Bố Ngày Phát Hành Toàn Cầu", "https://i.ibb.co/VWVz0H1/news4.jpg", "News", "James Cameron tiết lộ những hình ảnh đầu tiên về bộ tộc lửa...", new Timestamp(new Date())));
-        newsList.add(new News("Đạo Diễn Christopher Nolan Trở Lại Với Dự Án Phim Về Điệp Viên", "https://i.ibb.co/abc/news5.jpg", "News", "Sau thành công của Oppenheimer, Nolan đang chuẩn bị cho dự án mới...", new Timestamp(new Date())));
-        newsList.add(new News("Vũ Trụ Điện Ảnh Marvel Công Bố Danh Sách Phim Cho Giai Đoạn 6", "https://i.ibb.co/xyz/news6.jpg", "News", "Sẽ có sự xuất hiện của nhóm Fantastic Four...", new Timestamp(new Date())));
-        newsList.add(new News("LHP Cannes 2026: Những Bộ Phim Sáng Giá Cho Giải Cành Cọ Vàng", "https://i.ibb.co/123/news7.jpg", "News", "Điện ảnh thế giới hội tụ tại Cannes...", new Timestamp(new Date())));
+            JSONObject root = new JSONObject(json);
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // Tab Nhân Vật (Character)
-        newsList.add(new News("Robert Downey Jr. Chia Sẻ Về Cảm Xúc Khi Quay Lại Vũ Trụ Marvel", "https://i.ibb.co/456/news8.jpg", "Character", "Lần trở lại này với vai phản diện Doctor Doom...", new Timestamp(new Date())));
-        newsList.add(new News("Hành Trình Tỏa Sáng Của Cựu Người Mẫu Emily Blunt Tại Hollywood", "https://i.ibb.co/789/news9.jpg", "Character", "Từ những vai diễn phụ đến ngôi sao hạng A...", new Timestamp(new Date())));
-        newsList.add(new News("Tom Cruise Và Những Pha Hành Động Không Cần Đóng Thế Ở Tuổi 60", "https://i.ibb.co/000/news10.jpg", "Character", "Anh vẫn tiếp tục chinh phục những giới hạn mới...", new Timestamp(new Date())));
+            // 1. Seed Banners
+            seedBanners(db, root.optJSONArray("banners"));
 
-        for (News n : newsList) {
-            db.collection("news").add(n)
-                .addOnSuccessListener(documentReference -> Log.d("DataSeeder", "Đã thêm tin tức: " + n.getTitle()))
-                .addOnFailureListener(e -> Log.e("DataSeeder", "Lỗi thêm tin tức", e));
+            // 2. Seed Movies
+            seedMovies(db, root.optJSONArray("movies"));
+
+            // 3. Seed Cinemas
+            seedCinemas(db, root.optJSONArray("cinemas"));
+
+            // 4. Seed Products
+            seedProducts(db, root.optJSONArray("products"));
+
+            // 5. Seed News
+            seedNews(db, root.optJSONArray("news"));
+
+            // 6. Seed Locations
+            seedLocations(db, root.optJSONArray("locations"));
+
+            // 7. Seed Showtimes
+            seedShowtimes(db, root.optJSONArray("showtimes"));
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error seeding data", e);
         }
     }
 
-    public static void seedProducts() {
+    /**
+     * Phương thức này để nạp 4 phòng chiếu mẫu cho rạp cụ thể
+     * Bạn gọi phương thức này một lần trong MainActivity hoặc nơi nào đó để khởi tạo dữ liệu
+     */
+    public static void seedRooms(String cinemaId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        List<Product> products = new ArrayList<>();
+        List<Room> rooms = new ArrayList<>();
 
-        products.add(new Product("Ly nước Capybara", 350000, "https://i.ibb.co/L6v3n4K/capybara.jpg", "Seasonal"));
-        products.add(new Product("Combo Bắp Nước Solo", 85000, "https://www.galaxycine.vn/media/2023/10/26/combo-1_1698310323381.jpg", "Movie"));
-        products.add(new Product("Combo Bắp Nước Couple", 150000, "https://www.galaxycine.vn/media/2023/10/26/combo-2_1698310323381.jpg", "Movie"));
-        products.add(new Product("Bình nước Iron Man", 250000, "https://i.ibb.co/VWVz0H1/ironman.jpg", "Seasonal"));
+        // Phòng 1: Standard (Layout chuẩn)
+        rooms.add(new Room("Phòng 1", cinemaId, 9, 12, Arrays.asList(
+                "____SSSSS____", // Hàng I (Cuối)
+                "SSSSSSSSSSSS", // Hàng H
+                "SSSSSSSSSSSS", // Hàng G
+                "SSVVVVVVVVSS", // Hàng F (VIP giữa)
+                "SSVVVVVVVVSS", // Hàng E
+                "SSVVVVVVVVSS", // Hàng D
+                "SSSSSSSSSSSS", // Hàng C
+                "SSSSSSSSSSSS", // Hàng B
+                "__SSSSSSSS__"  // Hàng A (Gần màn hình)
+        )));
 
-        for (Product p : products) {
-            db.collection("products").add(p)
-                .addOnSuccessListener(documentReference -> Log.d("DataSeeder", "Đã thêm sản phẩm: " + p.getName()))
-                .addOnFailureListener(e -> Log.e("DataSeeder", "Lỗi thêm sản phẩm", e));
+        // Phòng 2: Standard
+        rooms.add(new Room("Phòng 2", cinemaId, 9, 12, Arrays.asList(
+                "CCCC__CCCC",   // Hàng I (Ghế đôi)
+                "SSSSSSSSSS",   // Hàng H
+                "SSSSSSSSSS",   // Hàng G
+                "SVVVVVVVVS",   // Hàng F
+                "SVVVVVVVVS",   // Hàng E
+                "SSSSSSSSSS",   // Hàng D
+                "SSSSSSSSSS",   // Hàng C
+                "SSSSSSSSSS",   // Hàng B
+                "__SSSSSS__"    // Hàng A
+        )));
+
+        // Phòng 3: Premium (Ít ghế hơn nhưng rộng hơn)
+        rooms.add(new Room("Phòng 3", cinemaId, 7, 10, Arrays.asList(
+                "BBBBBBBBBB",   // Hàng G (Ghế Ba)
+                "VVVVVVVVVV",   // Hàng F
+                "VVVVVVVVVV",   // Hàng E
+                "VVVVVVVVVV",   // Hàng D
+                "SSSSSSSSSS",   // Hàng C
+                "SSSSSSSSSS",   // Hàng B
+                "__SSSSSS__"    // Hàng A
+        )));
+
+        // Phòng 4: Premium
+        rooms.add(new Room("Phòng 4", cinemaId, 8, 10, Arrays.asList(
+                "CCCC__CCCC",   // Hàng H
+                "VVVVVVVVVV",   // Hàng G
+                "VVVVVVVVVV",   // Hàng F
+                "VVVVVVVVVV",   // Hàng E
+                "VVVVVVVVVV",   // Hàng D
+                "VVVVVVVVVV",   // Hàng C
+                "SSSSSSSSSS",   // Hàng B
+                "__SSSSSS__"    // Hàng A
+        )));
+
+        for (Room r : rooms) {
+            db.collection("rooms").add(r)
+                    .addOnSuccessListener(doc -> Log.d(TAG, "Added Room: " + r.getName()))
+                    .addOnFailureListener(e -> Log.e(TAG, "Error adding room", e));
         }
     }
 
-    public static void seedCinemas() {
+    /**
+     * Nạp thêm 2 suất chiếu cụ thể theo yêu cầu.
+     * Cần gọi 1 lần trong MainActivity: DataSeeder.seedExtraShowtimes();
+     */
+    public static void seedExtraShowtimes() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        List<Cinema> cinemas = new ArrayList<>();
+        
+        String movieId = "test";
+        String cinemaId = "test";
+        String roomId = "P2FI2eO3POTAIzBCYFml";
+        String city = "Hà Nội"; // Bạn có thể đổi lại nếu cần
+        
+        // Lấy ngày hôm nay
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        SimpleDateFormat sdfFull = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String dateToday = sdfFull.format(calendar.getTime());
 
-        // Danh sách dữ liệu mẫu
-        cinemas.add(createCinema("Galaxy Nguyễn Du", "116 Nguyễn Du, Quận 1, TP.HCM", "1900 2224", "TP Hồ Chí Minh", "https://www.galaxycine.vn/media/2023/10/26/nguyen-du-1_1698310323381.jpg"));
-        cinemas.add(createCinema("Galaxy Tân Bình", "246 Nguyễn Hồng Đào, Q.Tân Bình, TP.HCM", "1900 2224", "TP Hồ Chí Minh", "https://www.galaxycine.vn/media/2023/10/26/tan-binh-1_1698310373807.jpg"));
-        cinemas.add(createCinema("Galaxy Kinh Dương Vương", "718 Bis Kinh Dương Vương, Q.6, TP.HCM", "1900 2224", "TP Hồ Chí Minh", "https://www.galaxycine.vn/media/2023/10/26/kdv-1_1698310345091.jpg"));
-        cinemas.add(createCinema("Galaxy Quang Trung", "Lầu 3, TTTM CoopMart, Quang Trung, Q.Gò Vấp, TP.HCM", "1900 2224", "TP Hồ Chí Minh", "https://www.galaxycine.vn/media/2023/10/26/quang-trung-1_1698310359871.jpg"));
-        cinemas.add(createCinema("Galaxy Sala", "Tầng 3, Thiso Mall Sala, TP.Thủ Đức, TP.HCM", "1900 2224", "TP Hồ Chí Minh", "https://www.galaxycine.vn/media/2023/12/20/sala-4_1703063539824.jpg"));
-        cinemas.add(createCinema("Galaxy Mipec Long Biên", "Tầng 6, TTTM Mipec Long Biên, Hà Nội", "1900 2224", "Hà Nội", "https://www.galaxycine.vn/media/2023/10/26/long-bien-1_1698310398687.jpg"));
-        cinemas.add(createCinema("Galaxy Tràng Thi", "Tầng 10, Tòa nhà Center Building, Tràng Thi, Hà Nội", "1900 2224", "Hà Nội", "https://scontent.fhan14-2.fna.fbcdn.net/v/t39.30808-6/305282582_530467772420042_8123281096727289547_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=O_n8U2u0K7cQ7kNvgH0O4J8&_nc_zt=23&_nc_ht=scontent.fhan14-2.fna&_nc_gid=AnK8X8_K3_T5D_Z8_Y_L_V&oh=00_AYBa4R_yv_H5_G_E_X_L_V_N_A_C_C_M_S_A_B_C_D_E_F_G_H_I_J_K_L_M_N&oe=664D9283"));
-        cinemas.add(createCinema("Galaxy Đà Nẵng", "Tầng 3, Coop Mart Đà Nẵng", "1900 2224", "Đà Nẵng", "https://www.galaxycine.vn/media/2023/10/26/da-nang-1_1698310411623.jpg"));
-        cinemas.add(createCinema("Galaxy Hải Phòng", "Tầng 7, TTTM Nguyễn Kim - Sài Gòn Mall, Hải Phòng", "1900 2224", "Hải Phòng", "https://www.galaxycine.vn/media/2023/10/26/hai-phong-1_1698310424567.jpg"));
-        cinemas.add(createCinema("Galaxy Bến Tre", "Tầng 1, TTTM Sense City Bến Tre", "1900 2224", "Bến Tre", "https://www.galaxycine.vn/media/2023/10/26/ben-tre-1_1698310438091.jpg"));
+        // Suất chiếu 1 (Hôm nay, 19:00)
+        Showtime s1 = new Showtime();
+        s1.setMovieId(movieId);
+        s1.setCinemaId(cinemaId);
+        s1.setRoomId(roomId);
+        s1.setCity(city);
+        s1.setDate(dateToday);
+        s1.setTime("19:00");
+        s1.setFormat("2D LỒNG TIẾNG");
+        s1.setBookedSeats(Arrays.asList("E5", "E6")); // Đặt sẵn 2 ghế VIP
 
-        for (Cinema c : cinemas) {
-            db.collection("cinemas").add(c)
-                .addOnSuccessListener(documentReference -> Log.d("DataSeeder", "Đã thêm rạp: " + c.getName()))
-                .addOnFailureListener(e -> Log.e("DataSeeder", "Lỗi thêm rạp", e));
+        // Suất chiếu 2 (Hôm nay, 21:30)
+        Showtime s2 = new Showtime();
+        s2.setMovieId(movieId);
+        s2.setCinemaId(cinemaId);
+        s2.setRoomId(roomId);
+        s2.setCity(city);
+        s2.setDate(dateToday);
+        s2.setTime("21:30");
+        s2.setFormat("IMAX 3D");
+        s2.setBookedSeats(new ArrayList<>()); // Trống
+
+        db.collection("showtimes").add(s1)
+                .addOnSuccessListener(doc -> Log.d(TAG, "Added Showtime 1: " + doc.getId()))
+                .addOnFailureListener(e -> Log.e(TAG, "Error adding Showtime 1", e));
+
+        db.collection("showtimes").add(s2)
+                .addOnSuccessListener(doc -> Log.d(TAG, "Added Showtime 2: " + doc.getId()))
+                .addOnFailureListener(e -> Log.e(TAG, "Error adding Showtime 2", e));
+    }
+
+    public static void seedCombos() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        List<com.example.rapapp.models.Combo> comboList = new ArrayList<>();
+        
+        comboList.add(new com.example.rapapp.models.Combo("Combo 2 Big Extra...", "\"Nhân đôi sự sảng khoái!\" Combo gồm 1 bắp rang bơ lớn, 2 Pepsi cỡ lớn + 1 snack...", 134000, "https://firebasestorage.googleapis.com/v0/b/rapapp-9759c.appspot.com/o/popcorn.png?alt=media"));
+        comboList.add(new com.example.rapapp.models.Combo("Snacking Combo 2", "1 Bắp ngọt + 2 Nước bất kỳ + 1 Món ăn nhẹ (Gà Karaage / Lạp xưởng / Khoai tây...", 169000, "https://firebasestorage.googleapis.com/v0/b/rapapp-9759c.appspot.com/o/popcorn.png?alt=media"));
+        comboList.add(new com.example.rapapp.models.Combo("Combo 1 Big Extra...", "\"Thỏa mãn cơn thèm\" với 1 phần bắp rang bơ thơm ngon, 1 Pepsi mát lạnh và...", 115000, "https://firebasestorage.googleapis.com/v0/b/rapapp-9759c.appspot.com/o/popcorn.png?alt=media"));
+        comboList.add(new com.example.rapapp.models.Combo("Teanema Combo 1...", "1 Bắp ngọt + 1 Trà (Trà mãng cầu / Trà quýt / Trà hibiscus / Trà chuối / Socola c...", 115000, "https://firebasestorage.googleapis.com/v0/b/rapapp-9759c.appspot.com/o/popcorn.png?alt=media"));
+
+        for (com.example.rapapp.models.Combo c : comboList) {
+            db.collection("combos").add(c)
+                    .addOnSuccessListener(doc -> Log.d(TAG, "Added Combo: " + c.getName()))
+                    .addOnFailureListener(e -> Log.e(TAG, "Error adding Combo", e));
         }
     }
 
-    private static Cinema createCinema(String name, String address, String phone, String city, String imageUrl) {
-        Cinema c = new Cinema();
-        c.setName(name);
-        c.setAddress(address);
-        c.setPhone(phone);
-        c.setCity(city);
-        c.setImageUrl(imageUrl);
-        return c;
+    private static String loadJSONFromAsset(Context context, String fileName) {
+        try {
+            InputStream is = context.getAssets().open(fileName);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            return new String(buffer, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            Log.e(TAG, "Error loading JSON from asset", e);
+            return null;
+        }
+    }
+
+    private static void seedBanners(FirebaseFirestore db, JSONArray banners) throws Exception {
+        if (banners == null) return;
+        for (int i = 0; i < banners.length(); i++) {
+            JSONObject obj = banners.getJSONObject(i);
+            Map<String, Object> data = new HashMap<>();
+            data.put("imageUrl", obj.getString("imageUrl"));
+            db.collection("banners").add(data);
+        }
+    }
+
+    private static void seedMovies(FirebaseFirestore db, JSONArray movies) throws Exception {
+        if (movies == null) return;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        for (int i = 0; i < movies.length(); i++) {
+            JSONObject obj = movies.getJSONObject(i);
+            Movie m = new Movie();
+            m.setTitle(obj.getString("title"));
+            m.setDescription(obj.getString("description"));
+            m.setPosterUrl(obj.getString("posterUrl"));
+            m.setDuration(obj.getInt("duration"));
+            m.setRating((float) obj.getDouble("rating"));
+            m.setAgeRating(obj.getString("ageRating"));
+            m.setReleaseDate(new Timestamp(sdf.parse(obj.getString("releaseDate"))));
+            
+            // Add optional fields if present
+            if (obj.has("director")) m.setDirector(obj.getString("director"));
+            if (obj.has("cast")) m.setCast(obj.getString("cast"));
+            if (obj.has("trailerUrl")) m.setTrailerUrl(obj.getString("trailerUrl"));
+            if (obj.has("price")) m.setPrice(obj.getInt("price"));
+            
+            if (obj.has("galleryUrls")) {
+                JSONArray gallery = obj.getJSONArray("galleryUrls");
+                List<String> list = new ArrayList<>();
+                for (int j = 0; j < gallery.length(); j++) list.add(gallery.getString(j));
+                m.setGalleryUrls(list);
+            }
+
+            db.collection("movies").add(m);
+        }
+    }
+
+    private static void seedCinemas(FirebaseFirestore db, JSONArray cinemas) throws Exception {
+        if (cinemas == null) return;
+        for (int i = 0; i < cinemas.length(); i++) {
+            JSONObject obj = cinemas.getJSONObject(i);
+            Cinema c = new Cinema();
+            c.setName(obj.getString("name"));
+            c.setAddress(obj.getString("address"));
+            c.setPhone(obj.getString("phone"));
+            c.setCity(obj.getString("city"));
+            c.setImageUrl(obj.getString("imageUrl"));
+            db.collection("cinemas").add(c);
+        }
+    }
+
+    private static void seedProducts(FirebaseFirestore db, JSONArray products) throws Exception {
+        if (products == null) return;
+        for (int i = 0; i < products.length(); i++) {
+            JSONObject obj = products.getJSONObject(i);
+            Product p = new Product(
+                    obj.getString("name"),
+                    obj.getInt("price"),
+                    obj.getString("imageUrl"),
+                    obj.getString("category")
+            );
+            db.collection("products").add(p);
+        }
+    }
+
+    private static void seedNews(FirebaseFirestore db, JSONArray news) throws Exception {
+        if (news == null) return;
+        for (int i = 0; i < news.length(); i++) {
+            JSONObject obj = news.getJSONObject(i);
+            List<News.ContentBlock> blocks = new ArrayList<>();
+            JSONArray blocksArr = obj.optJSONArray("contentBlocks");
+            if (blocksArr != null) {
+                for (int j = 0; j < blocksArr.length(); j++) {
+                    JSONObject b = blocksArr.getJSONObject(j);
+                    blocks.add(new News.ContentBlock(b.getString("type"), b.getString("value")));
+                }
+            }
+            News n = new News(
+                    obj.getString("title"),
+                    obj.getString("imageUrl"),
+                    obj.getString("category"),
+                    blocks,
+                    Timestamp.now()
+            );
+            db.collection("news").add(n);
+        }
+    }
+
+    private static void seedLocations(FirebaseFirestore db, JSONArray locations) throws Exception {
+        if (locations == null) return;
+        List<String> locList = new ArrayList<>();
+        for (int i = 0; i < locations.length(); i++) {
+            locList.add(locations.getString(i));
+        }
+        Map<String, Object> data = new HashMap<>();
+        data.put("list", locList);
+        db.collection("metadata").document("locations").set(data);
+    }
+
+    private static void seedShowtimes(FirebaseFirestore db, JSONArray showtimes) throws Exception {
+        if (showtimes == null) return;
+        for (int i = 0; i < showtimes.length(); i++) {
+            JSONObject obj = showtimes.getJSONObject(i);
+            Showtime s = new Showtime();
+            s.setMovieId(obj.getString("movieId"));
+            s.setCinemaId(obj.getString("cinemaId"));
+            s.setCity(obj.getString("city"));
+            s.setDate(obj.getString("date"));
+            s.setTime(obj.getString("time"));
+            s.setFormat(obj.getString("format"));
+            db.collection("showtimes").add(s);
+        }
     }
 }
