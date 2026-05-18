@@ -41,6 +41,7 @@
         <activity android:name=".ComboSelectionActivity" />
         <activity android:name=".CheckoutActivity" />
         <activity android:name=".CartActivity" />
+        <activity android:name=".ShopCheckoutActivity" />
         <activity android:name=".PromoDetailActivity" />
     </application>
 

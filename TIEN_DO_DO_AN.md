@@ -38,6 +38,13 @@
 - [x] **Hệ thống Thông báo (Toast):** Tiêu chuẩn hóa toàn bộ thông báo ứng dụng hiển thị ở **phía trên cùng màn hình** thông qua `ToastUtils`.
 - [x] **Hệ thống nội dung đa phương tiện (Content Blocks):** Cho phép bài viết chèn nhiều ảnh và đoạn văn bản đan xen, dàn trang linh hoạt.
 - [x] **Màn hình Chi tiết Tin tức (`NewsDetailActivity`):** Hiển thị đầy đủ nội dung căn lề đều (Justify), cỡ chữ 12sp.
+- [x] **Màn hình Thanh toán Star Shop (`ShopCheckoutActivity`):** 
+    - Giao diện hiện đại: Nền xám nhạt, các khối nội dung trắng bo góc 12dp, đổ bóng nhẹ.
+    - **Tóm tắt đơn hàng:** Danh sách sản phẩm rút gọn với giá đỏ/cam nổi bật bên phải.
+    - **Phương thức thanh toán:** Hệ thống chọn ZaloPay, MoMo, OnePay với hiệu ứng viền cam và dấu tích cam tùy chỉnh sắc nét.
+    - **Khuyến mãi thông minh:** Hỗ trợ nhập Voucher và sử dụng điểm Stars (hiển thị số điểm hiện có) với hiệu ứng accordion mượt mà.
+    - **Nơi nhận hàng chuyên nghiệp:** Bộ chọn Thành phố/Rạp dạng BottomSheet (1/3 màn hình) với dữ liệu 100% từ Cloud Firestore. Tự động hiển thị địa chỉ chi tiết của rạp đã chọn.
+    - **Chuẩn hóa thiết kế:** Đồng bộ cỡ chữ 12sp toàn màn hình, nút bấm compact (40dp height), căn chỉnh khoảng cách pixel-perfect theo hình mẫu.
 
 ## 👤 GIAI ĐOẠN 3.6: TÀI KHOẢN & HỆ THỐNG
 - [x] **Hoàn thiện Tab Tài khoản (Profile):** Mascot, ưu đãi Stars, Quà tặng, Đặc quyền và danh sách liên kết hỗ trợ.

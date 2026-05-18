@@ -1,5 +1,6 @@
 package com.example.rapapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -36,7 +37,8 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
         findViewById(R.id.btnContinueShopping).setOnClickListener(v -> finish());
         findViewById(R.id.btnOrder).setOnClickListener(v -> {
-            Toast.makeText(this, "Chức năng đặt hàng đang phát triển", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, ShopCheckoutActivity.class);
+            startActivity(intent);
         });
     }
 
