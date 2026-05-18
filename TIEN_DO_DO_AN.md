@@ -44,6 +44,7 @@
     - **Phương thức thanh toán:** Hệ thống chọn ZaloPay, MoMo, OnePay với hiệu ứng viền cam và dấu tích cam tùy chỉnh sắc nét.
     - **Khuyến mãi thông minh:** Hỗ trợ nhập Voucher và sử dụng điểm Stars (hiển thị số điểm hiện có) với hiệu ứng accordion mượt mà.
     - **Nơi nhận hàng chuyên nghiệp:** Bộ chọn Thành phố/Rạp dạng BottomSheet (1/3 màn hình) với dữ liệu 100% từ Cloud Firestore. Tự động hiển thị địa chỉ chi tiết của rạp đã chọn.
+    - **Thông báo thành công & Điều hướng:** Thiết kế Success Dialog rộng 340dp chuyên nghiệp. Hỗ trợ quay về Trang chủ hoặc quay lại đúng Tab Star Shop để tiếp tục mua sắm (tự động làm sạch giỏ hàng).
     - **Chuẩn hóa thiết kế:** Đồng bộ cỡ chữ 12sp toàn màn hình, nút bấm compact (40dp height), căn chỉnh khoảng cách pixel-perfect theo hình mẫu.
 
 ## 👤 GIAI ĐOẠN 3.6: TÀI KHOẢN & HỆ THỐNG

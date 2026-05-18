@@ -1,5 +1,9 @@
 package com.example.rapapp;
 
+import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.transition.TransitionManager;
 import android.view.View;
@@ -69,9 +73,7 @@ public class ShopCheckoutActivity extends AppCompatActivity {
                 Toast.makeText(this, "Vui lòng chọn rạp nhận hàng", Toast.LENGTH_SHORT).show();
                 return;
             }
-            Toast.makeText(this, "Đặt hàng thành công!", Toast.LENGTH_SHORT).show();
-            CartManager.getInstance().clearCart();
-            finish();
+            showSuccessDialog();
         });
 
         setupExpandables();
@@ -98,6 +100,35 @@ public class ShopCheckoutActivity extends AppCompatActivity {
         rbZalo = findViewById(R.id.rbZalo);
         rbMomo = findViewById(R.id.rbMomo);
         rbOnePay = findViewById(R.id.rbOnePay);
+    }
+
+    private void showSuccessDialog() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_shop_success);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+
+        dialog.findViewById(R.id.btnGoHome).setOnClickListener(v -> {
+            CartManager.getInstance().clearCart();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        });
+
+        dialog.findViewById(R.id.btnContinue).setOnClickListener(v -> {
+            CartManager.getInstance().clearCart();
+            dialog.dismiss();
+            
+            // Quay về MainActivity và chọn tab Star Shop (thường là tab thứ 3, index 2)
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("SELECT_TAB", "STAR_SHOP");
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+            finish();
+        });
+
+        dialog.show();
     }
 
     private void loadInitialData() {

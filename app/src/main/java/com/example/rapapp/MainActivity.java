@@ -1,5 +1,6 @@
 package com.example.rapapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -76,10 +77,26 @@ public class MainActivity extends AppCompatActivity {
 
         // Hiển thị Fragment Trang chủ mặc định khi mở app
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new HomeFragment())
-                    .commit();
-            bottomNav.setSelectedItemId(R.id.nav_home);
+            String selectTab = getIntent().getStringExtra("SELECT_TAB");
+            if (selectTab != null && selectTab.equals("STAR_SHOP")) {
+                bottomNav.setSelectedItemId(R.id.nav_ticket);
+            } else {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new HomeFragment())
+                        .commit();
+                bottomNav.setSelectedItemId(R.id.nav_home);
+            }
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        String selectTab = intent.getStringExtra("SELECT_TAB");
+        if (selectTab != null && selectTab.equals("STAR_SHOP")) {
+            BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
+            bottomNav.setSelectedItemId(R.id.nav_ticket);
         }
     }
 }
