@@ -32,15 +32,16 @@
 - [x] Tạo màn hình `StarShopActivity` với thiết kế `item_product.xml` chuẩn mẫu: Ảnh sản phẩm, tên, giá cam, nút "Mua ngay".
 - [x] Tích hợp Banner Slider và Bộ lọc danh mục (Seasonal / Movie) mượt mà.
 - [x] **Hệ thống Giỏ hàng (Shopping Cart):** Khởi tạo `CartManager` (Singleton). Icon giỏ hàng với Badge cập nhật realtime, thiết kế Outline mảnh chuẩn Modern UI.
-- [x] **Màn hình Chi tiết Sản phẩm (`ProductDetailActivity`):** Hiển thị mô tả động, bộ chọn số lượng (+/-), tính tổng tiền động và Điều khoản căn lề Justify chuyên nghiệp.
+- [x] **Hiệu ứng Xe đẩy bay (Flying Cart Animation):** Thay thế thông báo Toast bằng hiệu ứng icon sản phẩm "bay" từ nút bấm lên giỏ hàng ở Header khi nhấn "Thêm vào giỏ hàng". Thêm hiệu ứng Bounce (nảy) cho giỏ hàng mục tiêu khi nhận được sản phẩm.
+- [x] **Màn hình Chi tiết Sản phẩm (`ProductDetailActivity`):** Hiển thị mô tả động, bộ chọn số lượng (+/-), tính tổng tiền động và Điều khoản căn lề Justify chuyên nghiệp. Tích hợp hiệu ứng bay và thu nhỏ nút bấm khi tương tác.
 - [x] **Trang Chi tiết Khuyến mãi (`PromoDetailActivity`):** Dữ liệu 100% động từ Firestore Content Blocks. Hỗ trợ bôi đậm HTML (`<b>`), tự động phân cấp cỡ chữ 14sp/12sp cực kỳ tinh tế.
 - [x] **Chuẩn hóa Typography:** Đồng bộ toàn bộ cỡ chữ nội dung về **12sp**, giảm khoảng cách (spacing) giúp giao diện gọn gàng và hiện đại hơn.
 - [x] **Hệ thống Thông báo (Toast):** Tiêu chuẩn hóa toàn bộ thông báo ứng dụng hiển thị ở **phía trên cùng màn hình** thông qua `ToastUtils`.
 - [x] **Hệ thống nội dung đa phương tiện (Content Blocks):** Cho phép bài viết chèn nhiều ảnh và đoạn văn bản đan xen, dàn trang linh hoạt.
 - [x] **Màn hình Chi tiết Tin tức (`NewsDetailActivity`):** Hiển thị đầy đủ nội dung căn lề đều (Justify), cỡ chữ 12sp.
-- [x] **Màn hình Thanh toán Star Shop (`ShopCheckoutActivity`):** 
+- [x] **Màn hình Thanh toán Star Shop (`Shop
     - Giao diện hiện đại: Nền xám nhạt, các khối nội dung trắng bo góc 12dp, đổ bóng nhẹ.
-    - **Tóm tắt đơn hàng:** Danh sách sản phẩm rút gọn với giá đỏ/cam nổi bật bên phải.
+    - **Tóm tắt đơn hàng:** Danh sách sản phẩm rút gọn với giá đỏ/CheckoutActivity`):** cam nổi bật bên phải.
     - **Phương thức thanh toán:** Hệ thống chọn ZaloPay, MoMo, OnePay với hiệu ứng viền cam và dấu tích cam tùy chỉnh sắc nét.
     - **Khuyến mãi thông minh:** Hỗ trợ nhập Voucher và sử dụng điểm Stars (hiển thị số điểm hiện có) với hiệu ứng accordion mượt mà.
     - **Nơi nhận hàng chuyên nghiệp:** Bộ chọn Thành phố/Rạp dạng BottomSheet (1/3 màn hình) với dữ liệu 100% từ Cloud Firestore. Tự động hiển thị địa chỉ chi tiết của rạp đã chọn.
@@ -51,11 +52,18 @@
 - [x] **Hoàn thiện Tab Tài khoản (Profile):** Mascot, ưu đãi Stars, Quà tặng, Đặc quyền và danh sách liên kết hỗ trợ.
 - [x] **Xây dựng luồng Đăng nhập/Đăng ký:** DatePicker ngày sinh, UI cam chủ đạo.
 - [x] **Hệ thống Cài đặt:** LanguageActivity hỗ trợ chuyển đổi Tiếng Việt/English.
+- [x] **Chuẩn hóa tương tác (Interaction UI):** Thêm hiệu ứng **Bounce & Scale** (thu nhỏ nhẹ khi nhấn và nảy lên khi thả) cho toàn bộ Bottom Navigation, các nút bấm chính (Đặt hàng, Mua ngay) và các mục trong danh sách.
 - [x] **Chuẩn hóa UI/UX:** File `GEMINI.md` quy định chặt chẽ toàn dự án. Xóa bỏ hoàn toàn "Hardcode" dữ liệu tĩnh trong code Java.
 
 ## 🎬 GIAI ĐOẠN 4: CHI TIẾT PHIM & SUẤT CHIẾU (HOÀN THÀNH)
 - [x] Tạo màn hình `MovieDetailActivity` và tích hợp `ViewPager2` với `TabLayout` (3 tab: Suất Chiếu, Thông Tin, Tin Tức).
-- [x] **Hoàn thiện Tab Suất Chiếu:** Xây dựng danh sách rạp và giờ chiếu dạng accordion (thu/phóng) có hiệu ứng trượt mượt mà (sử dụng `DiffUtil` và `TransitionManager`).
+- [x] **Hoàn thiện Tab Suất Chiếu:** 
+    - Xây dựng danh sách rạp và giờ chiếu dạng accordion (thu/phóng) có hiệu ứng trượt mượt mà (sử dụng `DiffUtil` và `TransitionManager`).
+    - **Lọc suất chiếu thông minh:** Tự động đồng bộ vị trí từ Trang chủ (ví dụ: Nghệ An, TP Hồ Chí Minh) vào màn hình suất chiếu. Hỗ trợ chế độ "Toàn quốc" để hiển thị tất cả suất chiếu trên cả nước.
+    - **Đồng bộ hóa Cloud:** Danh sách khu vực được tải động từ collection `metadata` thay vì hardcode.
+- [x] **Sắp xếp danh sách phim thông minh:** 
+    - Tab Đang chiếu: Sắp xếp theo ngày phát hành mới nhất (Giảm dần).
+    - Tab Sắp chiếu: Sắp xếp theo ngày khởi chiếu gần nhất (Tăng dần).
 - [x] **Hoàn thiện Tab Thông Tin:** Thiết kế Header poster nổi, nội dung xem thêm/thu gọn, danh sách Diễn viên/Đạo diễn và Gallery.
 - [x] Xử lý chuyển hướng sang luồng đặt vé khi click vào một Suất chiếu.
 

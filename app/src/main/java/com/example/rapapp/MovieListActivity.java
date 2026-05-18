@@ -23,6 +23,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MovieListActivity extends AppCompatActivity {
@@ -72,6 +73,7 @@ public class MovieListActivity extends AppCompatActivity {
         allMovies = new ArrayList<>();
         
         movieAdapter = new MovieAdapter(this, movies);
+        movieAdapter.setSelectedLocation(selectedLocation);
         rvMovies.setLayoutManager(new GridLayoutManager(this, 2));
         rvMovies.setAdapter(movieAdapter);
 
@@ -139,6 +141,9 @@ public class MovieListActivity extends AppCompatActivity {
         view.findViewById(R.id.btnConfirm).setOnClickListener(v -> {
             selectedLocation = locations.get(picker.getValue());
             tvLocation.setText(selectedLocation);
+            if (movieAdapter != null) {
+                movieAdapter.setSelectedLocation(selectedLocation);
+            }
             bottomSheetDialog.dismiss();
         });
 
@@ -188,6 +193,20 @@ public class MovieListActivity extends AppCompatActivity {
                     movies.add(movie);
                 }
             }
+        }
+
+        if (isNowShowingSelected) {
+            // Sắp xếp Đang chiếu: Ngày phát hành giảm dần (mới nhất lên đầu)
+            Collections.sort(movies, (m1, m2) -> {
+                if (m1.getReleaseDate() == null || m2.getReleaseDate() == null) return 0;
+                return m2.getReleaseDate().compareTo(m1.getReleaseDate());
+            });
+        } else {
+            // Sắp xếp Sắp chiếu: Ngày phát hành tăng dần (gần nhất lên đầu)
+            Collections.sort(movies, (m1, m2) -> {
+                if (m1.getReleaseDate() == null || m2.getReleaseDate() == null) return 0;
+                return m1.getReleaseDate().compareTo(m2.getReleaseDate());
+            });
         }
         movieAdapter.notifyDataSetChanged();
     }

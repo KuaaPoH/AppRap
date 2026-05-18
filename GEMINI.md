@@ -45,3 +45,9 @@ File này chứa các nguyên tắc thiết kế giao diện (UI/UX) chuẩn c�
 ## 5. Quy tắc khác
 - **Giao diện tràn ngang (Match Parent):** Ưu tiên bọc màn hình bằng `ScrollView`/`NestedScrollView` thay vì để kích thước tĩnh nhằm tương thích với bàn phím và nhiều kích cỡ màn hình.
 - Các thuộc tính phải được tối giản, gom nhóm (VD: dùng `paddingHorizontal` thay cho `paddingLeft` và `paddingRight`).
+
+## 6. Hiệu ứng Animation & Tương tác (Interactions)
+- **Hiệu ứng Click (Bounce Effect):** Tất cả các nút bấm quan trọng (Mua ngay, Đặt hàng, Thêm vào giỏ hàng) và các Tab điều hướng phải có hiệu ứng thu nhỏ nhẹ (`scale 0.9x` hoặc `0.95x`) khi nhấn để tạo cảm giác phản hồi vật lý.
+- **Hiệu ứng Giỏ hàng (Flying Cart):** Khi thêm sản phẩm vào giỏ hàng, sử dụng hiệu ứng icon bay từ vị trí nút bấm lên biểu tượng giỏ hàng trên Header. Tuyệt đối không sử dụng Toast thông báo gây gián đoạn trải nghiệm người dùng.
+- **Hiệu ứng Nảy (Bounce Feedback):** Các phần tử mục tiêu (như icon giỏ hàng) phải có hiệu ứng nảy nhẹ (`scale 1.2x` rồi về `1.0x`) khi nhận được tác động từ animation bay tới.
+- **Chuyển động Accordion:** Sử dụng `TransitionManager` với `AccelerateDecelerateInterpolator` cho các danh sách thu/phóng (ví dụ: Suất chiếu theo rạp) để đảm bảo chuyển động mượt mà ở cả hai đầu.

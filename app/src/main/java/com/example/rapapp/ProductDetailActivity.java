@@ -1,8 +1,15 @@
 package com.example.rapapp;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -103,19 +110,26 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
 
         btnAddToCartBottom.setOnClickListener(v -> {
-            // Thêm sản phẩm với số lượng hiện tại vào giỏ hàng
-            for (int i = 0; i < currentQuantity; i++) {
-                CartManager.getInstance().addProduct(product);
-            }
-            updateCartBadge();
-            Toast.makeText(this, "Đã thêm " + currentQuantity + " sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+            v.animate().scaleX(0.95f).scaleY(0.95f).setDuration(100)
+                    .withEndAction(() -> {
+                        v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(100).start();
+                        // Thêm sản phẩm với số lượng hiện tại vào giỏ hàng
+                        for (int i = 0; i < currentQuantity; i++) {
+                            CartManager.getInstance().addProduct(product);
+                        }
+                        playAddToCartAnimation(v, layoutCart);
+                    }).start();
         });
 
         btnBuyNowBottom.setOnClickListener(v -> {
-            for (int i = 0; i < currentQuantity; i++) {
-                CartManager.getInstance().addProduct(product);
-            }
-            startActivity(new Intent(this, CartActivity.class));
+            v.animate().scaleX(0.95f).scaleY(0.95f).setDuration(100)
+                    .withEndAction(() -> {
+                        v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(100).start();
+                        for (int i = 0; i < currentQuantity; i++) {
+                            CartManager.getInstance().addProduct(product);
+                        }
+                        startActivity(new Intent(this, CartActivity.class));
+                    }).start();
         });
     }
 
@@ -140,5 +154,52 @@ public class ProductDetailActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         updateCartBadge();
+    }
+
+    private void playAddToCartAnimation(View startView, View endView) {
+        // Tạo một ImageView tạm thời để bay
+        final ImageView flyingIcon = new ImageView(this);
+        flyingIcon.setImageResource(R.drawable.ic_cart);
+        flyingIcon.setLayoutParams(new FrameLayout.LayoutParams(60, 60));
+        
+        // Lấy root view để add icon vào
+        final ViewGroup rootView = (ViewGroup) getWindow().getDecorView().findViewById(android.R.id.content);
+        rootView.addView(flyingIcon);
+
+        // Lấy vị trí bắt đầu và kết thúc
+        int[] startLoc = new int[2];
+        startView.getLocationInWindow(startLoc);
+        int[] endLoc = new int[2];
+        endView.getLocationInWindow(endLoc);
+
+        // Thiết lập vị trí ban đầu cho icon bay
+        flyingIcon.setX(startLoc[0] + startView.getWidth() / 2f - 30);
+        flyingIcon.setY(startLoc[1] + startView.getHeight() / 2f - 30);
+
+        // Hiệu ứng bay
+        ObjectAnimator animX = ObjectAnimator.ofFloat(flyingIcon, "translationX", endLoc[0] + endView.getWidth() / 2f - 30);
+        ObjectAnimator animY = ObjectAnimator.ofFloat(flyingIcon, "translationY", endLoc[1] + endView.getHeight() / 2f - 30);
+        animY.setInterpolator(new AccelerateInterpolator());
+
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(flyingIcon, "scaleX", 1.0f, 0.5f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(flyingIcon, "scaleY", 1.0f, 0.5f);
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(flyingIcon, "alpha", 1.0f, 0.5f);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(animX, animY, scaleX, scaleY, alpha);
+        animatorSet.setDuration(800);
+        animatorSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                rootView.removeView(flyingIcon);
+                updateCartBadge();
+                
+                // Hiệu ứng nảy cho giỏ hàng
+                endView.animate().scaleX(1.2f).scaleY(1.2f).setDuration(100)
+                        .withEndAction(() -> endView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(100).start())
+                        .start();
+            }
+        });
+        animatorSet.start();
     }
 }

@@ -47,7 +47,7 @@ public class ShopCheckoutActivity extends AppCompatActivity {
 
     private List<String> cities = new ArrayList<>();
     private List<Cinema> cinemasInCity = new ArrayList<>();
-    private String selectedCity = "TP. Hồ Chí Minh";
+    private String selectedCity = "TP Hồ Chí Minh";
     private Cinema selectedCinema;
 
     @Override
@@ -187,7 +187,7 @@ public class ShopCheckoutActivity extends AppCompatActivity {
         BottomSheetDialog dialog = new BottomSheetDialog(this);
         View view = getLayoutInflater().inflate(R.layout.dialog_location_picker, null);
         dialog.setContentView(view);
-        dialog.getBehavior().setPeekHeight(getResources().getDisplayMetrics().heightPixels / 3);
+        dialog.getBehavior().setPeekHeight(getResources().getDisplayMetrics().heightPixels / 2);
 
         TextView tvTitle = view.findViewById(R.id.tvTitle);
         tvTitle.setText("Chọn Thành Phố");
@@ -214,7 +214,7 @@ public class ShopCheckoutActivity extends AppCompatActivity {
         BottomSheetDialog dialog = new BottomSheetDialog(this);
         View view = getLayoutInflater().inflate(R.layout.dialog_location_picker, null);
         dialog.setContentView(view);
-        dialog.getBehavior().setPeekHeight(getResources().getDisplayMetrics().heightPixels / 3);
+        dialog.getBehavior().setPeekHeight(getResources().getDisplayMetrics().heightPixels / 2);
 
         TextView tvTitle = view.findViewById(R.id.tvTitle);
         tvTitle.setText("Chọn Rạp Nhận Hàng");

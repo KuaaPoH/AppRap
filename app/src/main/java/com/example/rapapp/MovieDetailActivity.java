@@ -20,6 +20,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private String movieId;
     private String movieTitle;
+    private String selectedLocation;
     private TextView tvToolbarTitle;
 
     @Override
@@ -29,6 +30,8 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         movieId = getIntent().getStringExtra("movieId");
         movieTitle = getIntent().getStringExtra("movieTitle");
+        selectedLocation = getIntent().getStringExtra("selectedLocation");
+        if (selectedLocation == null) selectedLocation = "Toàn quốc";
 
         tvToolbarTitle = findViewById(R.id.tvToolbarTitle);
         tvToolbarTitle.setText(movieTitle);
@@ -54,7 +57,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             @Override
             public Fragment createFragment(int position) {
                 switch (position) {
-                    case 0: return ShowtimeFragment.newInstance(movieId);
+                    case 0: return ShowtimeFragment.newInstance(movieId, selectedLocation);
                     case 1: return MovieInfoFragment.newInstance(movieId);
                     case 2: return MovieNewsFragment.newInstance(movieId);
                     default: return new Fragment();

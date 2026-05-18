@@ -23,7 +23,7 @@ import java.util.List;
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
     public interface OnProductClickListener {
-        void onAddToCart(Product product);
+        void onAddToCart(Product product, View view);
         void onBuyNow(Product product);
     }
 
@@ -68,11 +68,19 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         });
 
         holder.btnBuyNow.setOnClickListener(v -> {
-            if (listener != null) listener.onBuyNow(product);
+            v.animate().scaleX(0.95f).scaleY(0.95f).setDuration(100)
+                    .withEndAction(() -> {
+                        v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(100).start();
+                        if (listener != null) listener.onBuyNow(product);
+                    }).start();
         });
 
         holder.btnAddToCart.setOnClickListener(v -> {
-            if (listener != null) listener.onAddToCart(product);
+            v.animate().scaleX(0.95f).scaleY(0.95f).setDuration(100)
+                    .withEndAction(() -> {
+                        v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(100).start();
+                        if (listener != null) listener.onAddToCart(product, v);
+                    }).start();
         });
     }
 

@@ -35,10 +35,20 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
         updateUI();
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
-        findViewById(R.id.btnContinueShopping).setOnClickListener(v -> finish());
+        findViewById(R.id.btnContinueShopping).setOnClickListener(v -> {
+            v.animate().scaleX(0.95f).scaleY(0.95f).setDuration(100)
+                    .withEndAction(() -> {
+                        v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(100).start();
+                        finish();
+                    }).start();
+        });
         findViewById(R.id.btnOrder).setOnClickListener(v -> {
-            Intent intent = new Intent(this, ShopCheckoutActivity.class);
-            startActivity(intent);
+            v.animate().scaleX(0.95f).scaleY(0.95f).setDuration(100)
+                    .withEndAction(() -> {
+                        v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(100).start();
+                        Intent intent = new Intent(this, ShopCheckoutActivity.class);
+                        startActivity(intent);
+                    }).start();
         });
     }
 
@@ -86,6 +96,5 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
         CartManager.getInstance().removeProduct(item.getProduct());
         cartAdapter.notifyDataSetChanged();
         updateUI();
-        Toast.makeText(this, "Đã xóa " + item.getProduct().getName(), Toast.LENGTH_SHORT).show();
     }
 }

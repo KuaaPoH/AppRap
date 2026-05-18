@@ -1,5 +1,9 @@
 package com.example.rapapp.fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -10,6 +14,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,10 +86,9 @@ public class StarShopFragment extends Fragment {
 
         productAdapter = new ProductAdapter(getContext(), filteredProducts, new ProductAdapter.OnProductClickListener() {
             @Override
-            public void onAddToCart(Product product) {
+            public void onAddToCart(Product product, View view) {
                 CartManager.getInstance().addProduct(product);
-                updateCartBadge();
-                Toast.makeText(getContext(), "Đã thêm vào giỏ hàng: " + product.getName(), Toast.LENGTH_SHORT).show();
+                playAddToCartAnimation(view, layoutCart);
             }
 
             @Override
@@ -289,5 +295,54 @@ public class StarShopFragment extends Fragment {
         if (bannerRunnable != null) {
             bannerHandler.postDelayed(bannerRunnable, 5000);
         }
+    }
+
+    private void playAddToCartAnimation(View startView, View endView) {
+        if (getActivity() == null) return;
+
+        // Tạo một ImageView tạm thời để bay
+        final ImageView flyingIcon = new ImageView(getContext());
+        flyingIcon.setImageResource(R.drawable.ic_cart); 
+        flyingIcon.setLayoutParams(new FrameLayout.LayoutParams(60, 60));
+        
+        // Lấy root view để add icon vào
+        final ViewGroup rootView = (ViewGroup) getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
+        rootView.addView(flyingIcon);
+
+        // Lấy vị trí bắt đầu và kết thúc
+        int[] startLoc = new int[2];
+        startView.getLocationInWindow(startLoc);
+        int[] endLoc = new int[2];
+        endView.getLocationInWindow(endLoc);
+
+        // Thiết lập vị trí ban đầu cho icon bay
+        flyingIcon.setX(startLoc[0] + startView.getWidth() / 2f - 30);
+        flyingIcon.setY(startLoc[1] + startView.getHeight() / 2f - 30);
+
+        // Hiệu ứng bay
+        ObjectAnimator animX = ObjectAnimator.ofFloat(flyingIcon, "translationX", endLoc[0] + endView.getWidth() / 2f - 30);
+        ObjectAnimator animY = ObjectAnimator.ofFloat(flyingIcon, "translationY", endLoc[1] + endView.getHeight() / 2f - 30);
+        animY.setInterpolator(new AccelerateInterpolator());
+
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(flyingIcon, "scaleX", 1.0f, 0.5f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(flyingIcon, "scaleY", 1.0f, 0.5f);
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(flyingIcon, "alpha", 1.0f, 0.5f);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(animX, animY, scaleX, scaleY, alpha);
+        animatorSet.setDuration(800);
+        animatorSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                rootView.removeView(flyingIcon);
+                updateCartBadge();
+                
+                // Hiệu ứng nảy cho giỏ hàng
+                endView.animate().scaleX(1.2f).scaleY(1.2f).setDuration(100)
+                        .withEndAction(() -> endView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(100).start())
+                        .start();
+            }
+        });
+        animatorSet.start();
     }
 }
