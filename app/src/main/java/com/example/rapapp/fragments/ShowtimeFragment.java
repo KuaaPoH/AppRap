@@ -47,18 +47,18 @@ public class ShowtimeFragment extends Fragment {
     
     private String selectedCity = "TP Hồ Chí Minh";
     private String selectedCinemaId = "";
+    private String initialLocation = "Toàn quốc";
     private String selectedCinemaName = "Tất cả rạp";
     private String selectedDate = "";
     private Map<String, Boolean> cinemaExpandMap = new HashMap<>();
 
-    private final String[] locations = {
-        "An Giang", "Bà Rịa - Vũng Tàu", "Bắc Giang", "Bắc Kạn", "Bạc Liêu", "Bắc Ninh", "Bến Tre", "Bình Định", "Bình Dương", "Bình Phước", "Bình Thuận", "Cà Mau", "Cần Thơ", "Cao Bằng", "Đà Nẵng", "Đắk Lắk", "Đắk Nông", "Điện Biên", "Đồng Nai", "Đồng Tháp", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Nội", "Hà Tĩnh", "Hải Dương", "Hải Phòng", "Hậu Giang", "Hòa Bình", "Hưng Yên", "Khánh Hòa", "Kiên Giang", "Kon Tum", "Lai Châu", "Lâm Đồng", "Lạng Sơn", "Lào Cai", "Long An", "Nam Định", "Nghệ An", "Ninh Bình", "Ninh Thuận", "Phú Thọ", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh", "Quảng Trị", "Sóc Trăng", "Sơn La", "Tây Ninh", "Thái Bình", "Thái Nguyên", "Thanh Hóa", "Thừa Thiên Huế", "Tiền Giang", "TP Hồ Chí Minh", "Trà Vinh", "Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái"
-    };
+    private List<String> locations = new ArrayList<>();
 
-    public static ShowtimeFragment newInstance(String movieId) {
+    public static ShowtimeFragment newInstance(String movieId, String location) {
         ShowtimeFragment fragment = new ShowtimeFragment();
         Bundle args = new Bundle();
         args.putString("movieId", movieId);
+        args.putString("selectedLocation", location);
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,6 +68,8 @@ public class ShowtimeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             movieId = getArguments().getString("movieId");
+            initialLocation = getArguments().getString("selectedLocation", "Toàn quốc");
+            selectedCity = initialLocation;
         }
         db = FirebaseFirestore.getInstance();
     }
@@ -85,6 +87,7 @@ public class ShowtimeFragment extends Fragment {
         tvFilterCity.setText(selectedCity);
         tvFilterCinema.setText(selectedCinemaName);
 
+        loadLocationsFromFirebase();
         setupDateSelector();
         setupFilters();
 
@@ -130,24 +133,29 @@ public class ShowtimeFragment extends Fragment {
     }
 
     private void showLocationPicker() {
+        if (locations.isEmpty()) {
+            Toast.makeText(getContext(), "Đang tải danh sách địa điểm...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
         View v = getLayoutInflater().inflate(R.layout.dialog_location_picker, null);
         dialog.setContentView(v);
 
         NumberPicker picker = v.findViewById(R.id.locationPicker);
         picker.setMinValue(0);
-        picker.setMaxValue(locations.length - 1);
-        picker.setDisplayedValues(locations);
+        picker.setMaxValue(locations.size() - 1);
+        picker.setDisplayedValues(locations.toArray(new String[0]));
         
-        for (int i = 0; i < locations.length; i++) {
-            if (locations[i].equals(selectedCity)) {
+        for (int i = 0; i < locations.size(); i++) {
+            if (locations.get(i).equals(selectedCity)) {
                 picker.setValue(i);
                 break;
             }
         }
 
         v.findViewById(R.id.btnConfirm).setOnClickListener(view -> {
-            selectedCity = locations[picker.getValue()];
+            selectedCity = locations.get(picker.getValue());
             tvFilterCity.setText(selectedCity);
             selectedCinemaId = "";
             selectedCinemaName = "Tất cả rạp";
@@ -199,25 +207,28 @@ public class ShowtimeFragment extends Fragment {
     }
 
     private void loadShowtimes() {
-        db.collection("showtimes")
+        com.google.firebase.firestore.Query query = db.collection("showtimes")
                 .whereEqualTo("movieId", movieId)
-                .whereEqualTo("city", selectedCity)
-                .whereEqualTo("date", selectedDate)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    filteredShowtimes.clear();
-                    List<com.google.firebase.firestore.DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
-                    for (int i = 0; i < docs.size(); i++) {
-                        Showtime s = docs.get(i).toObject(Showtime.class);
-                        if (s != null) {
-                            s.setId(docs.get(i).getId());
-                            if (selectedCinemaId.isEmpty() || s.getCinemaId().equals(selectedCinemaId)) {
-                                filteredShowtimes.add(s);
-                            }
-                        }
+                .whereEqualTo("date", selectedDate);
+        
+        if (!selectedCity.equals("Toàn quốc")) {
+            query = query.whereEqualTo("city", selectedCity);
+        }
+
+        query.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            filteredShowtimes.clear();
+            List<com.google.firebase.firestore.DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
+            for (int i = 0; i < docs.size(); i++) {
+                Showtime s = docs.get(i).toObject(Showtime.class);
+                if (s != null) {
+                    s.setId(docs.get(i).getId());
+                    if (selectedCinemaId.isEmpty() || s.getCinemaId().equals(selectedCinemaId)) {
+                        filteredShowtimes.add(s);
                     }
-                    displayShowtimes();
-                });
+                }
+            }
+            displayShowtimes();
+        });
     }
 
     // Lớp model nội bộ để DiffUtil có thể so sánh chính xác
@@ -254,7 +265,12 @@ public class ShowtimeFragment extends Fragment {
     private ShowtimeFlatAdapter showtimeAdapter;
 
     private void displayShowtimes() {
-        db.collection("cinemas").whereEqualTo("city", selectedCity).get().addOnSuccessListener(cinemaDocs -> {
+        com.google.firebase.firestore.Query cinemaQuery = db.collection("cinemas");
+        if (!selectedCity.equals("Toàn quốc")) {
+            cinemaQuery = cinemaQuery.whereEqualTo("city", selectedCity);
+        }
+
+        cinemaQuery.get().addOnSuccessListener(cinemaDocs -> {
             Map<String, String> cinemaNameMap = new HashMap<>();
             for (com.google.firebase.firestore.DocumentSnapshot doc : cinemaDocs) {
                 cinemaNameMap.put(doc.getId(), doc.getString("name"));
@@ -493,5 +509,28 @@ public class ShowtimeFragment extends Fragment {
             super(v);
             tvTime = v.findViewById(R.id.tvTime);
         }
+    }
+
+    private void loadLocationsFromFirebase() {
+        db.collection("metadata").document("locations").get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                List<String> locList = (List<String>) documentSnapshot.get("list");
+                if (locList != null) {
+                    locations.clear();
+                    // Đảm bảo Toàn quốc luôn có mặt và ở đầu
+                    if (!locList.contains("Toàn quốc")) {
+                        locations.add("Toàn quốc");
+                    }
+                    locations.addAll(locList);
+                }
+            } else {
+                // Fallback nếu không có dữ liệu
+                if (locations.isEmpty()) {
+                    locations.add("Toàn quốc");
+                    locations.add("TP Hồ Chí Minh");
+                    locations.add("Hà Nội");
+                }
+            }
+        });
     }
 }

@@ -27,13 +27,6 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        // Nạp dữ liệu mẫu vào Firebase (Chỉ chạy một lần đầu tiên)
-        // DataSeeder.seedMovies();
-        // DataSeeder.seedCinemas();
-        // DataSeeder.seedShowtimes();
-        // DataSeeder.seedNews();
-        // DataSeeder.seedProducts();
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_content), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -53,6 +46,14 @@ public class MainActivity extends AppCompatActivity {
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
             int id = item.getItemId();
+
+            // Hiệu ứng nảy khi click
+            View itemView = bottomNav.findViewById(id);
+            if (itemView != null) {
+                itemView.animate().scaleX(1.1f).scaleY(1.1f).setDuration(100)
+                        .withEndAction(() -> itemView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(100).start())
+                        .start();
+            }
 
             if (id == R.id.nav_home) {
                 selectedFragment = new HomeFragment();

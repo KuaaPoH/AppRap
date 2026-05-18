@@ -19,10 +19,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     
     private Context context;
     private List<Movie> movieList;
+    private String selectedLocation = "Toàn quốc";
 
     public MovieAdapter(Context context, List<Movie> movieList) {
         this.context = context;
         this.movieList = movieList;
+    }
+
+    public void setSelectedLocation(String location) {
+        this.selectedLocation = location;
     }
 
     @NonNull
@@ -54,6 +59,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             Intent intent = new Intent(context, MovieDetailActivity.class);
             intent.putExtra("movieId", movie.getId());
             intent.putExtra("movieTitle", movie.getTitle());
+            intent.putExtra("selectedLocation", selectedLocation);
             context.startActivity(intent);
         });
     }

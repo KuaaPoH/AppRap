@@ -325,4 +325,39 @@ public class DataSeeder {
             db.collection("showtimes").add(s);
         }
     }
+
+    public void seedShowtimesCustom() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String[] cinemaIds = {"cinema_1", "ls0vPXYi2IJqbIx6BeqV", "m5SWtwuC0wiN6HhNnNdx", "mtaDT1DUauvtVNK9BCoe", "mtjzvwuGCxovi3qEYrs8", "nnxpL4jJrRXb1s2MWjdy", "oVfRlulMDgRTqvr9tK3g", "oZutMw2OTmkPWDQkioaI"};
+        String[] cities = {"Hà Nội", "TP Hồ Chí Minh", "TP Hồ Chí Minh", "TP Hồ Chí Minh", "TP Hồ Chí Minh", "Nghệ An", "Nghệ An", "Hải Phòng"};
+        String[] dates = {"2026-05-19", "2026-05-20"};
+        String[] movieIds = {"movie1", "movie10", "movie6", "movie7", "movie8", "movie9", "test"};
+        String[] roomIds = {"6AQN52PHZ02wJtcdA9r2", "DCg2NkYKnadI9RCCSbly", "P2FI2eO3POTAIzBCYFml", "kE8fbaz5qUQwpPIgRW6d"};
+        String[] formats = {"2D VietSub", "2D Lồng Tiếng"};
+        String[] times = {"16:00", "17:30", "18:45", "20:00"};
+
+        for (int i = 0; i < cinemaIds.length; i++) {
+            String cinemaId = cinemaIds[i];
+            String city = cities[i];
+            
+            for (String date : dates) {
+                for (String movieId : movieIds) {
+                    // Mỗi phim sinh khoảng 2 suất chiếu ngẫu nhiên tại mỗi rạp/ngày
+                    for (int j = 0; j < 2; j++) {
+                        Showtime s = new Showtime();
+                        s.setCinemaId(cinemaId);
+                        s.setCity(city);
+                        s.setDate(date);
+                        s.setMovieId(movieId);
+                        s.setRoomId(roomIds[(int) (Math.random() * roomIds.length)]);
+                        s.setFormat(formats[(int) (Math.random() * formats.length)]);
+                        s.setTime(times[(int) (Math.random() * times.length)]);
+                        
+                        db.collection("showtimes").add(s);
+                    }
+                }
+            }
+        }
+        Log.d("DataSeeder", "Đã gửi lệnh đẩy dữ liệu suất chiếu mẫu lên Firebase");
+    }
 }
