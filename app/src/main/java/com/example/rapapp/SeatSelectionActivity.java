@@ -89,6 +89,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
                 intent.putStringArrayListExtra("selectedSeats", new ArrayList<>(selectedSeats));
                 intent.putExtra("totalPrice", totalPrice);
                 intent.putExtra("movieId", movieId);
+                intent.putExtra("cinemaId", cinemaId);
                 intent.putExtra("showtimeId", showtimeId); // Quan trọng: Truyền showtimeId để Checkout biết cần cập nhật Firebase
                 intent.putExtra("movieTitle", tvMovieTitle.getText().toString());
                 intent.putExtra("cinemaName", tvCinemaName.getText().toString());

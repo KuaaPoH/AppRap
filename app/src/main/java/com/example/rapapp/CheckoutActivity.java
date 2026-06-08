@@ -55,16 +55,37 @@ public class CheckoutActivity extends AppCompatActivity {
         findViewById(R.id.btnCheckout).setOnClickListener(v -> {
             if (showtimeId != null && selectedSeats != null && !selectedSeats.isEmpty()) {
                 // Cập nhật ghế lên Firebase
-                com.google.firebase.firestore.FirebaseFirestore.getInstance()
-                        .collection("showtimes")
+                com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+                db.collection("showtimes")
                         .document(showtimeId)
                         .update("bookedSeats", com.google.firebase.firestore.FieldValue.arrayUnion(selectedSeats.toArray()))
-                        .addOnSuccessListener(aVoid -> showSuccessDialog())
+                        .addOnSuccessListener(aVoid -> {
+                            // Lưu thông tin đơn hàng để thống kê
+                            saveBookingData(db);
+                            showSuccessDialog();
+                        })
                         .addOnFailureListener(e -> Toast.makeText(this, "Lỗi cập nhật ghế: " + e.getMessage(), Toast.LENGTH_SHORT).show());
             } else {
                 showSuccessDialog(); // Fallback an toàn
             }
         });
+    }
+
+    private void saveBookingData(com.google.firebase.firestore.FirebaseFirestore db) {
+        android.content.Intent intent = getIntent();
+        String cinemaId = intent.getStringExtra("cinemaId");
+        String movieId = intent.getStringExtra("movieId");
+        double finalTotalPrice = intent.getDoubleExtra("finalTotalPrice", 0);
+
+        java.util.Map<String, Object> booking = new java.util.HashMap<>();
+        booking.put("showtimeId", showtimeId);
+        booking.put("cinemaId", cinemaId);
+        booking.put("movieId", movieId);
+        booking.put("totalPrice", finalTotalPrice);
+        booking.put("timestamp", com.google.firebase.firestore.FieldValue.serverTimestamp());
+        booking.put("seats", selectedSeats);
+
+        db.collection("bookings").add(booking);
     }
 
     private void showSuccessDialog() {

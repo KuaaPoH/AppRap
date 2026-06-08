@@ -78,6 +78,22 @@
 - [x] **Thông báo thành công:** Thiết kế Custom Success Dialog chuyên nghiệp và điều hướng luồng về trang chủ.
 - [ ] **GIAI ĐOẠN CUỐI:** Xuất vé điện tử (Mã QR/Barcode).
 
+## 🛠️ GIAI ĐOẠN 7: HỆ THỐNG QUẢN TRỊ (ADMIN PANEL - HOÀN THÀNH)
+- [x] **Kiến trúc Modern Package:** Tách biệt hoàn toàn mã nguồn Admin vào package `com.example.rapapp.admin` với cấu trúc `activities` và `adapters` riêng biệt.
+- [x] **Giao diện Bento Dashboard:** 
+    - Thiết kế Dashboard theo xu hướng **Bento Box** hiện đại với các khối bo góc lớn (24dp), hiệu ứng đổ bóng và màu sắc nhận diện thương hiệu.
+    - **Hệ thống Thống kê Real-time:** Khối thống kê tự động đếm số lượng thực tế từ Firestore ngay khi mở màn hình.
+    - **Mascot Branding:** Tích hợp ảnh chú gấu mascot với viền xanh Galaxy và độ hiển thị đậm nét (alpha 1.0) chuyên nghiệp.
+- [x] **Bộ lọc Thống kê Kép (Dual Filter):** 
+    - **Lọc theo Rạp:** Tự động cập nhật Doanh thu và Suất chiếu theo từng rạp cụ thể qua Dropdown.
+    - **Lọc theo Ngày:** Tích hợp bộ chọn ngày (DatePicker) để theo dõi dữ liệu theo mốc thời gian. Hỗ trợ Reset lọc bằng cách nhấn giữ (Long click).
+- [x] **Quản lý Toàn diện (7 Module CRUD):** 
+    - Phim, Rạp, Suất chiếu, Sản phẩm Star Shop, Phòng chiếu, Tin tức, Banner.
+- [x] **Seat Map Editor Trực quan:** Xây dựng trình chỉnh sửa sơ đồ ghế (Grid Editor) tỉ lệ nhỏ (20dp). Hỗ trợ chạm để đổi trạng thái ghế (Đơn, Đôi, Ba, VIP, Trống) và tự động tính toán kích thước ghế linh hoạt.
+- [x] **Format Toolbar (Rich Text Engine):** Tích hợp thanh công cụ chèn nhanh định dạng (In đậm `<b>`, Chèn ảnh `IMAGE:`, Gạch đầu dòng `BULLET:`) cho module Tin tức và Banner, giúp Admin soạn thảo nội dung như Microsoft Word.
+- [x] **Action Bar Pattern:** Đồng bộ giao diện danh sách quản lý: Thanh tìm kiếm (Search Bar) bên trái và Nút Thêm mới (Add Button) bên phải, thay thế hoàn toàn FAB truyền thống để tối ưu UX.
+- [x] **Dropdown & Automation:** Tự động hóa bộ chọn Thành phố (63 tỉnh thành) và bộ chọn Phòng chiếu động theo Rạp đã chọn.
+
 ---
 ## 🗄️ CẤU TRÚC CƠ SỞ DỮ LIỆU (FIREBASE FIRESTORE SCHEMA)
 *(Chi tiết các Model đã triển khai)*
@@ -96,17 +112,16 @@
 *   `price` (Number/Double): Giá vé cơ bản.
 *   `galleryUrls` (Array of Strings): Danh sách link ảnh thư viện phim.
 
-**2. Collection `banners` (Danh sách Banner quảng cáo):**
+**2. Collection `banners` (Danh sách Banner quảng cáo - Độc lập):**
 *   `imageUrl` (String): Link ảnh banner.
-*   `newsId` (String): ID bài báo liên quan.
-*   `contentBlocks` (Array of Maps): Dữ liệu nội dung chi tiết nếu không trỏ tới newsId (Gồm `type` và `value`).
+*   `contentBlocks` (Array of Maps): Dữ liệu nội dung đa phương tiện hiển thị khi click (Gồm `type` và `value`).
 
 **3. Collection `cinemas` (Danh sách rạp chiếu):**
 *   `name` (String): Tên rạp.
 *   `address` (String): Địa chỉ.
 *   `imageUrl` (String): Link ảnh đại diện rạp.
 *   `phone` (String): Số điện thoại liên hệ.
-*   `city` (String): Tỉnh/Thành phố.
+*   `city` (String): Tỉnh/Thành phố (63 tỉnh thành).
 
 **4. Collection `products` (Danh sách sản phẩm Star Shop):**
 *   `name` (String): Tên sản phẩm.
@@ -119,11 +134,11 @@
 *   `title` (String): Tiêu đề bài viết.
 *   `imageUrl` (String): Link ảnh bìa.
 *   `category` (String): Danh mục ("Review", "News", "Character").
-*   `contentBlocks` (Array of Maps): `type` ("text"/"image") và `value`.
+*   `contentBlocks` (Array of Maps): `type` ("text"/"image"/"bullet") và `value`.
 *   `publishedDate` (Timestamp): Ngày đăng bài.
 
 **6. Collection `rooms` (Danh sách Phòng chiếu):**
-*   `cinemaId` (String): ID rạp chiếu chứa phòng này.
+*   `cinemaId` (String): ID rạp chiếu chứa phòng này (Tùy chọn).
 *   `name` (String): Tên phòng (VD: "Phòng 1").
 *   `totalRows` (Number/Int): Tổng số hàng ghế.
 *   `totalCols` (Number/Int): Tổng số cột ghế.
@@ -132,23 +147,26 @@
 **7. Collection `showtimes` (Danh sách suất chiếu):**
 *   `movieId` (String): ID phim.
 *   `cinemaId` (String): ID rạp chiếu.
-*   `roomId` (String): ID phòng chiếu (Liên kết với `rooms`).
+*   `roomId` (String): ID phòng chiếu (Liên kết động với `rooms`).
 *   `city` (String): Tỉnh/Thành phố của rạp.
 *   `date` (String): Ngày chiếu ("yyyy-MM-dd").
 *   `time` (String): Giờ chiếu ("HH:mm").
 *   `format` (String): Định dạng (VD: "2D LỒNG TIẾNG").
 *   `bookedSeats` (Array of Strings): Danh sách mã ghế đã bán (VD: `["E5", "E6"]`).
 
-**8. Collection `combos` (Danh sách Bắp Nước cho đặt vé):**
-*   `name` (String): Tên combo.
-*   `description` (String): Mô tả chi tiết.
-*   `price` (Number/Double): Giá tiền.
-*   `imageUrl` (String): Link ảnh combo.
+**8. Collection `bookings` (Thống kê đơn hàng - MỚI):**
+*   `cinemaId` (String): Rạp thực hiện giao dịch.
+*   `movieId` (String): Phim đã mua.
+*   `showtimeId` (String): Suất chiếu liên quan.
+*   `totalPrice` (Number/Double): Tổng số tiền thanh toán thành công.
+*   `timestamp` (Timestamp): Thời gian thanh toán (Dùng để lọc doanh thu theo ngày).
+*   `seats` (Array of Strings): Danh sách các ghế đã mua.
 
 **9. Collection `metadata` (Thông tin hệ thống):**
 *   Document `locations`: Chứa mảng `list` gồm danh sách 63 tỉnh thành Việt Nam.
 
 ---
 **CẬP NHẬT TIẾN ĐỘ HIỆN TẠI:**
-- **Tiến độ:** Đã hoàn thiện 100% luồng đặt vé và mua sắm của ứng dụng. Toàn bộ hệ thống (Shopping Cart, Star Shop, Movie Booking) đã được chuẩn hóa UI/UX cực kỳ chuyên nghiệp và mượt mà.
-- **Trạng thái:** Dữ liệu đồng bộ Real-time với Cloud Firestore thông qua các Model đã được tối ưu hóa. Chỉ còn bước cuối cùng là xuất vé điện tử.
+- **Tiến độ:** Đã hoàn thiện 100% hệ thống Quản trị (Admin Panel) với đầy đủ tính năng CRUD nâng cao, thống kê doanh thu và bộ công cụ soạn thảo trực quan.
+- **Trạng thái:** Toàn bộ hệ thống quản lý đã đồng bộ Real-time với Cloud Firestore. Dự án đã sẵn sàng cho bước cuối cùng.
+

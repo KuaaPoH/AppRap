@@ -26,6 +26,14 @@ public class ProfileFragment extends Fragment {
         AppCompatButton btnProfileRegister = view.findViewById(R.id.btnProfileRegister);
         AppCompatButton btnProfileLogin = view.findViewById(R.id.btnProfileLogin);
         ImageView btnSettings = view.findViewById(R.id.btnSettings);
+        View btnAdmin = view.findViewById(R.id.btnAdmin);
+
+        if (btnAdmin != null) {
+            btnAdmin.setOnClickListener(v -> {
+                Intent intent = new Intent(getActivity(), com.example.rapapp.admin.activities.AdminDashboardActivity.class);
+                startActivity(intent);
+            });
+        }
 
         if (btnSettings != null) {
             btnSettings.setOnClickListener(v -> {
