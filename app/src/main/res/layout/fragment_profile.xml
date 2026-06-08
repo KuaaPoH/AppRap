@@ -375,6 +375,35 @@
 
                 <!-- FAQ -->
                 <RelativeLayout
+                    android:id="@+id/btnAdmin"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="Quản trị viên"
+                        android:textColor="#F58020"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_chevron_right" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/divider_gray" />
+                </RelativeLayout>
+
+                <!-- FAQ -->
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="48dp">
 

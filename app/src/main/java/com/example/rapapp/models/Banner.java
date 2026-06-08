@@ -5,7 +5,6 @@ import java.util.List;
 public class Banner {
     private String id;
     private String imageUrl;
-    private String newsId;
     private List<ContentBlock> contentBlocks;
 
     public static class ContentBlock {
@@ -26,9 +25,8 @@ public class Banner {
 
     public Banner() {}
 
-    public Banner(String imageUrl, String newsId) {
+    public Banner(String imageUrl) {
         this.imageUrl = imageUrl;
-        this.newsId = newsId;
     }
 
     public String getId() { return id; }
@@ -36,9 +34,6 @@ public class Banner {
 
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
-
-    public String getNewsId() { return newsId; }
-    public void setNewsId(String newsId) { this.newsId = newsId; }
 
     public List<ContentBlock> getContentBlocks() { return contentBlocks; }
     public void setContentBlocks(List<ContentBlock> contentBlocks) { this.contentBlocks = contentBlocks; }
