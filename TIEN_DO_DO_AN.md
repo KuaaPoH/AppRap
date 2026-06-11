@@ -50,7 +50,9 @@
 
 ## 👤 GIAI ĐOẠN 3.6: TÀI KHOẢN & HỆ THỐNG
 - [x] **Hoàn thiện Tab Tài khoản (Profile):** Mascot, ưu đãi Stars, Quà tặng, Đặc quyền và danh sách liên kết hỗ trợ.
-- [x] **Xây dựng luồng Đăng nhập/Đăng ký:** DatePicker ngày sinh, UI cam chủ đạo.
+- [x] **Xây dựng luồng Đăng nhập/Đăng ký:** DatePicker ngày sinh, tích hợp **Firebase Authentication** (Email/Password).
+- [x] **Quản lý Thông tin Người dùng (Profile Edit):** Cho phép người dùng cập nhật Họ tên, SĐT, Ngày sinh.
+- [x] **Hệ thống Avatar Base64:** Nén và mã hóa ảnh đại diện thành chuỗi Base64 lưu trực tiếp vào Firestore, giúp hiển thị ảnh Avatar cực nhanh mà không tốn phí lưu trữ Firebase Storage.
 - [x] **Hệ thống Cài đặt:** LanguageActivity hỗ trợ chuyển đổi Tiếng Việt/English.
 - [x] **Chuẩn hóa tương tác (Interaction UI):** Thêm hiệu ứng **Bounce & Scale** (thu nhỏ nhẹ khi nhấn và nảy lên khi thả) cho toàn bộ Bottom Navigation, các nút bấm chính (Đặt hàng, Mua ngay) và các mục trong danh sách.
 - [x] **Chuẩn hóa UI/UX:** File `GEMINI.md` quy định chặt chẽ toàn dự án. Xóa bỏ hoàn toàn "Hardcode" dữ liệu tĩnh trong code Java.
@@ -60,6 +62,7 @@
 - [x] **Hoàn thiện Tab Suất Chiếu:** 
     - Xây dựng danh sách rạp và giờ chiếu dạng accordion (thu/phóng) có hiệu ứng trượt mượt mà (sử dụng `DiffUtil` và `TransitionManager`).
     - **Lọc suất chiếu thông minh:** Tự động đồng bộ vị trí từ Trang chủ (ví dụ: Nghệ An, TP Hồ Chí Minh) vào màn hình suất chiếu. Hỗ trợ chế độ "Toàn quốc" để hiển thị tất cả suất chiếu trên cả nước.
+    - **Tự động ẩn suất chiếu quá hạn:** Ẩn các suất chiếu đã chiếu quá 15 phút so với thời gian thực tế.
     - **Đồng bộ hóa Cloud:** Danh sách khu vực được tải động từ collection `metadata` thay vì hardcode.
 - [x] **Sắp xếp danh sách phim thông minh:** 
     - Tab Đang chiếu: Sắp xếp theo ngày phát hành mới nhất (Giảm dần).
@@ -68,35 +71,35 @@
 - [x] Xử lý chuyển hướng sang luồng đặt vé khi click vào một Suất chiếu.
 
 ## 🎟️ GIAI ĐOẠN 5: LUỒNG ĐẶT VÉ (HOÀN THÀNH)
-- [x] **Màn hình Chọn Ghế (Seat Map):** Tải sơ đồ ghế động từ Firestore, tự động vẽ lưới ghế, tính toán giá vé theo loại ghế (Đơn, Đôi, Ba, VIP). Tích hợp Dropdown chọn nhanh giờ chiếu, hiệu ứng Pop animation mượt mà và căn giữa sơ đồ thông minh.
+- [x] **Màn hình Chọn Ghế (Seat Map):** Tải sơ đồ ghế động từ Firestore, tự động vẽ lưới ghế, tính toán giá vé theo loại ghế (Đơn, Đôi, Ba, VIP). Tích hợp Dropdown chọn nhanh giờ chiếu, hiệu ứng Pop animation mượt mà và căn giữa sơ đồ thông minh. Bắt buộc đăng nhập trước khi chọn ghế.
 - [x] **Màn hình Chọn Bắp Nước (Combo):** Tải danh sách Combo từ Firestore, thiết kế CardView nhỏ gọn (Compact UI), tích hợp bộ đếm (+/-) và tự động tính tổng tiền.
+- [x] **Lưu trữ Giỏ hàng (Persistent Cart):** Sử dụng SharedPreferences và Gson để lưu trữ giỏ hàng Star Shop cục bộ, đảm bảo không mất dữ liệu khi thoát app.
 
 ## 💳 GIAI ĐOẠN 6: XÁC NHẬN & THANH TOÁN (HOÀN THÀNH)
 - [x] **Màn hình Giao dịch (Checkout):** Hiển thị hóa đơn chi tiết với hiệu ứng "Vé bị cắt viền" (Ticket Cutout) độc đáo, các đường kẻ đứt phân cách và phân loại giá Ghế/Combo rõ ràng.
-- [x] **Giao diện thanh toán:** Chức năng chọn phương thức thanh toán (OnePay, MoMo, ZaloPay, ShopeePay) với thiết kế hiện đại, tinh tế.
+- [x] **Giao diện thanh toán:** Chức năng chọn phương thức thanh toán (OnePay, MoMo, ZaloPay, ShopeePay) với thiết kế hiện đại, tinh tế. Bắt buộc đăng nhập trước khi thanh toán Star Shop.
 - [x] **Đồng bộ Dữ liệu Real-time:** Tích hợp cập nhật trạng thái ghế (`bookedSeats`) lên Firebase ngay sau khi thanh toán thành công để khóa ghế cho các người dùng khác.
+- [x] **Tích điểm (Stars):** Tự động tính toán (1 Star/20.000đ) và cộng dồn điểm vào tài khoản người dùng sau khi thanh toán đơn vé hoặc Star Shop.
+- [x] **Lịch sử Giao dịch:** Hiển thị danh sách vé đã mua với thiết kế thẻ vé (khuyết 2 bên). Phân biệt vé phim và hóa đơn Star Shop.
+- [x] **Chi tiết Giao dịch (Virtual Ticket):** Bóc tách chi tiết từng mã vé ghế, từng combo bắp nước kèm giá tiền và số Stars tương ứng. Giao diện chuẩn vé điện tử có dải phân cách răng cưa.
 - [x] **Thông báo thành công:** Thiết kế Custom Success Dialog chuyên nghiệp và điều hướng luồng về trang chủ.
 - [ ] **GIAI ĐOẠN CUỐI:** Xuất vé điện tử (Mã QR/Barcode).
 
 ## 🛠️ GIAI ĐOẠN 7: HỆ THỐNG QUẢN TRỊ (ADMIN PANEL - HOÀN THÀNH)
 - [x] **Kiến trúc Modern Package:** Tách biệt hoàn toàn mã nguồn Admin vào package `com.example.rapapp.admin` với cấu trúc `activities` và `adapters` riêng biệt.
-- [x] **Giao diện Bento Dashboard:** 
-    - Thiết kế Dashboard theo xu hướng **Bento Box** hiện đại với các khối bo góc lớn (24dp), hiệu ứng đổ bóng và màu sắc nhận diện thương hiệu.
-    - **Hệ thống Thống kê Real-time:** Khối thống kê tự động đếm số lượng thực tế từ Firestore ngay khi mở màn hình.
-    - **Mascot Branding:** Tích hợp ảnh chú gấu mascot với viền xanh Galaxy và độ hiển thị đậm nét (alpha 1.0) chuyên nghiệp.
-- [x] **Bộ lọc Thống kê Kép (Dual Filter):** 
-    - **Lọc theo Rạp:** Tự động cập nhật Doanh thu và Suất chiếu theo từng rạp cụ thể qua Dropdown.
-    - **Lọc theo Ngày:** Tích hợp bộ chọn ngày (DatePicker) để theo dõi dữ liệu theo mốc thời gian. Hỗ trợ Reset lọc bằng cách nhấn giữ (Long click).
-- [x] **Quản lý Toàn diện (7 Module CRUD):** 
-    - Phim, Rạp, Suất chiếu, Sản phẩm Star Shop, Phòng chiếu, Tin tức, Banner.
-- [x] **Seat Map Editor Trực quan:** Xây dựng trình chỉnh sửa sơ đồ ghế (Grid Editor) tỉ lệ nhỏ (20dp). Hỗ trợ chạm để đổi trạng thái ghế (Đơn, Đôi, Ba, VIP, Trống) và tự động tính toán kích thước ghế linh hoạt.
-- [x] **Format Toolbar (Rich Text Engine):** Tích hợp thanh công cụ chèn nhanh định dạng (In đậm `<b>`, Chèn ảnh `IMAGE:`, Gạch đầu dòng `BULLET:`) cho module Tin tức và Banner, giúp Admin soạn thảo nội dung như Microsoft Word.
-- [x] **Action Bar Pattern:** Đồng bộ giao diện danh sách quản lý: Thanh tìm kiếm (Search Bar) bên trái và Nút Thêm mới (Add Button) bên phải, thay thế hoàn toàn FAB truyền thống để tối ưu UX.
+- [x] **Giao diện Bento Dashboard:** Thiết kế Dashboard theo xu hướng **Bento Box** hiện đại. Thống kê Real-time số lượng và doanh thu.
+- [x] **Bộ lọc Thống kê Kép (Dual Filter):** Lọc theo Rạp và Lọc theo Ngày bằng DatePicker.
+- [x] **Quản lý Toàn diện (9 Module CRUD):** 
+    - Phim, Rạp, Suất chiếu, Sản phẩm Star Shop, Phòng chiếu, Tin tức, Banner, **Người dùng (Users)**, **Combo Bắp Nước**.
+- [x] **Ràng buộc Suất chiếu (Anti-Overlap):** Thuật toán tự động ngăn chặn tạo/sửa suất chiếu bị trùng giờ tại cùng một phòng (tính toán dựa trên thời lượng phim + 15p dọn dẹp).
+- [x] **Quản lý Người dùng & Phân quyền:** Admin có thể thay đổi thông tin User (Tên, SĐT), thăng cấp lên Admin, điều chỉnh điểm Stars, và kiểm tra toàn bộ lịch sử mua sắm của bất kỳ tài khoản nào.
+- [x] **Seat Map Editor Trực quan:** Xây dựng trình chỉnh sửa sơ đồ ghế (Grid Editor) tỉ lệ nhỏ (20dp). Hỗ trợ chạm để đổi trạng thái ghế (Đơn, Đôi, Ba, VIP, Trống).
+- [x] **Format Toolbar (Rich Text Engine):** Tích hợp thanh công cụ chèn nhanh định dạng cho module Tin tức và Banner, giúp Admin soạn thảo nội dung chuyên nghiệp.
+- [x] **Action Bar Pattern:** Đồng bộ giao diện danh sách quản lý: Thanh tìm kiếm (Search Bar) bên trái và Nút Thêm mới (Add Button) bên phải.
 - [x] **Dropdown & Automation:** Tự động hóa bộ chọn Thành phố (63 tỉnh thành) và bộ chọn Phòng chiếu động theo Rạp đã chọn.
 
 ---
 ## 🗄️ CẤU TRÚC CƠ SỞ DỮ LIỆU (FIREBASE FIRESTORE SCHEMA)
-*(Chi tiết các Model đã triển khai)*
 
 **1. Collection `movies` (Danh sách phim):**
 *   `title` (String): Tên phim.
@@ -154,15 +157,33 @@
 *   `format` (String): Định dạng (VD: "2D LỒNG TIẾNG").
 *   `bookedSeats` (Array of Strings): Danh sách mã ghế đã bán (VD: `["E5", "E6"]`).
 
-**8. Collection `bookings` (Thống kê đơn hàng - MỚI):**
-*   `cinemaId` (String): Rạp thực hiện giao dịch.
-*   `movieId` (String): Phim đã mua.
-*   `showtimeId` (String): Suất chiếu liên quan.
-*   `totalPrice` (Number/Double): Tổng số tiền thanh toán thành công.
-*   `timestamp` (Timestamp): Thời gian thanh toán (Dùng để lọc doanh thu theo ngày).
-*   `seats` (Array of Strings): Danh sách các ghế đã mua.
+**8. Collection `users` (Thông tin tài khoản - MỚI):**
+*   `uid` (String): Mã ID định danh từ Firebase Auth.
+*   `name` (String): Họ và tên.
+*   `email` (String): Địa chỉ Email.
+*   `phone` (String): Số điện thoại liên hệ.
+*   `birthday` (String): Ngày sinh.
+*   `role` (String): Quyền hạn ("user" hoặc "admin").
+*   `stars` (Number/Int): Tổng điểm tích lũy.
+*   `avatarUrl` (String): Chuỗi mã hóa ảnh đại diện Base64 (hoặc URL ảnh).
 
-**9. Collection `metadata` (Thông tin hệ thống):**
+**9. Collection `combos` (Danh sách Combo bắp nước - MỚI):**
+*   `name` (String): Tên combo.
+*   `price` (Number/Double): Giá tiền.
+*   `imageUrl` (String): Link ảnh minh họa.
+*   `description` (String): Nội dung combo.
+
+**10. Collection `bookings` (Thống kê đơn hàng - CẬP NHẬT):**
+*   `userId` (String): ID của khách hàng thực hiện mua (Liên kết `users`).
+*   `type` (String): Loại giao dịch ("movie_ticket" hoặc "star_shop").
+*   `mainTitle` (String): Tên hiển thị tóm tắt (Tên phim hoặc Tóm tắt món hàng).
+*   `mainImage` (String): Link ảnh đại diện đơn hàng.
+*   `totalPrice` (Number/Double): Tổng số tiền thanh toán thành công.
+*   `timestamp` (Date/ServerTimestamp): Thời gian thanh toán.
+*   *(Chi tiết vé)*: `cinemaId`, `cinemaName`, `movieId`, `showtimeId`, `seats` (Mảng ghế), `seatTotalPrice`.
+*   *(Chi tiết combo/shop)*: `combos` (Mảng tên combo), `comboPrices` (Mảng giá combo), `items` (Mảng Map chứa chi tiết giỏ hàng Star Shop).
+
+**11. Collection `metadata` (Thông tin hệ thống):**
 *   Document `locations`: Chứa mảng `list` gồm danh sách 63 tỉnh thành Việt Nam.
 
 ---

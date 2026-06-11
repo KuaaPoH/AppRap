@@ -87,13 +87,13 @@ public class StarShopFragment extends Fragment {
         productAdapter = new ProductAdapter(getContext(), filteredProducts, new ProductAdapter.OnProductClickListener() {
             @Override
             public void onAddToCart(Product product, View view) {
-                CartManager.getInstance().addProduct(product);
+                CartManager.getInstance(getContext()).addProduct(product);
                 playAddToCartAnimation(view, layoutCart);
             }
 
             @Override
             public void onBuyNow(Product product) {
-                CartManager.getInstance().addProduct(product);
+                CartManager.getInstance(getContext()).addProduct(product);
                 startActivity(new Intent(getActivity(), CartActivity.class));
             }
         });
@@ -273,7 +273,7 @@ public class StarShopFragment extends Fragment {
     }
 
     private void updateCartBadge() {
-        int total = CartManager.getInstance().getTotalQuantity();
+        int total = CartManager.getInstance(getContext()).getTotalQuantity();
         if (total > 0) {
             tvCartBadge.setText(String.valueOf(total));
             tvCartBadge.setVisibility(View.VISIBLE);

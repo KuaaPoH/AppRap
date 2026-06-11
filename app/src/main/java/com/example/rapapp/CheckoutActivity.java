@@ -74,18 +74,41 @@ public class CheckoutActivity extends AppCompatActivity {
     private void saveBookingData(com.google.firebase.firestore.FirebaseFirestore db) {
         android.content.Intent intent = getIntent();
         String cinemaId = intent.getStringExtra("cinemaId");
+        String cinemaName = intent.getStringExtra("cinemaName");
         String movieId = intent.getStringExtra("movieId");
+        String movieTitle = intent.getStringExtra("movieTitle");
+        String posterUrl = intent.getStringExtra("posterUrl");
         double finalTotalPrice = intent.getDoubleExtra("finalTotalPrice", 0);
+        double seatTotalPrice = intent.getDoubleExtra("totalPrice", 0);
+        ArrayList<String> selectedCombos = intent.getStringArrayListExtra("selectedCombos");
+        ArrayList<String> selectedComboPrices = intent.getStringArrayListExtra("selectedComboPrices");
+        
+        String userId = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser() != null ? 
+                com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser().getUid() : null;
 
         java.util.Map<String, Object> booking = new java.util.HashMap<>();
+        booking.put("userId", userId);
         booking.put("showtimeId", showtimeId);
         booking.put("cinemaId", cinemaId);
+        booking.put("cinemaName", cinemaName);
         booking.put("movieId", movieId);
+        booking.put("mainTitle", movieTitle);
+        booking.put("mainImage", posterUrl);
         booking.put("totalPrice", finalTotalPrice);
+        booking.put("seatTotalPrice", seatTotalPrice);
+        booking.put("combos", selectedCombos);
+        booking.put("comboPrices", selectedComboPrices);
         booking.put("timestamp", com.google.firebase.firestore.FieldValue.serverTimestamp());
         booking.put("seats", selectedSeats);
+        booking.put("type", "movie_ticket");
 
-        db.collection("bookings").add(booking);
+        db.collection("bookings").add(booking).addOnSuccessListener(documentReference -> {
+            if (userId != null) {
+                int earnedStars = (int) (finalTotalPrice / 20000);
+                db.collection("users").document(userId)
+                    .update("stars", com.google.firebase.firestore.FieldValue.increment(earnedStars));
+            }
+        });
     }
 
     private void showSuccessDialog() {

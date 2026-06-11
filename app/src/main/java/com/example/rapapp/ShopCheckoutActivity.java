@@ -73,10 +73,65 @@ public class ShopCheckoutActivity extends AppCompatActivity {
                 Toast.makeText(this, "Vui lòng chọn rạp nhận hàng", Toast.LENGTH_SHORT).show();
                 return;
             }
+            saveShopOrder();
             showSuccessDialog();
         });
 
         setupExpandables();
+    }
+
+    private void saveShopOrder() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String userId = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser() != null ? 
+                com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser().getUid() : null;
+        
+        long totalAmount = CartManager.getInstance(this).getTotalAmount();
+        List<com.example.rapapp.models.CartItem> items = CartManager.getInstance(this).getCartItems();
+        List<java.util.Map<String, Object>> itemMaps = new ArrayList<>();
+        
+        for (com.example.rapapp.models.CartItem item : items) {
+            java.util.Map<String, Object> itemMap = new java.util.HashMap<>();
+            itemMap.put("productId", item.getProduct().getId());
+            itemMap.put("productName", item.getProduct().getName());
+            itemMap.put("productImage", item.getProduct().getImageUrl());
+            itemMap.put("quantity", item.getQuantity());
+            itemMap.put("price", item.getProduct().getPrice());
+            itemMaps.add(itemMap);
+        }
+
+        java.util.Map<String, Object> order = new java.util.HashMap<>();
+        order.put("userId", userId);
+        order.put("totalPrice", (double) totalAmount);
+        order.put("timestamp", com.google.firebase.firestore.FieldValue.serverTimestamp());
+        order.put("items", itemMaps);
+        order.put("cinemaId", selectedCinema.getId());
+        order.put("cinemaName", selectedCinema.getName());
+        order.put("type", "star_shop");
+
+        if (!items.isEmpty()) {
+            com.example.rapapp.models.Product firstProduct = items.get(0).getProduct();
+            String firstProductName = firstProduct.getName();
+            String mainTitleSummary = items.size() > 1 ? firstProductName + " và " + (items.size() - 1) + " sản phẩm khác" : firstProductName;
+            order.put("mainTitle", mainTitleSummary);
+            
+            String imageUrl = firstProduct.getImageUrl();
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                order.put("mainImage", imageUrl);
+            } else {
+                order.put("mainImage", ""); // Explicit empty string instead of null
+            }
+        } else {
+            order.put("mainTitle", "Đơn hàng Star Shop");
+            order.put("mainImage", "");
+        }
+
+        db.collection("bookings").add(order).addOnSuccessListener(documentReference -> {
+            if (userId != null) {
+                int earnedStars = (int) (totalAmount / 20000);
+                db.collection("users").document(userId)
+                    .update("stars", com.google.firebase.firestore.FieldValue.increment(earnedStars));
+            }
+        });
     }
 
     private void initViews() {
@@ -109,7 +164,7 @@ public class ShopCheckoutActivity extends AppCompatActivity {
         dialog.setCancelable(false);
 
         dialog.findViewById(R.id.btnGoHome).setOnClickListener(v -> {
-            CartManager.getInstance().clearCart();
+            CartManager.getInstance(this).clearCart();
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
@@ -117,7 +172,7 @@ public class ShopCheckoutActivity extends AppCompatActivity {
         });
 
         dialog.findViewById(R.id.btnContinue).setOnClickListener(v -> {
-            CartManager.getInstance().clearCart();
+            CartManager.getInstance(this).clearCart();
             dialog.dismiss();
             
             // Quay về MainActivity và chọn tab Star Shop (thường là tab thứ 3, index 2)
@@ -270,7 +325,7 @@ public class ShopCheckoutActivity extends AppCompatActivity {
     }
 
     private void setupSummary() {
-        summaryAdapter = new CheckoutSummaryAdapter(this, CartManager.getInstance().getCartItems());
+        summaryAdapter = new CheckoutSummaryAdapter(this, CartManager.getInstance(this).getCartItems());
         rvOrderSummary.setLayoutManager(new LinearLayoutManager(this));
         rvOrderSummary.setAdapter(summaryAdapter);
     }
@@ -300,7 +355,7 @@ public class ShopCheckoutActivity extends AppCompatActivity {
     }
 
     private void updateAmounts() {
-        long total = CartManager.getInstance().getTotalAmount();
+        long total = CartManager.getInstance(this).getTotalAmount();
         tvTotalAmount.setText(decimalFormat.format(total) + " VND");
         tvDiscountAmount.setText("0 VND");
         tvFinalPayment.setText(decimalFormat.format(total) + " VND");

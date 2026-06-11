@@ -173,28 +173,86 @@ public class AdminShowtimeFormActivity extends AppCompatActivity {
             return;
         }
 
-        Showtime s = new Showtime();
-        s.setMovieId(selectedMovieId);
-        s.setCinemaId(selectedCinemaId);
-        s.setCity(selectedCity);
-        s.setDate(date);
-        s.setTime(time);
-        s.setFormat(format);
-        s.setRoomId(selectedRoomId);
-        s.setBookedSeats(new ArrayList<>());
+        // 1. Fetch movie duration
+        db.collection("movies").document(selectedMovieId).get().addOnSuccessListener(movieDoc -> {
+            Long durationObj = movieDoc.getLong("duration");
+            int durationMinutes = durationObj != null ? durationObj.intValue() : 120; // Default 120 mins if missing
+            
+            // Allow 15 minutes for cleaning/setup between shows
+            final int totalBlockMinutes = durationMinutes + 15; 
+            
+            // 2. Fetch existing showtimes for the same room on the same date
+            db.collection("showtimes")
+                .whereEqualTo("roomId", selectedRoomId)
+                .whereEqualTo("date", date)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    boolean hasOverlap = false;
+                    
+                    try {
+                        String[] newTimeParts = time.split(":");
+                        int newStartMinutes = Integer.parseInt(newTimeParts[0]) * 60 + Integer.parseInt(newTimeParts[1]);
+                        int newEndMinutes = newStartMinutes + totalBlockMinutes;
 
-        if (showtimeId != null) {
-            db.collection("showtimes").document(showtimeId).set(s)
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
-                        finish();
-                    });
-        } else {
-            db.collection("showtimes").add(s)
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(this, "Thêm thành công", Toast.LENGTH_SHORT).show();
-                        finish();
-                    });
-        }
+                        for (com.google.firebase.firestore.DocumentSnapshot doc : queryDocumentSnapshots) {
+                            // Skip the current showtime if we are editing
+                            if (showtimeId != null && doc.getId().equals(showtimeId)) {
+                                continue;
+                            }
+                            
+                            Showtime existingShow = doc.toObject(Showtime.class);
+                            if (existingShow != null && existingShow.getTime() != null) {
+                                // Fetch duration of existing show's movie (synchronous simulation for logic flow, ideally should fetch each or use a default buffer)
+                                // To keep it efficient, we assume a standard 120 min + 15 min buffer for existing shows if we don't query their exact duration here.
+                                // A more robust way is to query the movie duration, but for this constraint check, a fixed buffer is often used or we query all movies.
+                                // For simplicity and speed in this check, we will use a conservative 150 minutes block for existing shows.
+                                int existingBlockMinutes = 150; 
+                                
+                                String[] existTimeParts = existingShow.getTime().split(":");
+                                int existStartMinutes = Integer.parseInt(existTimeParts[0]) * 60 + Integer.parseInt(existTimeParts[1]);
+                                int existEndMinutes = existStartMinutes + existingBlockMinutes;
+                                
+                                // Overlap logic: (StartA < EndB) and (EndA > StartB)
+                                if (newStartMinutes < existEndMinutes && newEndMinutes > existStartMinutes) {
+                                    hasOverlap = true;
+                                    break;
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(this, "Lỗi kiểm tra thời gian", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (hasOverlap) {
+                        Toast.makeText(this, "Lỗi: Trùng lịch chiếu tại phòng này!", Toast.LENGTH_LONG).show();
+                    } else {
+                        // 3. Proceed to save
+                        Showtime s = new Showtime();
+                        s.setMovieId(selectedMovieId);
+                        s.setCinemaId(selectedCinemaId);
+                        s.setCity(selectedCity);
+                        s.setDate(date);
+                        s.setTime(time);
+                        s.setFormat(format);
+                        s.setRoomId(selectedRoomId);
+                        s.setBookedSeats(new ArrayList<>());
+
+                        if (showtimeId != null) {
+                            db.collection("showtimes").document(showtimeId).set(s)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    });
+                        } else {
+                            db.collection("showtimes").add(s)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(this, "Thêm thành công", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    });
+                        }
+                    }
+                });
+        }).addOnFailureListener(e -> Toast.makeText(this, "Không thể lấy thông tin phim", Toast.LENGTH_SHORT).show());
     }
 }

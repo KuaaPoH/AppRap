@@ -112,6 +112,14 @@ public class AdminDashboardActivity extends AppCompatActivity {
             startActivity(new android.content.Intent(this, AdminNewsListActivity.class));
         });
 
+        findViewById(R.id.cardManageUsers).setOnClickListener(v -> {
+            startActivity(new android.content.Intent(this, AdminUserListActivity.class));
+        });
+
+        findViewById(R.id.cardManageCombos).setOnClickListener(v -> {
+            startActivity(new android.content.Intent(this, AdminComboListActivity.class));
+        });
+
         findViewById(R.id.cardRevenue).setOnClickListener(v -> {
             showRevenueDetail();
         });

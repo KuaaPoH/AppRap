@@ -94,6 +94,26 @@
             android:name=".admin.activities.AdminRoomFormActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".admin.activities.AdminUserListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".admin.activities.AdminUserDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".admin.activities.AdminUserFormActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".admin.activities.AdminComboListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".admin.activities.AdminComboFormActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".SettingsActivity" />
@@ -104,7 +124,10 @@
         <activity android:name=".CheckoutActivity" />
         <activity android:name=".CartActivity" />
         <activity android:name=".ShopCheckoutActivity" />
+        <activity android:name=".TransactionHistoryActivity" />
+        <activity android:name=".TransactionDetailActivity" />
         <activity android:name=".PromoDetailActivity" />
+        <activity android:name=".ProfileEditActivity" />
     </application>
 
 </manifest>

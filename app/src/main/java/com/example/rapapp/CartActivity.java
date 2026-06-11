@@ -46,8 +46,13 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
             v.animate().scaleX(0.95f).scaleY(0.95f).setDuration(100)
                     .withEndAction(() -> {
                         v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(100).start();
-                        Intent intent = new Intent(this, ShopCheckoutActivity.class);
-                        startActivity(intent);
+                        if (com.example.rapapp.utils.LoginUtils.isUserLoggedIn()) {
+                            Intent intent = new Intent(this, ShopCheckoutActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(this, "Vui lòng đăng nhập để thanh toán", Toast.LENGTH_SHORT).show();
+                            com.example.rapapp.utils.LoginUtils.redirectToLogin(this);
+                        }
                     }).start();
         });
     }
@@ -62,13 +67,13 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
     }
 
     private void setupRecyclerView() {
-        cartAdapter = new CartAdapter(this, CartManager.getInstance().getCartItems(), this);
+        cartAdapter = new CartAdapter(this, CartManager.getInstance(this).getCartItems(), this);
         rvCartItems.setLayoutManager(new LinearLayoutManager(this));
         rvCartItems.setAdapter(cartAdapter);
     }
 
     private void updateUI() {
-        if (CartManager.getInstance().getCartItems().isEmpty()) {
+        if (CartManager.getInstance(this).getCartItems().isEmpty()) {
             layoutEmptyCart.setVisibility(View.VISIBLE);
             layoutSummary.setVisibility(View.GONE);
             rvCartItems.setVisibility(View.GONE);
@@ -77,7 +82,7 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
             layoutSummary.setVisibility(View.VISIBLE);
             rvCartItems.setVisibility(View.VISIBLE);
 
-            long total = CartManager.getInstance().getTotalAmount();
+            long total = CartManager.getInstance(this).getTotalAmount();
             tvTotalAmount.setText(decimalFormat.format(total) + " VND");
             tvFinalAmount.setText(decimalFormat.format(total) + " VND");
             tvDiscount.setText("0 VND");
@@ -86,14 +91,14 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
 
     @Override
     public void onQuantityChanged(String productId, int delta) {
-        CartManager.getInstance().updateQuantity(productId, delta);
+        CartManager.getInstance(this).updateQuantity(productId, delta);
         cartAdapter.notifyDataSetChanged();
         updateUI();
     }
 
     @Override
     public void onRemoveItem(CartItem item) {
-        CartManager.getInstance().removeProduct(item.getProduct());
+        CartManager.getInstance(this).removeProduct(item.getProduct());
         cartAdapter.notifyDataSetChanged();
         updateUI();
     }

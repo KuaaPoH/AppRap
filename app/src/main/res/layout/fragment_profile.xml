@@ -41,23 +41,62 @@
             android:orientation="vertical">
 
             <!-- Mascot Image -->
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivUserAvatar"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="8dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/bear" />
+                android:scaleType="centerCrop"
+                android:src="@drawable/bear"
+                app:shapeAppearanceOverlay="@style/CircleImage"
+                app:strokeWidth="2dp"
+                app:strokeColor="#DDDDDD"/>
 
             <TextView
+                android:id="@+id/tvUsername"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:paddingHorizontal="40dp"
-                android:text="Đăng Ký Thành Viên Star\nNhận Ngay Ưu Đãi!"
+                android:text="Đăng Ký Thành Viên Star"
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvUserSubtext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingHorizontal="40dp"
+                android:text="Nhận Ngay Ưu Đãi!"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:id="@+id/llStarsInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="#F58020" />
+                <TextView
+                    android:id="@+id/tvUserStars"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="0 Stars"
+                    android:textColor="#F58020"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <!-- Row Icons -->
             <LinearLayout
@@ -67,11 +106,16 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
+                    android:id="@+id/btnTransactions"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:paddingVertical="8dp">
 
                     <ImageView
                         android:layout_width="32dp"
@@ -83,7 +127,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Stars"
+                        android:text="Giao dịch"
                         android:textColor="@color/black"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -135,6 +179,7 @@
 
             <!-- Buttons -->
             <LinearLayout
+                android:id="@+id/llAuthButtons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -168,6 +213,20 @@
                     android:textSize="13sp"
                     android:textStyle="bold" />
             </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_btn_outline_blue"
+                android:paddingHorizontal="24dp"
+                android:text="Đăng xuất"
+                android:textAllCaps="false"
+                android:textColor="#034EA2"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <!-- Separator -->
             <View
