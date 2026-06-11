@@ -218,12 +218,49 @@ public class ShowtimeFragment extends Fragment {
         query.get().addOnSuccessListener(queryDocumentSnapshots -> {
             filteredShowtimes.clear();
             List<com.google.firebase.firestore.DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
+            
+            // Get current date and time
+            Calendar currentCal = Calendar.getInstance();
+            SimpleDateFormat sdfFull = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            String todayStr = sdfFull.format(currentCal.getTime());
+            
+            // Calculate cutoff time (current time minus 15 minutes)
+            // A showtime is valid if its start time + 15 mins > current time
+            // Equivalently: start time > current time - 15 mins
+            Calendar cutoffCal = Calendar.getInstance();
+            cutoffCal.add(Calendar.MINUTE, -15);
+            int currentHour = cutoffCal.get(Calendar.HOUR_OF_DAY);
+            int currentMinute = cutoffCal.get(Calendar.MINUTE);
+            int cutoffTotalMinutes = currentHour * 60 + currentMinute;
+            
+            boolean isToday = selectedDate.equals(todayStr);
+
             for (int i = 0; i < docs.size(); i++) {
                 Showtime s = docs.get(i).toObject(Showtime.class);
                 if (s != null) {
                     s.setId(docs.get(i).getId());
                     if (selectedCinemaId.isEmpty() || s.getCinemaId().equals(selectedCinemaId)) {
-                        filteredShowtimes.add(s);
+                        boolean isValidTime = true;
+                        if (isToday && s.getTime() != null && s.getTime().contains(":")) {
+                            try {
+                                String[] parts = s.getTime().split(":");
+                                int showHour = Integer.parseInt(parts[0]);
+                                int showMinute = Integer.parseInt(parts[1]);
+                                int showTotalMinutes = showHour * 60 + showMinute;
+                                
+                                // Show only if showtime + 15 mins > current time
+                                // i.e., showTotalMinutes > cutoffTotalMinutes
+                                if (showTotalMinutes <= cutoffTotalMinutes) {
+                                    isValidTime = false;
+                                }
+                            } catch (Exception e) {
+                                // Ignore parsing errors, assume valid
+                            }
+                        }
+                        
+                        if (isValidTime) {
+                            filteredShowtimes.add(s);
+                        }
                     }
                 }
             }
@@ -397,6 +434,13 @@ public class ShowtimeFragment extends Fragment {
                         holder.itemView.setOnClickListener(v -> {
                             v.animate().scaleX(0.9f).scaleY(0.9f).setDuration(100).withEndAction(() -> {
                                 v.animate().scaleX(1f).scaleY(1f).setDuration(100).start();
+                                
+                                if (!com.example.rapapp.utils.LoginUtils.isUserLoggedIn()) {
+                                    Toast.makeText(getContext(), "Vui lòng đăng nhập để đặt vé", Toast.LENGTH_SHORT).show();
+                                    com.example.rapapp.utils.LoginUtils.redirectToLogin(getContext());
+                                    return;
+                                }
+
                                 android.content.Intent intent = new android.content.Intent(getContext(), com.example.rapapp.SeatSelectionActivity.class);
                                 intent.putExtra("movieId", s.getMovieId());
                                 intent.putExtra("showtimeId", s.getId());

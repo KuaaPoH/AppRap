@@ -115,7 +115,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                         v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(100).start();
                         // Thêm sản phẩm với số lượng hiện tại vào giỏ hàng
                         for (int i = 0; i < currentQuantity; i++) {
-                            CartManager.getInstance().addProduct(product);
+                            CartManager.getInstance(this).addProduct(product);
                         }
                         playAddToCartAnimation(v, layoutCart);
                     }).start();
@@ -126,7 +126,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                     .withEndAction(() -> {
                         v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(100).start();
                         for (int i = 0; i < currentQuantity; i++) {
-                            CartManager.getInstance().addProduct(product);
+                            CartManager.getInstance(this).addProduct(product);
                         }
                         startActivity(new Intent(this, CartActivity.class));
                     }).start();
@@ -141,7 +141,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void updateCartBadge() {
-        int total = CartManager.getInstance().getTotalQuantity();
+        int total = CartManager.getInstance(this).getTotalQuantity();
         if (total > 0) {
             tvCartBadge.setText(String.valueOf(total));
             tvCartBadge.setVisibility(View.VISIBLE);

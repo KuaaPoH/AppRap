@@ -351,12 +351,10 @@
                 android:layout_width="0dp"
                 android:layout_height="82dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginBottom="24dp"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="0dp"
                 app:cardBackgroundColor="#E3F2FD"
                 app:layout_constraintTop_toBottomOf="@id/cardManageRooms"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
@@ -367,6 +365,57 @@
                     android:orientation="vertical">
                     <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_nav_news" app:tint="#0277BD" />
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Tin tức &amp; Đánh giá" android:textColor="#0277BD" android:textSize="12sp" android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Manage Users (Bento 10 - Square) -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardManageUsers"
+                android:layout_width="0dp"
+                android:layout_height="82dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="#EFEBE9"
+                app:layout_constraintTop_toBottomOf="@id/cardManageNews"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_v50">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_person_outline" app:tint="#5D4037" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Người dùng" android:textColor="#5D4037" android:textSize="12sp" android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Manage Combos (Bento 11 - Square) -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardManageCombos"
+                android:layout_width="0dp"
+                android:layout_height="82dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="#FFF9C4"
+                app:layout_constraintTop_toBottomOf="@id/cardManageNews"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guideline_v50"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_nav_ticket" app:tint="#F57F17" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Combo Bắp Nước" android:textColor="#F57F17" android:textSize="12sp" android:textStyle="bold" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
