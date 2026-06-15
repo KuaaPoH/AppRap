@@ -22,9 +22,8 @@ public class AdminShowtimeAdapter extends RecyclerView.Adapter<AdminShowtimeAdap
     private List<Showtime> showtimeList;
     private OnShowtimeClickListener editListener;
     private OnShowtimeClickListener deleteListener;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private Map<String, String> movieNames = new HashMap<>();
-    private Map<String, String> cinemaNames = new HashMap<>();
+    private Map<String, String> movieNames;
+    private Map<String, String> cinemaNames;
 
     public interface OnShowtimeClickListener {
         void onClick(Showtime showtime);
@@ -35,8 +34,14 @@ public class AdminShowtimeAdapter extends RecyclerView.Adapter<AdminShowtimeAdap
         notifyDataSetChanged();
     }
 
-    public AdminShowtimeAdapter(List<Showtime> showtimeList, OnShowtimeClickListener editListener, OnShowtimeClickListener deleteListener) {
+    public AdminShowtimeAdapter(List<Showtime> showtimeList, 
+                               Map<String, String> movieNames, 
+                               Map<String, String> cinemaNames,
+                               OnShowtimeClickListener editListener, 
+                               OnShowtimeClickListener deleteListener) {
         this.showtimeList = showtimeList;
+        this.movieNames = movieNames;
+        this.cinemaNames = cinemaNames;
         this.editListener = editListener;
         this.deleteListener = deleteListener;
     }
@@ -55,33 +60,13 @@ public class AdminShowtimeAdapter extends RecyclerView.Adapter<AdminShowtimeAdap
         holder.tvShowtimeTime.setText(showtime.getTime());
         holder.tvShowtimeFormat.setText(showtime.getFormat());
 
-        // Fetch Movie Name
-        if (movieNames.containsKey(showtime.getMovieId())) {
-            holder.tvMovieName.setText(movieNames.get(showtime.getMovieId()));
-        } else {
-            holder.tvMovieName.setText("Đang tải...");
-            db.collection("movies").document(showtime.getMovieId()).get().addOnSuccessListener(doc -> {
-                if (doc.exists()) {
-                    String name = doc.getString("title");
-                    movieNames.put(showtime.getMovieId(), name);
-                    notifyItemChanged(position);
-                }
-            });
-        }
+        // Use pre-loaded Movie Name
+        String movieName = movieNames.get(showtime.getMovieId());
+        holder.tvMovieName.setText(movieName != null ? movieName : "Không xác định");
 
-        // Fetch Cinema Name
-        if (cinemaNames.containsKey(showtime.getCinemaId())) {
-            holder.tvCinemaName.setText(cinemaNames.get(showtime.getCinemaId()));
-        } else {
-            holder.tvCinemaName.setText("Đang tải...");
-            db.collection("cinemas").document(showtime.getCinemaId()).get().addOnSuccessListener(doc -> {
-                if (doc.exists()) {
-                    String name = doc.getString("name");
-                    cinemaNames.put(showtime.getCinemaId(), name);
-                    notifyItemChanged(position);
-                }
-            });
-        }
+        // Use pre-loaded Cinema Name
+        String cinemaName = cinemaNames.get(showtime.getCinemaId());
+        holder.tvCinemaName.setText(cinemaName != null ? cinemaName : "Không xác định");
 
         holder.btnEdit.setOnClickListener(v -> editListener.onClick(showtime));
         holder.btnDelete.setOnClickListener(v -> deleteListener.onClick(showtime));

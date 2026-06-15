@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,6 +40,11 @@ public class AdminRoomListActivity extends AppCompatActivity {
 
         initViews();
         setupSearch();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         loadRooms();
     }
 
@@ -78,9 +84,7 @@ public class AdminRoomListActivity extends AppCompatActivity {
             Intent intent = new Intent(this, AdminRoomFormActivity.class);
             intent.putExtra("roomId", room.getId());
             startActivity(intent);
-        }, room -> {
-            deleteRoom(room);
-        });
+        }, this::confirmDelete);
         rvAdminRooms.setAdapter(adapter);
 
         ImageView btnAddRoom = findViewById(R.id.btnAddRoom);
@@ -92,12 +96,8 @@ public class AdminRoomListActivity extends AppCompatActivity {
 
     private void loadRooms() {
         db.collection("rooms")
-                .addSnapshotListener((value, error) -> {
-                    if (error != null) {
-                        Toast.makeText(this, "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
+                .get()
+                .addOnSuccessListener(value -> {
                     if (value != null) {
                         roomList.clear();
                         fullRoomList.clear();
@@ -107,17 +107,32 @@ public class AdminRoomListActivity extends AppCompatActivity {
                         }
                         roomList.addAll(objects);
                         fullRoomList.addAll(objects);
-                        
+
                         EditText etSearch = findViewById(R.id.etSearchRoom);
                         filterRooms(etSearch.getText().toString());
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private void confirmDelete(Room room) {
+        new AlertDialog.Builder(this)
+                .setTitle("Xác nhận xóa")
+                .setMessage("Bạn có chắc chắn muốn xóa phòng này không?")
+                .setPositiveButton("Xóa", (dialog, which) -> deleteRoom(room))
+                .setNegativeButton("Hủy", null)
+                .show();
     }
 
     private void deleteRoom(Room room) {
         db.collection("rooms").document(room.getId())
                 .delete()
-                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Đã xoá phòng", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(this, "Lỗi khi xoá", Toast.LENGTH_SHORT).show());
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Đã xoá phòng", Toast.LENGTH_SHORT).show();
+                    loadRooms();
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Lỗi khi xoá: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 }

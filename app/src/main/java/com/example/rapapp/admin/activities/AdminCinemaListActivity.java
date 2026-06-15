@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,6 +37,11 @@ public class AdminCinemaListActivity extends AppCompatActivity {
 
         initViews();
         setupSearch();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         loadCinemas();
     }
 
@@ -74,9 +80,7 @@ public class AdminCinemaListActivity extends AppCompatActivity {
             Intent intent = new Intent(this, AdminCinemaFormActivity.class);
             intent.putExtra("cinemaId", cinema.getId());
             startActivity(intent);
-        }, cinema -> {
-            deleteCinema(cinema);
-        });
+        }, this::confirmDelete);
         rvAdminCinemas.setAdapter(adapter);
 
         ImageView btnAddCinema = findViewById(R.id.btnAddCinema);
@@ -86,7 +90,7 @@ public class AdminCinemaListActivity extends AppCompatActivity {
     }
 
     private void loadCinemas() {
-        db.collection("cinemas").addSnapshotListener((value, error) -> {
+        db.collection("cinemas").get().addOnSuccessListener(value -> {
             if (value != null) {
                 cinemaList.clear();
                 fullCinemaList.clear();
@@ -101,11 +105,28 @@ public class AdminCinemaListActivity extends AppCompatActivity {
                 android.widget.EditText etSearch = findViewById(R.id.etSearchCinema);
                 filterCinemas(etSearch.getText().toString());
             }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Lỗi tải dữ liệu: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void confirmDelete(Cinema cinema) {
+        new AlertDialog.Builder(this)
+                .setTitle("Xác nhận xóa")
+                .setMessage("Bạn có chắc chắn muốn xóa rạp này không?")
+                .setPositiveButton("Xóa", (dialog, which) -> deleteCinema(cinema))
+                .setNegativeButton("Hủy", null)
+                .show();
     }
 
     private void deleteCinema(Cinema cinema) {
         db.collection("cinemas").document(cinema.getId()).delete()
-                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Đã xoá rạp", Toast.LENGTH_SHORT).show());
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Đã xoá rạp", Toast.LENGTH_SHORT).show();
+                    loadCinemas();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Lỗi khi xoá: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 }
