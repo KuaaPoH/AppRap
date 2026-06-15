@@ -36,6 +36,11 @@ public class AdminUserListActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         initViews();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         loadUsers();
     }
 
@@ -91,23 +96,20 @@ public class AdminUserListActivity extends AppCompatActivity {
     }
 
     private void loadUsers() {
-        db.collection("users")
-                .addSnapshotListener((value, error) -> {
-                    if (error != null) {
-                        Toast.makeText(this, "Lỗi tải danh sách: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                        return;
+        db.collection("users").get().addOnSuccessListener(value -> {
+            if (value != null) {
+                fullUserList.clear();
+                for (com.google.firebase.firestore.DocumentSnapshot doc : value.getDocuments()) {
+                    User user = doc.toObject(User.class);
+                    if (user != null) {
+                        fullUserList.add(user);
                     }
-                    if (value != null) {
-                        fullUserList.clear();
-                        for (com.google.firebase.firestore.DocumentSnapshot doc : value.getDocuments()) {
-                            User user = doc.toObject(User.class);
-                            if (user != null) {
-                                fullUserList.add(user);
-                            }
-                        }
-                        filterUsers(etSearchUser.getText().toString());
-                    }
-                });
+                }
+                filterUsers(etSearchUser.getText().toString());
+            }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Lỗi tải danh sách: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void filterUsers(String query) {
@@ -131,7 +133,10 @@ public class AdminUserListActivity extends AppCompatActivity {
                 .setMessage("Bạn có chắc chắn muốn xoá hồ sơ dữ liệu của '" + user.getName() + "' không?\nLưu ý: Thao tác này chỉ xoá dữ liệu trên app, tài khoản đăng nhập (Auth) vẫn tồn tại.")
                 .setPositiveButton("Xoá", (dialog, which) -> {
                     db.collection("users").document(user.getUid()).delete()
-                            .addOnSuccessListener(aVoid -> Toast.makeText(this, "Đã xoá hồ sơ người dùng", Toast.LENGTH_SHORT).show())
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(this, "Đã xoá hồ sơ người dùng", Toast.LENGTH_SHORT).show();
+                                loadUsers(); // Refresh list
+                            })
                             .addOnFailureListener(e -> Toast.makeText(this, "Lỗi khi xoá: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                 })
                 .setNegativeButton("Hủy", null)

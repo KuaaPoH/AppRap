@@ -36,6 +36,11 @@ public class AdminComboListActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         initViews();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         loadCombos();
     }
 
@@ -62,16 +67,12 @@ public class AdminComboListActivity extends AppCompatActivity {
         rvAdminCombos = findViewById(R.id.rvAdminCombos);
         rvAdminCombos.setLayoutManager(new LinearLayoutManager(this));
         
-        adapter = new AdminComboAdapter(this, comboList, this::deleteCombo);
+        adapter = new AdminComboAdapter(this, comboList, this::confirmDelete);
         rvAdminCombos.setAdapter(adapter);
     }
 
     private void loadCombos() {
-        db.collection("combos").addSnapshotListener((value, error) -> {
-            if (error != null) {
-                Toast.makeText(this, "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show();
-                return;
-            }
+        db.collection("combos").get().addOnSuccessListener(value -> {
             if (value != null) {
                 fullComboList.clear();
                 for (com.google.firebase.firestore.DocumentSnapshot doc : value.getDocuments()) {
@@ -83,6 +84,8 @@ public class AdminComboListActivity extends AppCompatActivity {
                 }
                 filterCombos(etSearchCombo.getText().toString());
             }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Lỗi tải dữ liệu: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -99,13 +102,16 @@ public class AdminComboListActivity extends AppCompatActivity {
         adapter.updateList(filteredList);
     }
 
-    private void deleteCombo(Combo combo) {
+    private void confirmDelete(Combo combo) {
         new androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle("Xoá Combo")
                 .setMessage("Bạn có chắc chắn muốn xoá combo '" + combo.getName() + "' không?")
                 .setPositiveButton("Xoá", (dialog, which) -> {
                     db.collection("combos").document(combo.getId()).delete()
-                            .addOnSuccessListener(aVoid -> Toast.makeText(this, "Đã xoá combo", Toast.LENGTH_SHORT).show())
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(this, "Đã xoá combo", Toast.LENGTH_SHORT).show();
+                                loadCombos(); // Refresh list
+                            })
                             .addOnFailureListener(e -> Toast.makeText(this, "Lỗi khi xoá: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                 })
                 .setNegativeButton("Hủy", null)

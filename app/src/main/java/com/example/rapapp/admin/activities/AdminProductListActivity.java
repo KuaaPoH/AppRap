@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,6 +36,11 @@ public class AdminProductListActivity extends AppCompatActivity {
 
         initViews();
         setupSearch();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         loadProducts();
     }
 
@@ -73,9 +79,7 @@ public class AdminProductListActivity extends AppCompatActivity {
             Intent intent = new Intent(this, AdminProductFormActivity.class);
             intent.putExtra("productId", product.getId());
             startActivity(intent);
-        }, product -> {
-            deleteProduct(product);
-        });
+        }, this::confirmDelete);
         rvAdminProducts.setAdapter(adapter);
 
         android.widget.ImageView btnAddProduct = findViewById(R.id.btnAddProduct);
@@ -85,7 +89,7 @@ public class AdminProductListActivity extends AppCompatActivity {
     }
 
     private void loadProducts() {
-        db.collection("products").addSnapshotListener((value, error) -> {
+        db.collection("products").get().addOnSuccessListener(value -> {
             if (value != null) {
                 productList.clear();
                 fullProductList.clear();
@@ -100,11 +104,28 @@ public class AdminProductListActivity extends AppCompatActivity {
                 android.widget.EditText etSearch = findViewById(R.id.etSearchProduct);
                 filterProducts(etSearch.getText().toString());
             }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Lỗi tải dữ liệu: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void confirmDelete(Product product) {
+        new AlertDialog.Builder(this)
+                .setTitle("Xác nhận xóa")
+                .setMessage("Bạn có chắc chắn muốn xóa sản phẩm này không?")
+                .setPositiveButton("Xóa", (dialog, which) -> deleteProduct(product))
+                .setNegativeButton("Hủy", null)
+                .show();
     }
 
     private void deleteProduct(Product product) {
         db.collection("products").document(product.getId()).delete()
-                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Đã xoá sản phẩm", Toast.LENGTH_SHORT).show());
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Đã xoá sản phẩm", Toast.LENGTH_SHORT).show();
+                    loadProducts();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Lỗi khi xoá: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 }

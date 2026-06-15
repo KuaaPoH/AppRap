@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,6 +40,11 @@ public class AdminBannerListActivity extends AppCompatActivity {
 
         initViews();
         setupSearch();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         loadBanners();
     }
 
@@ -79,7 +85,7 @@ public class AdminBannerListActivity extends AppCompatActivity {
             intent.putExtra("bannerId", banner.getId());
             startActivity(intent);
         }, banner -> {
-            deleteBanner(banner);
+            confirmDelete(banner);
         });
         rvAdminBanners.setAdapter(adapter);
 
@@ -92,12 +98,8 @@ public class AdminBannerListActivity extends AppCompatActivity {
 
     private void loadBanners() {
         db.collection("banners")
-                .addSnapshotListener((value, error) -> {
-                    if (error != null) {
-                        Toast.makeText(this, "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
+                .get()
+                .addOnSuccessListener(value -> {
                     if (value != null) {
                         bannerList.clear();
                         fullBannerList.clear();
@@ -107,17 +109,32 @@ public class AdminBannerListActivity extends AppCompatActivity {
                         }
                         bannerList.addAll(objects);
                         fullBannerList.addAll(objects);
-                        
+
                         EditText etSearch = findViewById(R.id.etSearchBanner);
                         filterBanners(etSearch.getText().toString());
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private void confirmDelete(Banner banner) {
+        new AlertDialog.Builder(this)
+                .setTitle("Xác nhận xoá")
+                .setMessage("Bạn có chắc chắn muốn xoá banner này không?")
+                .setPositiveButton("Xoá", (dialog, which) -> deleteBanner(banner))
+                .setNegativeButton("Hủy", null)
+                .show();
     }
 
     private void deleteBanner(Banner banner) {
         db.collection("banners").document(banner.getId())
                 .delete()
-                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Đã xoá banner", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(this, "Lỗi khi xoá", Toast.LENGTH_SHORT).show());
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Đã xoá banner", Toast.LENGTH_SHORT).show();
+                    loadBanners();
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Lỗi khi xoá: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 }

@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,6 +40,11 @@ public class AdminMovieListActivity extends AppCompatActivity {
 
         initViews();
         setupSearch();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         loadMovies();
     }
 
@@ -81,7 +87,7 @@ public class AdminMovieListActivity extends AppCompatActivity {
             startActivity(intent);
         }, movie -> {
             // Delete movie
-            deleteMovie(movie);
+            confirmDelete(movie);
         });
         rvAdminMovies.setAdapter(adapter);
 
@@ -95,12 +101,8 @@ public class AdminMovieListActivity extends AppCompatActivity {
     private void loadMovies() {
         db.collection("movies")
                 .orderBy("releaseDate", Query.Direction.DESCENDING)
-                .addSnapshotListener((value, error) -> {
-                    if (error != null) {
-                        Toast.makeText(this, "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
+                .get()
+                .addOnSuccessListener(value -> {
                     if (value != null) {
                         movieList.clear();
                         fullMovieList.clear();
@@ -110,17 +112,32 @@ public class AdminMovieListActivity extends AppCompatActivity {
                         }
                         movieList.addAll(objects);
                         fullMovieList.addAll(objects);
-                        
+
                         android.widget.EditText etSearch = findViewById(R.id.etSearchMovie);
                         filterMovies(etSearch.getText().toString());
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private void confirmDelete(Movie movie) {
+        new AlertDialog.Builder(this)
+                .setTitle("Xác nhận xoá")
+                .setMessage("Bạn có chắc chắn muốn xoá phim này không?")
+                .setPositiveButton("Xoá", (dialog, which) -> deleteMovie(movie))
+                .setNegativeButton("Hủy", null)
+                .show();
     }
 
     private void deleteMovie(Movie movie) {
         db.collection("movies").document(movie.getId())
                 .delete()
-                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Đã xoá phim", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(this, "Lỗi khi xoá", Toast.LENGTH_SHORT).show());
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Đã xoá phim", Toast.LENGTH_SHORT).show();
+                    loadMovies();
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Lỗi khi xoá: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 }
