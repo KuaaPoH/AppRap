@@ -27,15 +27,23 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
+
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_content), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
             return insets;
         });
 
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
+
+        ViewCompat.setOnApplyWindowInsetsListener(bottomNav, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(0, v.getPaddingTop(), 0, systemBars.bottom);
+            return insets;
+        });
         
-        // Vô hiệu hóa Tooltip (thông báo khi nhấn giữ) trên Bottom Navigation
+
         for (int i = 0; i < bottomNav.getMenu().size(); i++) {
             View menuView = bottomNav.findViewById(bottomNav.getMenu().getItem(i).getItemId());
             if (menuView != null) {
@@ -47,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             Fragment selectedFragment = null;
             int id = item.getItemId();
 
-            // Hiệu ứng nảy khi click
+
             View itemView = bottomNav.findViewById(id);
             if (itemView != null) {
                 itemView.animate().scaleX(1.1f).scaleY(1.1f).setDuration(100)
@@ -76,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
-        // Hiển thị Fragment Trang chủ mặc định khi mở app
+
         if (savedInstanceState == null) {
             String selectTab = getIntent().getStringExtra("SELECT_TAB");
             if (selectTab != null && selectTab.equals("STAR_SHOP")) {
