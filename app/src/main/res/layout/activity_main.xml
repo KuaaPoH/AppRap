@@ -8,40 +8,44 @@
     android:background="@color/white"
     tools:context=".MainActivity">
 
-    <!-- Fragment Container để hiển thị nội dung các Tab -->
-    <FrameLayout
-        android:id="@+id/fragment_container"
+    <LinearLayout
+        android:id="@+id/main_content_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="70dp" />
+        android:orientation="vertical">
 
-    <!-- Line phân cách mỏng phía trên Bottom Nav -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="70dp"
-        android:background="#EEEEEE" />
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
-    <!-- Bottom Navigation duy nhất của hệ thống -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigation"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_gravity="bottom"
-        android:background="@color/white"
-        app:itemIconSize="20dp"
-        app:itemIconTint="@color/nav_item_color"
-        app:itemTextColor="@color/nav_item_color"
-        app:labelVisibilityMode="selected"
-        app:itemActiveIndicatorStyle="@null"
-        app:itemBackground="@android:color/transparent"
-        app:itemRippleColor="@android:color/transparent"
-        app:itemTextAppearanceActive="@style/BottomNavLabelStyle"
-        app:itemTextAppearanceInactive="@style/BottomNavLabelStyle"
-        app:itemIconPadding="4dp"
-        app:itemPaddingTop="16dp"
-        app:itemPaddingBottom="4dp"
-        app:menu="@menu/bottom_nav_menu" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#EEEEEE" />
+
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="70dp"
+            android:background="@color/white"
+            app:itemIconSize="20dp"
+            app:itemIconTint="@color/nav_item_color"
+            app:itemTextColor="@color/nav_item_color"
+            app:labelVisibilityMode="selected"
+            app:itemActiveIndicatorStyle="@null"
+            app:itemBackground="@android:color/transparent"
+            app:itemRippleColor="@android:color/transparent"
+            app:itemTextAppearanceActive="@style/BottomNavLabelStyle"
+            app:itemTextAppearanceInactive="@style/BottomNavLabelStyle"
+            app:itemIconPadding="4dp"
+            app:itemPaddingTop="12dp"
+            app:itemPaddingBottom="12dp"
+            app:menu="@menu/bottom_nav_menu" />
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
